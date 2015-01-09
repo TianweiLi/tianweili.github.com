@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[李天炜]]></title>
-  <link href="http://tianweili.github.io/atom.xml" rel="self"/>
-  <link href="http://tianweili.github.io/"/>
-  <updated>2015-01-09T17:44:09+08:00</updated>
-  <id>http://tianweili.github.io/</id>
+  <title><![CDATA[My Octopress Blog]]></title>
+  <link href="http://yoursite.com/atom.xml" rel="self"/>
+  <link href="http://yoursite.com/"/>
+  <updated>2015-01-09T17:48:29+08:00</updated>
+  <id>http://yoursite.com/</id>
   <author>
-    <name><![CDATA[李天炜 litianwei2013@gmail.com]]></name>
+    <name><![CDATA[Your Name]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[第一篇博文]]></title>
-    <link href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/"/>
+    <link href="http://yoursite.com/blog/2015/01/10/my-first-blog/"/>
     <updated>2015-01-10T01:28:08+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/01/10/my-first-blog</id>
+    <id>http://yoursite.com/blog/2015/01/10/my-first-blog</id>
     <content type="html"><![CDATA[<p>这是我的第一篇博客，终于搭建好了！</p>
 ]]></content>
   </entry>
