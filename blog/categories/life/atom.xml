@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[李天炜]]></title>
-  <link href="http://tianweili.github.io/tianweili@github/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Life | 李天炜]]></title>
+  <link href="http://tianweili.github.io/tianweili@github/blog/categories/life/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/tianweili@github/"/>
   <updated>2015-01-11T13:48:33+08:00</updated>
   <id>http://tianweili.github.io/tianweili@github/</id>
@@ -23,14 +23,9 @@
 <!--more-->
 
 
-
-
-<figure class='code'><figcaption><span>Test.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Test</span><span class="o">{</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<pre><code class="java Test.java">public class Test{
+}
+</code></pre>
 
 <h2>提高博客访问速度</h2>
 
@@ -59,9 +54,8 @@
 <p>把<code>\source\_includes\after_footer.html</code>文件中的twitter内容给注释掉：</p>
 
 <pre><code>&lt;!--
+--&gt;
 </code></pre>
-
-<p>&ndash;></p>
 
 <p><strong>3.删除Google font</strong></p>
 
@@ -140,7 +134,7 @@ Liquid::Template.register_tag('category_list', Jekyll::CategoryListTag)
 <pre><code>&lt;section&gt;
   &lt;h1&gt;文章分类&lt;/h1&gt;
   &lt;ul id="categories"&gt;
-    &lt;li class='category'&gt;&lt;a href='http://tianweili.github.io/tianweili@github/blog/categories/life/'&gt;life (1)&lt;/a&gt;&lt;/li&gt;
+    <li class='category'><a href='/blog/categories/life/'>life (1)</a></li>
 
   &lt;/ul&gt;
 &lt;/section&gt;
@@ -167,13 +161,16 @@ duoshuo_short_name: yourname
 
 <p>在<code>./source/_layouts/post.html</code>中的<code>disqus</code>代码</p>
 
+<pre><code>
+</code></pre>
+
 <p>下方添加多说评论模块：</p>
 
 <p>如果你希望一些单独的页面下方也放置评论功能，那么在<code>./source/_layouts/page.html</code>中也做如上修改。
 然后创建一个<code>./source/_includes/post/duoshuo.html</code>文件，内容如下：</p>
 
 <pre><code>&lt;!-- Duoshuo Comment BEGIN --&gt;
-&lt;div class="ds-thread" data-title="第一篇博文"&gt;&lt;/div&gt;
+&lt;div class="ds-thread" data-title="Category: Life"&gt;&lt;/div&gt;
 &lt;script type="text/javascript"&gt;
   var duoshuoQuery = {short_name:"tianweili"};
   (function() {
@@ -190,9 +187,14 @@ duoshuo_short_name: yourname
 
 <p>最后再修改<code>_includes/article.html</code>文件，在</p>
 
+<pre><code>
+</code></pre>
+
 <p>下方添加下面代码：</p>
 
-<pre><code>      | &lt;a href="#comments"&gt;Comments&lt;/a&gt;
+<pre><code>
+      | &lt;a href="#comments"&gt;Comments&lt;/a&gt;
+
 </code></pre>
 ]]></content>
   </entry>

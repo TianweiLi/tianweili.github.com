@@ -9,10 +9,10 @@
   <meta name="author" content="李天炜 litianwei2013[AT]gmail.com">
 
   
-  <meta name="description" content="这是我的第一篇博客，终于搭建好了！ &lt;!-– more –-> Test.java1
+  <meta name="description" content="这是我的第一篇博客，终于搭建好了！ Test.java1
 2
 public class Test{
-} &#8220;>
+} 提高博客访问速度 因为“墙”的关系，所以Octopress建立以后会发现访问速度奇慢无比。 1.替换Google JS公共库 Octopress默认使用的是Google的JS公共库地址， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -100,7 +100,10 @@ public class Test{
 
 <div class="entry-content"><p>这是我的第一篇博客，终于搭建好了！</p>
 
-<p>&lt;!-– more –-></p>
+<!--more-->
+
+
+
 
 <figure class='code'><figcaption><span>Test.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -108,6 +111,169 @@ public class Test{
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>提高博客访问速度</h2>
+
+<p>因为“墙”的关系，所以Octopress建立以后会发现访问速度奇慢无比。</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/my-first-blog/fail_to_push_error.png" alt="" /></p>
+
+<p><strong>1.替换Google JS公共库</strong></p>
+
+<p>Octopress默认使用的是Google的JS公共库地址，加载的过程无比的缓慢。因此我们要把它改为<a href="http://developer.baidu.com/wiki/index.php?title=docs/cplat/libs">百度的JS公共库</a>，需要把<code>/source/_includes/head.html</code>文件中的Google公共库地址改为：</p>
+
+<pre><code>&lt;script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p><strong>2.去掉Twitter</strong></p>
+
+<p>从上图可以看出加载失败的还有twitter，这个也得给去掉。</p>
+
+<p>把在根目录下的<code>_config.yml</code>文件中Twitter内容给注释掉。</p>
+
+<pre><code># Twitter
+#twitter_user:
+#twitter_tweet_button: true
+</code></pre>
+
+<p>把<code>\source\_includes\after_footer.html</code>文件中的twitter内容给注释掉：</p>
+
+<pre><code>&lt;!--
+</code></pre>
+
+<p>&ndash;></p>
+
+<p><strong>3.删除Google font</strong></p>
+
+<p>把在<code>\source\_includes\custom\head.html</code>中的Google font样式给删除：</p>
+
+<pre><code>&lt;link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"&gt;
+&lt;link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"&gt;
+</code></pre>
+
+<!--more-->
+
+
+<h2>设置链接在新窗口打开</h2>
+
+<p>在博文中，如果点击链接直接在本窗口打开了，那么用户体验就不是很好。而markdown的标准语法是不支持链接在新窗口打开的，虽然可以通过在markdown中直接写html标签来解决这个问题，但是这与markdown的简洁书写特性不符。但是我们可以通过设置Octopress来达到这种效果，即在<code>\source\_includes\custom\head.html</code>文件中添加如下一段代码：</p>
+
+<pre><code>&lt;script&gt;
+    function addBlankTargetForLinks () {
+      $('a[href^="http"]').each(function(){
+          $(this).attr('target', '_blank');
+      });
+    }
+
+    $(document).bind('DOMNodeInserted', function(event) {
+      addBlankTargetForLinks();
+    });
+&lt;/script&gt;
+</code></pre>
+
+<h2>首页文章以摘要形式展示</h2>
+
+<p>1.在文章对应的markdown文件中，在需要显示在首页的文字后面添加<code>&lt;!—more—&gt;</code>，执行rake generate后在首页上会看到只显示&lt;!—more—>前面的文字，文字后面会显示<code>Read on</code>链接，点击后进入文字的详细页面;</p>
+
+<p>2.如果想将Read on修改为中文，可以修改_config.yml文件</p>
+
+<pre><code>#excerpt_link: "Read on &amp;rarr;"  # "Continue reading" link text at the bottom of excerpted articles
+excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bottom of excerpted articles
+</code></pre>
+
+<h2>代码着色</h2>
+
+<p>Octopress使用的是Pygments来进行代码着色的，使用方式也比较简单如下所示：</p>
+
+<pre><code>```java xxx.java
+//java code
+```
+</code></pre>
+
+<p><a href="http://pygments.org/languages/">Pygments支持的语言列表</a></p>
+
+<h2>添加侧边栏文章分类（category）</h2>
+
+<p>1.在<code>plugins</code>目录下创建<code>category_list_tag.rb</code>文件，内容如下：</p>
+
+<pre><code>module Jekyll 
+  class CategoryListTag &lt; Liquid::Tag 
+    def render(context) 
+      html = "" 
+      categories = context.registers[:site].categories.keys 
+      categories.sort.each do |category| 
+        posts_in_category = context.registers[:site].categories[category].size 
+        category_dir = context.registers[:site].config['category_dir'] 
+        category_url = File.join(category_dir, category.gsub(/_|\P{Word}/, '-').gsub(/-{2,}/, '-').downcase) 
+        html &lt;&lt; "&lt;li class='category'&gt;&lt;a href='/#{category_url}/'&gt;#{category} (#{posts_in_category})&lt;/a&gt;&lt;/li&gt;\n" 
+      end 
+      html 
+    end 
+  end 
+end
+
+Liquid::Template.register_tag('category_list', Jekyll::CategoryListTag)
+</code></pre>
+
+<p>2.添加<code>source/_includes/asides/category_list.html</code>文件，内容如下：</p>
+
+<pre><code>&lt;section&gt;
+  &lt;h1&gt;文章分类&lt;/h1&gt;
+  &lt;ul id="categories"&gt;
+    &lt;li class='category'&gt;&lt;a href='/blog/categories/life/'&gt;life (1)&lt;/a&gt;&lt;/li&gt;
+
+  &lt;/ul&gt;
+&lt;/section&gt;
+</code></pre>
+
+<p>3.修改<code>_config.yml</code>文件，在<code>default_asides</code>项中添加<code>asides/category_list.html</code>，值之间以逗号隔开，值的先后顺序代表了侧边栏展现的先后顺序。</p>
+
+<pre><code>default_asides: [asides/category_list.html, asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+</code></pre>
+
+<p>在侧边栏还可以添加其他组件，如微博、标签云等，添加方式和上面类似。</p>
+
+<h2>添加多说评论</h2>
+
+<p>Octopress默认自带了DISQUS，但是对于国内不是很好用。所以在经过考虑之后选择了国内比较流行的多说评论系统。
+首先要去<a href="http://duoshuo.com/">多说网站注册</a>，获取站点的<code>short_name</code>。</p>
+
+<p>在<code>_config.yml</code>中添加</p>
+
+<pre><code># duoshuo comments
+duoshuo_comments: true
+duoshuo_short_name: yourname
+</code></pre>
+
+<p>在<code>./source/_layouts/post.html</code>中的<code>disqus</code>代码</p>
+
+<p>下方添加多说评论模块：</p>
+
+<p>如果你希望一些单独的页面下方也放置评论功能，那么在<code>./source/_layouts/page.html</code>中也做如上修改。
+然后创建一个<code>./source/_includes/post/duoshuo.html</code>文件，内容如下：</p>
+
+<pre><code>&lt;!-- Duoshuo Comment BEGIN --&gt;
+&lt;div class="ds-thread" data-title="第一篇博文"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+  var duoshuoQuery = {short_name:"tianweili"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+&lt;/script&gt;
+&lt;!-- Duoshuo Comment END --&gt;
+</code></pre>
+
+<p>最后再修改<code>_includes/article.html</code>文件，在</p>
+
+<p>下方添加下面代码：</p>
+
+<pre><code>      | &lt;a href="#comments"&gt;Comments&lt;/a&gt;
+</code></pre>
 </div>
 
 
@@ -128,7 +294,7 @@ public class Test{
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/test/'>test</a>
+    <a class='category' href='/blog/categories/life/'>life</a>
   
 </span>
 
@@ -175,7 +341,7 @@ public class Test{
     <section>
   <h1>文章分类</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/test/'>test (1)</a></li>
+    <li class='category'><a href='/blog/categories/life/'>life (1)</a></li>
 
   </ul>
 </section><section>
