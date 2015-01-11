@@ -1,0 +1,186 @@
+---
+layout: post
+title: "Octopress博客的个性化配置"
+date: 2015-01-11 21:52:49 +0800
+comments: true
+categories: Technology
+keywords: octopress,blog,github,优化访问速度，多说评论
+description: Octopress博客的一些个性化配置，如何提高Octopress博客访问速度，增加文章分类，添加多说评论系统等。
+---
+
+本文主要讲述了对Octopress搭建的博客进行一些个性化的配置，主要包括以下几个方面：
+
+* 优化提高博客的访问速度
+* 设置链接在新窗口打开
+* 配置首页文章以摘要形式展示
+* 代码着色
+* 添加侧边栏文章分类
+* 添加多说评论系统
+
+<!--more-->
+原文链接：<http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/>
+
+##提高博客访问速度
+因为“墙”的关系，所以Octopress建立以后会发现访问速度奇慢无比，竟然超过了40s。
+
+![call-octopress-blog-slowly](http://7u2i08.com1.z0.glb.clouddn.com/setup-octopress-blog/call-octopress-blog-slowly.png)
+
+仔细分析后我们发现其中都是一些被墙的请求报了404Error，所以导致访问博客巨慢无比，下面我们就一次阉割掉这些被墙的请求。T_T
+
+**1.替换Google JS公共库**
+
+Octopress默认使用的是Google的JS公共库地址，加载的过程无比的缓慢。因此我们要把它改为[百度的JS公共库](http://developer.baidu.com/wiki/index.php?title=docs/cplat/libs)，需要把`/source/_includes/head.html`文件中的Google公共库地址改为：
+
+	<script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+
+**2.去掉Twitter**
+
+从上图可以看出加载失败的还有twitter，这个也得给去掉。
+
+把在根目录下的`_config.yml`文件中Twitter内容给注释掉。
+
+	# Twitter
+	#twitter_user:
+	#twitter_tweet_button: true
+把`\source\_includes\after_footer.html`文件中的twitter内容给注释掉：
+
+	{% raw %}<!--{% include twitter_sharing.html %}-->{% endraw %}
+
+**3.删除Google font**
+
+把在`\source\_includes\custom\head.html`中的Google font样式给删除：
+
+	<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+	<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+##设置链接在新窗口打开
+在博文中，如果点击链接直接在本窗口打开了，那么用户体验就不是很好。而markdown的标准语法是不支持链接在新窗口打开的，虽然可以通过在markdown中直接写html标签来解决这个问题，但是这与markdown的简洁书写特性不符。但是我们可以通过设置Octopress来达到这种效果，即在`\source\_includes\custom\head.html`文件中添加如下一段代码：
+
+	<script>
+		function addBlankTargetForLinks () {
+		  $('a[href^="http"]').each(function(){
+			  $(this).attr('target', '_blank');
+		  });
+		}
+	
+		$(document).bind('DOMNodeInserted', function(event) {
+		  addBlankTargetForLinks();
+		});
+	</script>
+##首页文章以摘要形式展示
+1.在文章对应的markdown文件中，在需要显示在首页的文字后面添加`<!--more-->`，执行rake generate后在首页上会看到只显示<!—more—>前面的文字，文字后面会显示`Read on`链接，点击后进入文字的详细页面;
+
+2.如果想将Read on修改为中文，可以修改_config.yml文件
+
+	#excerpt_link: "Read on &rarr;"  # "Continue reading" link text at the bottom of excerpted articles
+	excerpt_link: "阅读全文&rarr;"  # "Continue reading" link text at the bottom of excerpted articles
+
+##代码着色
+Octopress使用的是Pygments来进行代码着色的，使用方式也比较简单如下所示：
+
+	```java xxx.java
+	//java code
+	```
+
+[Pygments支持的语言列表](http://pygments.org/languages/)
+##添加侧边栏文章分类（category）
+1.在`plugins`目录下创建`category_list_tag.rb`文件，内容如下：
+
+	module Jekyll 
+	  class CategoryListTag < Liquid::Tag 
+	    def render(context) 
+	      html = "" 
+	      categories = context.registers[:site].categories.keys 
+	      categories.sort.each do |category| 
+	        posts_in_category = context.registers[:site].categories[category].size 
+	        category_dir = context.registers[:site].config['category_dir'] 
+	        category_url = File.join(category_dir, category.gsub(/_|\P{Word}/, '-').gsub(/-{2,}/, '-').downcase) 
+	        html << "<li class='category'><a href='/#{category_url}/'>#{category} (#{posts_in_category})</a></li>\n" 
+	      end 
+	      html 
+	    end 
+	  end 
+	end
+	
+	Liquid::Template.register_tag('category_list', Jekyll::CategoryListTag)
+
+2.添加`source/_includes/asides/category_list.html`文件，内容如下：
+	{% raw %}
+	<section>
+	  <h1>文章分类</h1>
+	  <ul id="categories">
+	    {% category_list %}
+	  </ul>
+	</section>
+	{% endraw %}
+3.修改`_config.yml`文件，在`default_asides`项中添加`asides/category_list.html`，值之间以逗号隔开，值的先后顺序代表了侧边栏展现的先后顺序。
+
+	default_asides: [asides/category_list.html, asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+
+在侧边栏还可以添加其他组件，如微博、标签云等，添加方式和上面类似。
+
+##添加多说评论
+Octopress默认自带了DISQUS，但是对于国内不是很好用。所以在经过考虑之后选择了国内比较流行的多说评论系统。
+首先要去[多说网站注册](http://duoshuo.com/)，获取站点的`short_name`。
+
+在`_config.yml`中添加
+
+	# duoshuo comments
+	duoshuo_comments: true
+	duoshuo_short_name: yourname
+在`./source/_layouts/post.html`中的`disqus`代码
+
+	{% if site.disqus_short_name and page.comments == true %}
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
+	  </section>
+	{% endif %}
+
+下方添加多说评论模块：
+	{% raw %}
+	{% if site.duoshuo_short_name and site.duoshuo_comments == true and page.comments == true %}
+	  <section>
+	    <h1>Comments</h1>
+	    <div id="comments" aria-live="polite">{% include post/duoshuo.html %}</div>
+	  </section>
+	{% endif %}
+	{% endraw %}
+如果你希望一些单独的页面下方也放置评论功能，那么在`./source/_layouts/page.html`中也做如上修改。
+然后创建一个`./source/_includes/post/duoshuo.html`文件，内容如下：
+
+	<!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread" data-title="{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}"></div>
+	<script type="text/javascript">
+	  var duoshuoQuery = {short_name:"{{ site.duoshuo_short_name }}"};
+	  (function() {
+	    var ds = document.createElement('script');
+	    ds.type = 'text/javascript';ds.async = true;
+	    ds.src = 'http://static.duoshuo.com/embed.js';
+	    ds.charset = 'UTF-8';
+	    (document.getElementsByTagName('head')[0] 
+	    || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+	<!-- Duoshuo Comment END -->
+最后再修改`_includes/article.html`文件，在
+
+	{% if site.disqus_short_name and page.comments != false and post.comments != false and site.disqus_show_comment_count == true %}
+	         | <a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#disqus_thread">Comments</a>
+	{% endif %}
+下方添加下面代码：
+
+	{% raw %}
+	{% if site.duoshuo_short_name and page.comments != false and post.comments != false and site.duoshuo_comments == true %}
+          | <a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#comments">Comments</a>
+	{% endif %}
+	{% endraw %}
+
+
+
+
+作者：[李天炜](http://tianweili.github.com/)
+
+原文链接：<http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/>
+
+转载请注明作者和文章出处，谢谢。
