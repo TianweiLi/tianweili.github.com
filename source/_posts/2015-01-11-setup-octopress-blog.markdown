@@ -85,7 +85,7 @@ Octopress使用的是Pygments来进行代码着色的，使用方式也比较简
 
 [Pygments支持的语言列表](http://pygments.org/languages/)
 
-另外如果想让一段代码以博文内容形式展示出来，而不要让Octopress解析成HTML，那么可以在代码前后加入`{% raw %}`和`{% endraw %}`代码。
+有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入{% raw %}和{% endraw %}代码。
 
 ##添加侧边栏文章分类（category）
 1.在`plugins`目录下创建`category_list_tag.rb`文件，内容如下：
