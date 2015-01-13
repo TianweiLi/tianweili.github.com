@@ -16,6 +16,7 @@ description: Octopress博客的一些个性化配置，如何提高Octopress博�
 * 代码着色
 * 添加侧边栏文章分类
 * 添加多说评论系统
+* 自动为图片添加URL前缀
 
 <!--more-->
 原文链接：<http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/>
@@ -23,7 +24,7 @@ description: Octopress博客的一些个性化配置，如何提高Octopress博�
 ##提高博客访问速度
 因为“墙”的关系，所以Octopress建立以后会发现访问速度奇慢无比，竟然超过了40s。
 
-![call-octopress-blog-slowly](http://7u2i08.com1.z0.glb.clouddn.com/setup-octopress-blog/call-octopress-blog-slowly.png)
+{% img /setup-octopress-blog/call-octopress-blog-slowly.png %}
 
 仔细分析后我们发现其中都是一些被墙的请求报了404Error，所以导致访问博客巨慢无比，下面我们就一次阉割掉这些被墙的请求。T_T
 
@@ -83,6 +84,9 @@ Octopress使用的是Pygments来进行代码着色的，使用方式也比较简
 	```
 
 [Pygments支持的语言列表](http://pygments.org/languages/)
+
+另外如果想让一段代码以博文内容形式展示出来，而不要让Octopress解析成HTML，那么可以在代码前后加入`{% raw %}`和`{% endraw %}`代码。
+
 ##添加侧边栏文章分类（category）
 1.在`plugins`目录下创建`category_list_tag.rb`文件，内容如下：
 
@@ -176,8 +180,28 @@ Octopress默认自带了DISQUS，但是对于国内不是很好用。所以在�
 	{% endif %}
 	{% endraw %}
 
+##自动为图片添加url前缀
 
+我把图片资源都[放在了七牛云存储](https://portal.qiniu.com/)上，写博客时候就是用七牛的外链。但是这样有几个问题：
 
+* 每次写博客插入图片外链地址时候都很麻烦，需要给每张图片都添加七牛外链地址url前缀；
+* 如果以后更换了存储，那就麻烦了，需要依次编辑替换每个图片的url前缀
+
+现在我们就使用一种灵活的方式来配置并自动生成图片的URL前缀：
+
+首先修改`/plugins/image_tag.rb`文件，在`@img['class'].gsub!(/"/, '') if @img['class']`后添加下面一行代码：
+
+```ruby ./plugins/image_tag.rb
+@img['src'] = Jekyll.configuration({})['static_file_prefix'] + @img['src'] if @img['src'][0] == '/'
+```
+然后再修改根目录下的`_config.yml`文件，添加如下配置：
+
+	# Add url prefix for image automatically
+	static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
+
+最后我们在插入图片的时候要记住不能再使用Markdown语法来写了，要[使用Ocotpress自定义的IMG标签来插入图片](http://octopress.org/docs/plugins/image-tag/)。
+
+本地预览先generate后preview，这样一来插入图片就灵活方便多了。
 
 作者：[李天炜](http://tianweili.github.com/)
 

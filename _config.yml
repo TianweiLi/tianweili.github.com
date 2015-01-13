@@ -104,3 +104,6 @@ facebook_like: false
 # duoshuo comments
 duoshuo_comments: true
 duoshuo_short_name: tianweili
+
+# Add url prefix for image automatically
+static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
