@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[李天炜]]></title>
-  <link href="http://tianweili.github.io/tianweili@github/atom.xml" rel="self"/>
-  <link href="http://tianweili.github.io/tianweili@github/"/>
-  <updated>2015-01-12T11:28:17+08:00</updated>
-  <id>http://tianweili.github.io/tianweili@github/</id>
+  <link href="http://tianweili.github.io/atom.xml" rel="self"/>
+  <link href="http://tianweili.github.io/"/>
+  <updated>2015-01-13T11:20:11+08:00</updated>
+  <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Octopress博客的个性化配置]]></title>
-    <link href="http://tianweili.github.io/tianweili@github/blog/2015/01/11/setup-octopress-blog/"/>
+    <link href="http://tianweili.github.io/blog/2015/01/11/setup-octopress-blog/"/>
     <updated>2015-01-11T21:52:49+08:00</updated>
-    <id>http://tianweili.github.io/tianweili@github/blog/2015/01/11/setup-octopress-blog</id>
+    <id>http://tianweili.github.io/blog/2015/01/11/setup-octopress-blog</id>
     <content type="html"><![CDATA[<p>本文主要讲述了对Octopress搭建的博客进行一些个性化的配置，主要包括以下几个方面：</p>
 
 <ul>
@@ -27,6 +27,7 @@
 <li>代码着色</li>
 <li>添加侧边栏文章分类</li>
 <li>添加多说评论系统</li>
+<li>自动为图片添加URL前缀</li>
 </ul>
 
 
@@ -112,7 +113,7 @@ excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bo
 
 <p><a href="http://pygments.org/languages/">Pygments支持的语言列表</a></p>
 
-<p>另外如果想让一段代码以博文内容形式展示出来，而不要让Octopress解析成HTML，那么可以在代码前后加入<code>和</code>代码。</p>
+<p>有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入和代码。</p>
 
 <h2>添加侧边栏文章分类（category）</h2>
 
@@ -127,7 +128,7 @@ excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bo
         posts_in_category = context.registers[:site].categories[category].size 
         category_dir = context.registers[:site].config['category_dir'] 
         category_url = File.join(category_dir, category.gsub(/_|\P{Word}/, '-').gsub(/-{2,}/, '-').downcase) 
-        html &lt;&lt; "&lt;li class='category'&gt;&lt;a href='http://tianweili.github.io/tianweili@github/#{category_url}/'&gt;#{category} (#{posts_in_category})&lt;/a&gt;&lt;/li&gt;\n" 
+        html &lt;&lt; "&lt;li class='category'&gt;&lt;a href='http://tianweili.github.io/#{category_url}/'&gt;#{category} (#{posts_in_category})&lt;/a&gt;&lt;/li&gt;\n" 
       end 
       html 
     end 
@@ -245,9 +246,9 @@ static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
   
   <entry>
     <title type="html"><![CDATA[windows下搭建Octopress博客]]></title>
-    <link href="http://tianweili.github.io/tianweili@github/blog/2015/01/11/create-octopress-blog-in-windows/"/>
+    <link href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/"/>
     <updated>2015-01-11T21:43:31+08:00</updated>
-    <id>http://tianweili.github.io/tianweili@github/blog/2015/01/11/create-octopress-blog-in-windows</id>
+    <id>http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows</id>
     <content type="html"><![CDATA[<!--more-->
 
 
@@ -307,9 +308,9 @@ rake setup_github_pages
   
   <entry>
     <title type="html"><![CDATA[第一篇博文]]></title>
-    <link href="http://tianweili.github.io/tianweili@github/blog/2015/01/10/my-first-blog/"/>
+    <link href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/"/>
     <updated>2015-01-10T01:28:08+08:00</updated>
-    <id>http://tianweili.github.io/tianweili@github/blog/2015/01/10/my-first-blog</id>
+    <id>http://tianweili.github.io/blog/2015/01/10/my-first-blog</id>
     <content type="html"><![CDATA[<p>新的一年，又一个新的博客！</p>
 
 <p>IT干了几年，博客社区也换了几次。至今没有遇到特别中意的社区，<a href="http://www.cnblogs.com/hellojava/">最近一次用得比较久的博客就是博客园了</a>，在博客园写博客给我的感觉相对是比较好的，但是仍然不能让我满意。于是我动起了自己搭建博客的念头，多方搜索比较下选择使用<a href="http://octopress.org/">Octopress</a>+<a href="https://pages.github.com/">GitHub Pages</a>来搭建自己的个人博客。</p>
