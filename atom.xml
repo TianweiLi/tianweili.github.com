@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-01-13T11:20:11+08:00</updated>
+  <updated>2015-01-14T14:57:17+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -28,6 +28,7 @@
 <li>添加侧边栏文章分类</li>
 <li>添加多说评论系统</li>
 <li>自动为图片添加URL前缀</li>
+<li>添加访客统计</li>
 </ul>
 
 
@@ -235,6 +236,36 @@ static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
 <p>最后我们在插入图片的时候要记住不能再使用Markdown语法来写了，要<a href="http://octopress.org/docs/plugins/image-tag/">使用Ocotpress自定义的IMG标签来插入图片</a>。</p>
 
 <p>本地预览先generate后preview，这样一来插入图片就灵活方便多了。</p>
+
+<h2>添加访客统计</h2>
+
+<p>本博客的访客统计系统使用的是Flag Counter，所以要<a href="http://www.flagcounter.com/">先去Flag Counter获取代码</a>。</p>
+
+<p>拿到代码后添加<code>.\source\_includes\custom\asides\flag_counter.html</code>文件：</p>
+
+<figure class='code'><figcaption><span>flag_counter.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;section&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;h1&gt;</span>访客统计<span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;br/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://s07.flagcounter.com/more/2SH&quot;</span><span class="nt">&gt;&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://s07.flagcounter.com/count/2SH/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/&quot;</span> <span class="na">alt=</span><span class="s">&quot;Flag Counter&quot;</span> <span class="na">border=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/section&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>将页面添加到侧边栏，在<code>./_config.yml</code>配置文件中添加下面一行配置：</p>
+
+<pre><code>default_asides: [……, custom/asides/flag_counter.html]
+</code></pre>
+
+<p>最后添加控制开关，在<code>./_config.yml</code>配置文件中添加下面一行配置：</p>
+
+<pre><code># Flag Counter
+flag_counter: true
+</code></pre>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
