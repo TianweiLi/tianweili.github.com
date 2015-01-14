@@ -4,7 +4,7 @@ title: "Octopress博客的个性化配置"
 date: 2015-01-11 21:52:49 +0800
 comments: true
 categories: Technology
-keywords: octopress,blog,github,优化访问速度，多说评论
+keywords: octopress, blog, github, 优化访问速度， 多说评论， 添加访客统计
 description: Octopress博客的一些个性化配置，如何提高Octopress博客访问速度，增加文章分类，添加多说评论系统，添加访客统计等。
 ---
 
@@ -225,6 +225,15 @@ Octopress默认自带了DISQUS，但是对于国内不是很好用。所以在�
 	# Flag Counter
 	flag_counter: true
 
+##SEO
+
+[百度站长工具](http://zhanzhang.baidu.com/site/index)
+
+[百度统计](http://tongji.baidu.com/web/9700918/overview/sole?siteId=6181997)
+
+[Google Analytics](https://www.google.com/analytics/web/?authuser=0#home/a58552615w92512090p96324524/)
+
+[Google站长工具](https://www.google.com/webmasters/tools/home?hl=zh-CN&siteUrl=http://tianweili.github.io/&authuser=0)
 
 作者：[李天炜](http://tianweili.github.com/)
 
