@@ -5,7 +5,7 @@ date: 2015-01-11 21:52:49 +0800
 comments: true
 categories: Technology
 keywords: octopress,blog,github,优化访问速度，多说评论
-description: Octopress博客的一些个性化配置，如何提高Octopress博客访问速度，增加文章分类，添加多说评论系统等。
+description: Octopress博客的一些个性化配置，如何提高Octopress博客访问速度，增加文章分类，添加多说评论系统，添加访客统计等。
 ---
 
 本文主要讲述了对Octopress搭建的博客进行一些个性化的配置，主要包括以下几个方面：
@@ -17,6 +17,7 @@ description: Octopress博客的一些个性化配置，如何提高Octopress博�
 * 添加侧边栏文章分类
 * 添加多说评论系统
 * 自动为图片添加URL前缀
+* 添加访客统计
 
 <!--more-->
 原文链接：<http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/>
@@ -202,6 +203,28 @@ Octopress默认自带了DISQUS，但是对于国内不是很好用。所以在�
 最后我们在插入图片的时候要记住不能再使用Markdown语法来写了，要[使用Ocotpress自定义的IMG标签来插入图片](http://octopress.org/docs/plugins/image-tag/)。
 
 本地预览先generate后preview，这样一来插入图片就灵活方便多了。
+
+##添加访客统计
+本博客的访客统计系统使用的是Flag Counter，所以要[先去Flag Counter获取代码](http://www.flagcounter.com/)。
+
+拿到代码后添加`.\source\_includes\custom\asides\flag_counter.html`文件：
+
+```html flag_counter.html
+<section>
+	<h1>访客统计</h1>
+	<br/>
+	<a href="http://s07.flagcounter.com/more/2SH"><img src="http://s07.flagcounter.com/count/2SH/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0"></a>
+</section>
+```
+将页面添加到侧边栏，在`./_config.yml`配置文件中添加下面一行配置：
+
+	default_asides: [……, custom/asides/flag_counter.html]
+
+最后添加控制开关，在`./_config.yml`配置文件中添加下面一行配置：
+
+	# Flag Counter
+	flag_counter: true
+
 
 作者：[李天炜](http://tianweili.github.com/)
 
