@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-01-14T16:11:32+08:00</updated>
+  <updated>2015-01-14T16:39:06+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -266,6 +266,16 @@ static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
 <pre><code># Flag Counter
 flag_counter: true
 </code></pre>
+
+<h2>SEO</h2>
+
+<p><a href="http://zhanzhang.baidu.com/site/index">百度站长工具</a></p>
+
+<p><a href="http://tongji.baidu.com/web/9700918/overview/sole?siteId=6181997">百度统计</a></p>
+
+<p><a href="https://www.google.com/analytics/web/?authuser=0#home/a58552615w92512090p96324524/">Google Analytics</a></p>
+
+<p><a href="https://www.google.com/webmasters/tools/home?hl=zh-CN&amp;siteUrl=http://tianweili.github.io/&amp;authuser=0">Google站长工具</a></p>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
