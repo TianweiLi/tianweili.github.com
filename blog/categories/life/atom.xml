@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Life | 李天炜]]></title>
-  <link href="http://tianweili.github.io/tianweili@github/blog/categories/life/atom.xml" rel="self"/>
-  <link href="http://tianweili.github.io/tianweili@github/"/>
-  <updated>2015-01-11T22:17:37+08:00</updated>
-  <id>http://tianweili.github.io/tianweili@github/</id>
+  <link href="http://tianweili.github.io/blog/categories/life/atom.xml" rel="self"/>
+  <link href="http://tianweili.github.io/"/>
+  <updated>2015-01-26T21:28:24+08:00</updated>
+  <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[第一篇博文]]></title>
-    <link href="http://tianweili.github.io/tianweili@github/blog/2015/01/10/my-first-blog/"/>
+    <link href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/"/>
     <updated>2015-01-10T01:28:08+08:00</updated>
-    <id>http://tianweili.github.io/tianweili@github/blog/2015/01/10/my-first-blog</id>
+    <id>http://tianweili.github.io/blog/2015/01/10/my-first-blog</id>
     <content type="html"><![CDATA[<p>新的一年，又一个新的博客！</p>
 
 <p>IT干了几年，博客社区也换了几次。至今没有遇到特别中意的社区，<a href="http://www.cnblogs.com/hellojava/">最近一次用得比较久的博客就是博客园了</a>，在博客园写博客给我的感觉相对是比较好的，但是仍然不能让我满意。于是我动起了自己搭建博客的念头，多方搜索比较下选择使用<a href="http://octopress.org/">Octopress</a>+<a href="https://pages.github.com/">GitHub Pages</a>来搭建自己的个人博客。</p>

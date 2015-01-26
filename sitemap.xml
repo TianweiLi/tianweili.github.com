@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://tianweili.github.io/tianweili@github/blog/2015/01/11/setup-octopress-blog/</loc>
+    <loc>http://tianweili.github.io/blog/2015/01/26/java-filter/</loc>
+    <lastmod>2015-01-26T17:07:51+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://tianweili.github.io/blog/2015/01/11/setup-octopress-blog/</loc>
     <lastmod>2015-01-11T21:52:49+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://tianweili.github.io/tianweili@github/blog/2015/01/11/create-octopress-blog-in-windows/</loc>
+    <loc>http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/</loc>
     <lastmod>2015-01-11T21:43:31+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://tianweili.github.io/tianweili@github/blog/2015/01/10/my-first-blog/</loc>
+    <loc>http://tianweili.github.io/blog/2015/01/10/my-first-blog/</loc>
     <lastmod>2015-01-10T01:28:08+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://tianweili.github.io/tianweili@github/blog/archives/</loc>
-    <lastmod>2015-01-11T22:17:37+08:00</lastmod>
+    <loc>http://tianweili.github.io/blog/archives/</loc>
+    <lastmod>2015-01-26T21:28:24+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://tianweili.github.io/tianweili@github/</loc>
-    <lastmod>2015-01-11T22:17:37+08:00</lastmod>
+    <loc>http://tianweili.github.io/</loc>
+    <lastmod>2015-01-26T21:28:24+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://tianweili.github.io/tianweili@github/aboutme/</loc>
-    <lastmod>2015-01-11T22:17:37+08:00</lastmod>
+    <loc>http://tianweili.github.io/aboutme/</loc>
+    <lastmod>2015-01-26T21:28:24+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://tianweili.github.io/googleab9435bdc2dd6478.html</loc>
+    <lastmod>2015-01-26T19:36:55+08:00</lastmod>
+    <priority>0.6</priority>
   </url>
 </urlset>
