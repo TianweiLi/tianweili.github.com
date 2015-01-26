@@ -8,9 +8,28 @@ keywords: java, filter
 description: Java中的Filter过滤器详解
 ---
 
-Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。
+本文主要详细介绍了Filter的以下几个方面内容：
+
+* Filter概念介绍
+* Filter的用途
+* 如何借助Filter实现拦截功能
+* Filter的开发步骤和配置详解
+* Filter链
+* Filter的生命周期
+* Filter的使用案例
+	* 使用Filter验证用户登录安全控制
+	* 防止中文乱码过滤器
+	* Spring+Hibernate的OpenSessionInViewFilter控制session的开关
+	* Struts2的web.xml配置
+
+
 <!--more-->
+
 原文链接：<http://tianweili.github.com/blog/2015/01/26/java-filter/>
+
+##Filter简介
+
+Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。
 
 它主要用于对用户请求进行预处理，也可以对HttpServletResponse 进行后处理。使用Filter 的完整流程：Filter 对用户请求进行预处理，接着将请求交给Servlet 进行处理并生成响应，最后Filter 再对服务器响应进行后处理。
 
@@ -20,7 +39,7 @@ Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开�
 * 在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。根据需要检查 HttpServletResponse ，也可以修改HttpServletResponse头和数据。
 
 
-##如何实现拦截
+##如何借助Filter实现拦截功能
 
 Filter接口中有一个doFilter方法，当开发人员编写好Filter，并配置对哪个web资源进行拦截后，WEB服务器每次在调用web资源的service方法之前，都会先调用一下filter的doFilter方法，因此，在该方法内编写代码可达到如下目的：
 
@@ -31,9 +50,8 @@ web服务器在调用doFilter方法时，会传递一个filterChain对象进来�
 
 ##Filter开发两步走
 
-编写java类实现Filter接口，并实现其doFilter方法。
-
-在 web.xml 文件中使用<filter>和<filter-mapping>元素对编写的filter类进行注册，并设置它所能拦截的资源。
+1. 编写java类实现Filter接口，并实现其doFilter方法。
+2. 在 web.xml 文件中使用<filter>和<filter-mapping>元素对编写的filter类进行注册，并设置它所能拦截的资源。
 
 web.xml配置各节点介绍：
 ```XML
