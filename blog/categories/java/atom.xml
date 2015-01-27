@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-01-27T19:23:39+08:00</updated>
+  <updated>2015-01-27T19:34:29+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -48,6 +48,87 @@
 <p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/27/java-listener/">http://tianweili.github.com/blog/2015/01/27/java-listener/</a></p>
 
 <p><a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">之前写了一篇关于Filter的文章</a>，现在再来一篇Listener的，Filter和Listener在项目中是经常用到的，巧妙的使用可以达到事半功倍的效果。故把两者的用法总结一下。</p>
+
+<h2>Listener的定义与作用</h2>
+
+<p>监听器Listener就是在application,session,request三个对象创建、销毁或者往其中添加修改删除属性时自动执行代码的功能组件。</p>
+
+<p>Listener是Servlet的监听器，可以监听客户端的请求，服务端的操作等。</p>
+
+<h2>Listener的分类与使用</h2>
+
+<p>主要有以下三类：</p>
+
+<h3>1、ServletContext监听</h3>
+
+<p>ServletContextListener：用于对Servlet整个上下文进行监听（创建、销毁）。</p>
+
+<pre><code class="java">//上下文初始化
+public void contextInitialized(ServletContextEvent sce);
+//上下文销毁
+public void contextDestroyed(ServletContextEvent sce);
+//ServletContextEvent事件：取得一个ServletContext（application）对象
+public ServletContext getServletContext();
+</code></pre>
+
+<p>ServletContextAttributeListener：对Servlet上下文属性的监听（增删改属性）。</p>
+
+<pre><code class="java">//增加属性
+public void attributeAdded(ServletContextAttributeEvent scab);
+//属性删除
+public void attributeRemoved(ServletContextAttributeEvent scab);
+//属性替换（第二次设置同一属性）
+public void attributeRepalced(ServletContextAttributeEvent scab);
+
+//ServletContextAttributeEvent事件：能取得设置属性的名称与内容
+//得到属性名称
+public String getName();
+//取得属性的值
+public Object getValue();
+</code></pre>
+
+<h3>2、Session监听</h3>
+
+<p>Session属于http协议下的内容，接口位于javax.servlet.http.*包下。</p>
+
+<p>HttpSessionListener接口：对Session的整体状态的监听。</p>
+
+<pre><code class="java">//session创建
+public void sessionCreated(HttpSessionEvent se);
+//session销毁
+public void sessionDestroyed(HttpSessionEvent se);
+
+//HttpSessionEvent事件：
+//取得当前操作的session
+public HttpSession getSession();
+</code></pre>
+
+<p>HttpSessionAttributeListener接口：对session的属性监听。</p>
+
+<pre><code class="java">public void attributeAdded(HttpSessionBindingEvent se);//增加属性
+public void attributeRemoved(HttpSessionBindingEvent se);//删除属性
+public void attributeReplaced(HttpSessionBindingEvent se);//替换属性
+
+//HttpSessionBindingEvent事件：
+public String getName();//取得属性的名称
+public Object getValue();//取得属性的值
+public HttpSession getSession();//取得当前的session
+</code></pre>
+
+<p>session的销毁有两种情况：</p>
+
+<p>1.session超时，web.xml配置：</p>
+
+<pre><code class="xml web.xml">&lt;session-config&gt;
+    &lt;session-timeout&gt;120&lt;/session-timeout&gt;&lt;!--session120分钟后超时销毁--&gt;
+&lt;/session-config&gt;
+</code></pre>
+
+<p>2.手工使session失效</p>
+
+<pre><code class="java">//使session失效方法。session.invalidate();
+public void invalidate();
+</code></pre>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
