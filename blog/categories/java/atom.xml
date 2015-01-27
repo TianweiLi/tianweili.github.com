@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-01-27T15:38:50+08:00</updated>
+  <updated>2015-01-27T15:43:43+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -18,7 +18,38 @@
     <link href="http://tianweili.github.io/blog/2015/01/27/java-listener/"/>
     <updated>2015-01-27T15:36:14+08:00</updated>
     <id>http://tianweili.github.io/blog/2015/01/27/java-listener</id>
-    <content type="html"><![CDATA[
+    <content type="html"><![CDATA[<p>本文介绍了Listener以下几个方面的内容：</p>
+
+<ul>
+<li>Listener的定义与作用</li>
+<li>Listener的分类与使用
+
+<ul>
+<li>ServletContext监听</li>
+<li>Session监听</li>
+<li>Request监听</li>
+</ul>
+</li>
+<li>Listener的应用实例
+
+<ul>
+<li>利用HttpSessionListener统计最多在线用户人数</li>
+<li>Spring使用ContextLoaderListener加载ApplicationContext配置信息</li>
+<li>Spring使用Log4jConfigListener配置Log4j日志</li>
+<li>Spring使用IntrospectorCleanupListener清理缓存</li>
+</ul>
+</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/27/java-listener/">http://tianweili.github.com/blog/2015/01/27/java-listener/</a></p>
+
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/27/java-listener/">http://tianweili.github.com/blog/2015/01/27/java-listener/</a></p>
 ]]></content>
   </entry>
   
