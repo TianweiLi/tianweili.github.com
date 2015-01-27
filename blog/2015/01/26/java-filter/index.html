@@ -190,13 +190,22 @@
 <p>web.xml配置各节点介绍：</p>
 
 <ul>
+<li><code>&lt;filter&gt;</code>指定一个过滤器。
+
+<ul>
 <li><code>&lt;filter-name&gt;</code>用于为过滤器指定一个名字，该元素的内容不能为空。</li>
 <li><code>&lt;filter-class&gt;</code>元素用于指定过滤器的完整的限定类名。</li>
 <li><code>&lt;init-param&gt;</code>元素用于为过滤器指定初始化参数，它的子元素<code>&lt;param-name&gt;</code>指定参数的名字，<code>&lt;param-value&gt;</code>指定参数的值。</li>
 <li>在过滤器中，可以使用<code>FilterConfig</code>接口对象来访问初始化参数。</li>
-<li><code>&lt;filter-mapping&gt;</code>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径</li>
+</ul>
+</li>
+<li><code>&lt;filter-mapping&gt;</code>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径
+
+<ul>
 <li><code>&lt;filter-name&gt;</code>子元素用于设置filter的注册名称。该值必须是在<code>&lt;filter&gt;</code>元素中声明过的过滤器的名字</li>
 <li><code>&lt;url-pattern&gt;</code>设置 filter 所拦截的请求路径(过滤器关联的URL样式)</li>
+</ul>
+</li>
 <li><code>&lt;servlet-name&gt;</code>指定过滤器所拦截的Servlet名称。</li>
 <li><code>&lt;dispatcher&gt;</code>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是<code>REQUEST</code>,<code>INCLUDE</code>,<code>FORWARD</code>和<code>ERROR</code>之一，默认<code>REQUEST</code>。用户可以设置多个<code>&lt;dispatcher&gt;</code>子元素用来指定 Filter 对资源的多种调用方式进行拦截。</li>
 <li><code>&lt;dispatcher&gt;</code>子元素可以设置的值及其意义
