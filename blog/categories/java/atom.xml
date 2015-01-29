@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-01-29T16:38:53+08:00</updated>
+  <updated>2015-01-29T16:48:31+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -52,6 +52,8 @@
 <!--more-->
 
 
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
+
 <h2>简介</h2>
 
 <p>jxl是一个韩国人写的java操作excel的工具, 在开源世界中，有两套比较有影响的API可供使用，一个是POI，一个是jExcelAPI。其中jExcelAPI功能相对POI比较弱一点。但jExcelAPI对中文支持非常好，API是纯Java的，并不依赖Windows系统，即使运行在Linux下，它同样能够正确的处理Excel文件。另外需要说明的是，这套API对图形和图表的支持很有限，而且仅仅识别PNG格式。</p>
@@ -66,7 +68,7 @@
 
 <p>以下实例是生成一个名为“test.xls”的Excel文件，其中第一个工作表被命名为“第一页”。编译执行后，会产生一个Excel文件。</p>
 
-<pre><code class="java">// 生成Excel的类 
+<pre><code class="java CreateExcel.java">// 生成Excel的类 
 import java.io.File;
 
 import jxl.Workbook;
@@ -135,6 +137,159 @@ WritableSheet.setColumnView( int i, int width);
 // 将第一列的宽度设为30
 sheet.setColumnView(0, 30);
 </code></pre>
+
+<h3>3、数据格式化</h3>
+
+<h4>字串格式化</h4>
+
+<p>字符串的格式化涉及到的是字体、粗细、字号等元素，这些功能主要由WritableFont和WritableCellFormat类来负责。</p>
+
+<p>WritableFont有非常丰富的构造子方法，供不同情况下使用，jExcelAPI的java-doc中有详细列表，这里不再列出。</p>
+
+<p>WritableCellFormat类非常重要，通过它可以指定单元格的各种属性，后面的单元格格式化中会有更多描述。</p>
+
+<pre><code class="java">//字体样式：宋体；11号；粗体
+WritableFont font1 = new WritableFont(WritableFont.createFont("宋体"), 11, WritableFont.BOLD);
+WritableCellFormat format1 = new  WritableCellFormat(font1);
+Label label = new  Label( 0 , 0 , "test", format1);
+</code></pre>
+
+<h4>对齐方式</h4>
+
+<p>在WritableCellFormat类中，还有一个很重要的方法是指定数据的对齐方式，比如针对我们上面的实例，可以指定：</p>
+
+<pre><code class="java">// 把水平对齐方式指定为居中 
+format1.setAlignment(jxl.format.Alignment.CENTRE);
+// 把垂直对齐方式指定为居中 
+format1.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+</code></pre>
+
+<h3>4、读取文件</h3>
+
+<pre><code class="java ReadExcel.java">// 读取Excel的类 
+import java.io.File;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+
+public class ReadExcel {
+    public static void main(String args[]) {
+        try {
+            Workbook book = Workbook.getWorkbook(new File("c:/test.xls"));
+            // 获得第一个工作表对象
+            Sheet sheet = book.getSheet(0);
+            // 得到第一列第一行的单元格
+            Cell cell = sheet.getCell(0, 0);
+            String contents = cell.getContents();//得到单元格内容
+            System.out.println(contents);
+            book.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+</code></pre>
+
+<p>程序的输出结果是：test。</p>
+
+<p>Cell接口的方法还可以获取单元格行、列位置，单元格是否隐藏等属性。具体的参考jxl的API。</p>
+
+<h3>5、修改文件</h3>
+
+<p>修改Excel文件除了打开文件的方式不同之外，其他与创建Excel是一样的。</p>
+
+<pre><code class="java UpdateExcel.java">// 修改Excel的类 
+import java.io.File;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+
+public class UpdateExcel {
+    public static void main(String args[]) {
+        try {
+            // 获得Excel文件
+            Workbook wb = Workbook.getWorkbook(new File("c:/test.xls"));
+            // 打开一个文件的副本，并且指定数据写回到原文件
+            WritableWorkbook book = Workbook.createWorkbook(new File("c:/test.xls"), wb);
+
+            //修改原工作表数据
+            WritableSheet sheet1 = book.getSheet(0);
+            sheet1.addCell(new Label(0, 0, "覆盖原来的test"));
+
+            // 添加一个新工作表
+            WritableSheet sheet2 = book.createSheet(" 第二页 ", 1);
+            sheet2.addCell(new Label(0, 0, " 第二页的测试数据 "));
+
+            book.write();
+            book.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+</code></pre>
+
+<h2>导出文件</h2>
+
+<p>附上一个导出文件例子。</p>
+
+<pre><code class="javascript">$( function() {
+    /** 报表导出按钮 */
+    $( '#exportBtn' ).click( function() {
+        if( !$( '#frm' ).validationEngine( 'validate' ) )
+            return false;
+        $( '#frm' )[ 0 ].action = '${ctx }/exportAction.do?m=exportExcel';
+        $( '#frm' )[ 0 ].submit();
+        $( this ).attr( 'disabled', true );
+        window.setTimeout( function() {
+            document.getElementById( 'exportBtn' ).disabled = false;
+        }, 5000 );
+    } );
+} );
+</code></pre>
+
+<pre><code class="java">/** 根据浏览器类型，转换为当前浏览器支持的中文*/
+String fileName = "Excel工作表";
+
+/** header 浏览器key */
+String userAgent = request.getHeader("USER-AGENT").toUpperCase();
+if (userAgent != null &amp;&amp; userAgent.length() != 0 &amp;&amp; fileName != null &amp;&amp; fileName.length() != 0) {
+    /** header IE */
+    if ( -1 != userAgent.indexOf("MSIE") )
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+    /** header Mozilla */
+    else if ( -1 != userAgent.indexOf("MOZILLA") )
+        fileName = new String(fileName.getBytes(), "ISO8859-1");
+    /** header Safari */
+    else if ( -1 != userAgent.indexOf("SAFARI") )
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
+    /** header Opera */
+    else if ( -1 != userAgent.indexOf("OPERA") )
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
+    /** header 其它内核浏览器 */
+    else
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
+}
+
+response.setCharacterEncoding("UTF-8");
+response.setContentType("application/vnd.ms-excel");
+response.setHeader("Content-disposition", new StringBuffer("attachment").append( ";filename=" ).append( fileName ).append(".xls").toString() );
+
+WritableWorkbook book = Workbook.createWorkbook(response.getOutputStream());
+WritableSheet sheet = book.createSheet("Excel工作表", 0);
+
+//...
+
+book.write();
+book.close();
+</code></pre>
+
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
 ]]></content>
   </entry>
   

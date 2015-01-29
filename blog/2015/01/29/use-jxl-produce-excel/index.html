@@ -161,6 +161,8 @@
 <!--more-->
 
 
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
+
 <h2>简介</h2>
 
 <p>jxl是一个韩国人写的java操作excel的工具, 在开源世界中，有两套比较有影响的API可供使用，一个是POI，一个是jExcelAPI。其中jExcelAPI功能相对POI比较弱一点。但jExcelAPI对中文支持非常好，API是纯Java的，并不依赖Windows系统，即使运行在Linux下，它同样能够正确的处理Excel文件。另外需要说明的是，这套API对图形和图表的支持很有限，而且仅仅识别PNG格式。</p>
@@ -175,7 +177,7 @@
 
 <p>以下实例是生成一个名为“test.xls”的Excel文件，其中第一个工作表被命名为“第一页”。编译执行后，会产生一个Excel文件。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>CreateExcel.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -302,7 +304,275 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h3>3、数据格式化</h3>
 
+<h4>字串格式化</h4>
+
+<p>字符串的格式化涉及到的是字体、粗细、字号等元素，这些功能主要由WritableFont和WritableCellFormat类来负责。</p>
+
+<p>WritableFont有非常丰富的构造子方法，供不同情况下使用，jExcelAPI的java-doc中有详细列表，这里不再列出。</p>
+
+<p>WritableCellFormat类非常重要，通过它可以指定单元格的各种属性，后面的单元格格式化中会有更多描述。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//字体样式：宋体；11号；粗体</span>
+</span><span class='line'><span class="n">WritableFont</span> <span class="n">font1</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">WritableFont</span><span class="o">(</span><span class="n">WritableFont</span><span class="o">.</span><span class="na">createFont</span><span class="o">(</span><span class="s">&quot;宋体&quot;</span><span class="o">),</span> <span class="mi">11</span><span class="o">,</span> <span class="n">WritableFont</span><span class="o">.</span><span class="na">BOLD</span><span class="o">);</span>
+</span><span class='line'><span class="n">WritableCellFormat</span> <span class="n">format1</span> <span class="o">=</span> <span class="k">new</span>  <span class="nf">WritableCellFormat</span><span class="o">(</span><span class="n">font1</span><span class="o">);</span>
+</span><span class='line'><span class="n">Label</span> <span class="n">label</span> <span class="o">=</span> <span class="k">new</span>  <span class="nf">Label</span><span class="o">(</span> <span class="mi">0</span> <span class="o">,</span> <span class="mi">0</span> <span class="o">,</span> <span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="n">format1</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>对齐方式</h4>
+
+<p>在WritableCellFormat类中，还有一个很重要的方法是指定数据的对齐方式，比如针对我们上面的实例，可以指定：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// 把水平对齐方式指定为居中 </span>
+</span><span class='line'><span class="n">format1</span><span class="o">.</span><span class="na">setAlignment</span><span class="o">(</span><span class="n">jxl</span><span class="o">.</span><span class="na">format</span><span class="o">.</span><span class="na">Alignment</span><span class="o">.</span><span class="na">CENTRE</span><span class="o">);</span>
+</span><span class='line'><span class="c1">// 把垂直对齐方式指定为居中 </span>
+</span><span class='line'><span class="n">format1</span><span class="o">.</span><span class="na">setVerticalAlignment</span><span class="o">(</span><span class="n">jxl</span><span class="o">.</span><span class="na">format</span><span class="o">.</span><span class="na">VerticalAlignment</span><span class="o">.</span><span class="na">CENTRE</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4、读取文件</h3>
+
+<figure class='code'><figcaption><span>ReadExcel.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// 读取Excel的类 </span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">jxl.Cell</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">jxl.Sheet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">jxl.Workbook</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ReadExcel</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">Workbook</span> <span class="n">book</span> <span class="o">=</span> <span class="n">Workbook</span><span class="o">.</span><span class="na">getWorkbook</span><span class="o">(</span><span class="k">new</span> <span class="nf">File</span><span class="o">(</span><span class="s">&quot;c:/test.xls&quot;</span><span class="o">));</span>
+</span><span class='line'>            <span class="c1">// 获得第一个工作表对象</span>
+</span><span class='line'>            <span class="n">Sheet</span> <span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="na">getSheet</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>            <span class="c1">// 得到第一列第一行的单元格</span>
+</span><span class='line'>            <span class="n">Cell</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="na">getCell</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">contents</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="na">getContents</span><span class="o">();</span><span class="c1">//得到单元格内容</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">contents</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">book</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>程序的输出结果是：test。</p>
+
+<p>Cell接口的方法还可以获取单元格行、列位置，单元格是否隐藏等属性。具体的参考jxl的API。</p>
+
+<h3>5、修改文件</h3>
+
+<p>修改Excel文件除了打开文件的方式不同之外，其他与创建Excel是一样的。</p>
+
+<figure class='code'><figcaption><span>UpdateExcel.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// 修改Excel的类 </span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">jxl.Workbook</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">jxl.write.Label</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">jxl.write.WritableSheet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">jxl.write.WritableWorkbook</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UpdateExcel</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// 获得Excel文件</span>
+</span><span class='line'>            <span class="n">Workbook</span> <span class="n">wb</span> <span class="o">=</span> <span class="n">Workbook</span><span class="o">.</span><span class="na">getWorkbook</span><span class="o">(</span><span class="k">new</span> <span class="nf">File</span><span class="o">(</span><span class="s">&quot;c:/test.xls&quot;</span><span class="o">));</span>
+</span><span class='line'>            <span class="c1">// 打开一个文件的副本，并且指定数据写回到原文件</span>
+</span><span class='line'>            <span class="n">WritableWorkbook</span> <span class="n">book</span> <span class="o">=</span> <span class="n">Workbook</span><span class="o">.</span><span class="na">createWorkbook</span><span class="o">(</span><span class="k">new</span> <span class="nf">File</span><span class="o">(</span><span class="s">&quot;c:/test.xls&quot;</span><span class="o">),</span> <span class="n">wb</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">//修改原工作表数据</span>
+</span><span class='line'>            <span class="n">WritableSheet</span> <span class="n">sheet1</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="na">getSheet</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">sheet1</span><span class="o">.</span><span class="na">addCell</span><span class="o">(</span><span class="k">new</span> <span class="nf">Label</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="s">&quot;覆盖原来的test&quot;</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">// 添加一个新工作表</span>
+</span><span class='line'>            <span class="n">WritableSheet</span> <span class="n">sheet2</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="na">createSheet</span><span class="o">(</span><span class="s">&quot; 第二页 &quot;</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">sheet2</span><span class="o">.</span><span class="na">addCell</span><span class="o">(</span><span class="k">new</span> <span class="nf">Label</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="s">&quot; 第二页的测试数据 &quot;</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">book</span><span class="o">.</span><span class="na">write</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">book</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>导出文件</h2>
+
+<p>附上一个导出文件例子。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="cm">/** 报表导出按钮 */</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;#exportBtn&#39;</span> <span class="p">).</span><span class="nx">click</span><span class="p">(</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;#frm&#39;</span> <span class="p">).</span><span class="nx">validationEngine</span><span class="p">(</span> <span class="s1">&#39;validate&#39;</span> <span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;#frm&#39;</span> <span class="p">)[</span> <span class="mi">0</span> <span class="p">].</span><span class="nx">action</span> <span class="o">=</span> <span class="s1">&#39;${ctx }/exportAction.do?m=exportExcel&#39;</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;#frm&#39;</span> <span class="p">)[</span> <span class="mi">0</span> <span class="p">].</span><span class="nx">submit</span><span class="p">();</span>
+</span><span class='line'>        <span class="nx">$</span><span class="p">(</span> <span class="k">this</span> <span class="p">).</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="kc">true</span> <span class="p">);</span>
+</span><span class='line'>        <span class="nb">window</span><span class="p">.</span><span class="nx">setTimeout</span><span class="p">(</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span> <span class="s1">&#39;exportBtn&#39;</span> <span class="p">).</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">},</span> <span class="mi">5000</span> <span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/** 根据浏览器类型，转换为当前浏览器支持的中文*/</span>
+</span><span class='line'><span class="n">String</span> <span class="n">fileName</span> <span class="o">=</span> <span class="s">&quot;Excel工作表&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/** header 浏览器key */</span>
+</span><span class='line'><span class="n">String</span> <span class="n">userAgent</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getHeader</span><span class="o">(</span><span class="s">&quot;USER-AGENT&quot;</span><span class="o">).</span><span class="na">toUpperCase</span><span class="o">();</span>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">userAgent</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">userAgent</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">fileName</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">fileName</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="cm">/** header IE */</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span> <span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">userAgent</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&quot;MSIE&quot;</span><span class="o">)</span> <span class="o">)</span>
+</span><span class='line'>        <span class="n">fileName</span> <span class="o">=</span> <span class="n">URLEncoder</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">fileName</span><span class="o">,</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="cm">/** header Mozilla */</span>
+</span><span class='line'>    <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span> <span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">userAgent</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&quot;MOZILLA&quot;</span><span class="o">)</span> <span class="o">)</span>
+</span><span class='line'>        <span class="n">fileName</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span><span class="n">fileName</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="s">&quot;ISO8859-1&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="cm">/** header Safari */</span>
+</span><span class='line'>    <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span> <span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">userAgent</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&quot;SAFARI&quot;</span><span class="o">)</span> <span class="o">)</span>
+</span><span class='line'>        <span class="n">fileName</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span> <span class="n">fileName</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="s">&quot;ISO8859-1&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="cm">/** header Opera */</span>
+</span><span class='line'>    <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span> <span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">userAgent</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&quot;OPERA&quot;</span><span class="o">)</span> <span class="o">)</span>
+</span><span class='line'>        <span class="n">fileName</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span> <span class="n">fileName</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="s">&quot;ISO8859-1&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="cm">/** header 其它内核浏览器 */</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>        <span class="n">fileName</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span> <span class="n">fileName</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="s">&quot;ISO8859-1&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="na">setCharacterEncoding</span><span class="o">(</span><span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="na">setContentType</span><span class="o">(</span><span class="s">&quot;application/vnd.ms-excel&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="na">setHeader</span><span class="o">(</span><span class="s">&quot;Content-disposition&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="nf">StringBuffer</span><span class="o">(</span><span class="s">&quot;attachment&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span> <span class="s">&quot;;filename=&quot;</span> <span class="o">).</span><span class="na">append</span><span class="o">(</span> <span class="n">fileName</span> <span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;.xls&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">()</span> <span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">WritableWorkbook</span> <span class="n">book</span> <span class="o">=</span> <span class="n">Workbook</span><span class="o">.</span><span class="na">createWorkbook</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">());</span>
+</span><span class='line'><span class="n">WritableSheet</span> <span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="na">createSheet</span><span class="o">(</span><span class="s">&quot;Excel工作表&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//...</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">book</span><span class="o">.</span><span class="na">write</span><span class="o">();</span>
+</span><span class='line'><span class="n">book</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
 </div>
 
 
