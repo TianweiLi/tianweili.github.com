@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Pattern | 李天炜]]></title>
+  <link href="http://tianweili.github.io/blog/categories/pattern/atom.xml" rel="self"/>
+  <link href="http://tianweili.github.io/"/>
+  <updated>2015-02-01T21:48:49+08:00</updated>
+  <id>http://tianweili.github.io/</id>
+  <author>
+    <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The Six Principle of Design Patterns]]></title>
+    <link href="http://tianweili.github.io/blog/2015/02/01/the-six-principle-of-design-patterns/"/>
+    <updated>2015-02-01T21:44:42+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/02/01/the-six-principle-of-design-patterns</id>
+    <content type="html"><![CDATA[<p>本文主要讲述了设计模式六大原则：</p>
+
+<ul>
+<li>单一职责原则</li>
+<li>里氏替换原则</li>
+<li>依赖倒置原则</li>
+<li>接口隔离原则</li>
+</ul>
+
+
+<!--more-->
+
+]]></content>
+  </entry>
+  
+</feed>

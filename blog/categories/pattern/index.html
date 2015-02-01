@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>windows下搭建Octopress博客 - 李天炜</title>
+  <title>Category: Pattern - 李天炜</title>
   <meta name="author" content="李天炜 litianwei2013[AT]gmail.com">
 
   
-  <meta name="description" content="在Windows下搭建Octopress博客。">
-  <meta name="keywords" content="octopress,blog,github">
+  <meta name="description" content="Category: pattern">
+  
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -19,7 +19,7 @@
   <meta name="baidu-site-verification" content="56FDlmWosN" />
 
   
-  <link rel="canonical" href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows">
+  <link rel="canonical" href="http://tianweili.github.io/blog/categories/pattern">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="李天炜" type="application/atom+xml">
@@ -104,146 +104,37 @@
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">windows下搭建Octopress博客</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-01-11T21:43:31+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:43 pm</span></time>
-        
-		
--		   | <a href="#comments">Comments</a>
--       
-      </p>
+    <h1 class="entry-title">Category: Pattern</h1>
     
   </header>
-
-
-<div class="entry-content"><!--more-->
-
-
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
-
-<h2>将博客发布到GitHub</h2>
-
-<p>进入博客源代码所在目录。编辑markdown后</p>
-
-<ol>
-<li>执行<code>rake new_post['my first blog']</code>来生成一篇博文；</li>
-<li>执行<code>rake generate</code>生成博客网页；</li>
-<li>执行<code>rake preview</code>后在本地输入&lt;localhost:4000>来预览博客；</li>
-<li>执行<code>rake setup_github_pages</code>命令后，按照提示输入对应的GitHub的repository地址：<code>git@github.com:TianweiLi/tianweili.github.com.git</code>；（不执行这一步会可能会报<code>No such file or directory - _deploy</code>错误）</li>
-<li>执行<code>rake deploy</code>将博客站点发布到GitHub<code>master</code>分支上，这样就可以访问博客了（这一步就是把public目录下文件push到master分支上）；</li>
-<li>将修改后的octopress源码push到GitHub的<code>source</code>分支上：</li>
-</ol>
-
-
-<p>依次执行下面命令</p>
-
-<pre><code>git add .
-git commit -m 'build octopress blog'
-git push origin source
-</code></pre>
-
-<h2>换一台电脑写博客</h2>
-
-<p>如果需要在另一台电脑写博客并提交上去，那么可以采用下面步骤来实现。</p>
-
-<p>先要找到GitHub的repository url，然后clone source分支到本地：</p>
-
-<pre><code>git clone -b source git@github.com:TianweiLi/tianweili.github.com.git octopress
-</code></pre>
-
-<p>然后clone master分支到本地：</p>
-
-<pre><code>cd octopress
-git clone git@github.com:TianweiLi/tianweili.github.com.git _deploy
-</code></pre>
-
-<p>然后进行一些相关依赖的安装，依次执行下面命令：</p>
-
-<pre><code>gem install bundler
-bundle install
-rake install
-rake setup_github_pages
-</code></pre>
-
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
-
-<p>转载请注明作者和文章出处，谢谢。</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">李天炜 litianwei2013[AT]gmail.com</span></span>
-
-      
+  <div id="blog-archives" class="category">
 
 
 
-
-<time class='entry-date' datetime='2015-01-11T21:43:31+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:43 pm</span></time>
-      
-
-<span class="categories">
   
-    <a class='category' href='/blog/categories/technology/'>technology</a>
+  <h2>2015</h2>
+
+<article>
   
-</span>
+<h1><a href="/blog/2015/02/01/the-six-principle-of-design-patterns/">The Six Principle of Design Patterns</a></h1>
+<time datetime="2015-02-01T21:44:42+08:00" pubdate><span class='month'>Feb</span> <span class='day'>01</span> <span class='year'>2015</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/design/'>design</a>, <a class='category' href='/blog/categories/pattern/'>pattern</a></span>
+</footer>
 
 
-    </p>
-    
-      <div class="sharing">
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2015/01/10/my-first-blog/" title="Previous Post: 第一篇博文">&laquo; 第一篇博文</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2015/01/11/setup-octopress-blog/" title="Next Post: Octopress博客的个性化配置">Octopress博客的个性化配置 &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
+</div>
 
-	<section>
-		<h1>Comments</h1>
-		<div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title="windows下搭建Octopress博客"></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"tianweili"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END --></div>
-	</section>
+  
+</article>
+
 
 </div>
 
