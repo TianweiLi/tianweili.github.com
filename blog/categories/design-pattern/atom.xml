@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Design-pattern | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/design-pattern/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-10T22:17:35+08:00</updated>
+  <updated>2015-02-10T22:23:50+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -19,6 +19,8 @@
     <updated>2015-02-01T21:44:42+08:00</updated>
     <id>http://tianweili.github.io/blog/2015/02/01/the-six-principle-of-design-patterns</id>
     <content type="html"><![CDATA[<p>本文主要讲述了设计模式六大原则：</p>
+
+<p>[TOC]</p>
 
 <ul>
 <li><a href="#1">单一职责原则</a></li>
