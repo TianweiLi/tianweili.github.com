@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Design-pattern | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/design-pattern/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-10T22:06:05+08:00</updated>
+  <updated>2015-02-10T22:17:35+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<p>本文主要讲述了设计模式六大原则：</p>
 
 <ul>
-<li>单一职责原则</li>
+<li><a href="#1">单一职责原则</a></li>
 <li>里氏替换原则</li>
 <li>依赖倒置原则</li>
 <li>接口隔离原则</li>
@@ -35,7 +35,8 @@
 
 <p>据说设计模式是区别程序员与软件设计师的标准之一。其实在编程学习初期就接触过设计模式，但是都没有写过多少代码是领悟不到设计模式真正的威力和必要性的。现在自认为也实践过不少段时间了，是时候总结一下设计模式。不知谁说过没有写过十万行以上代码别谈设计模式，虽然略显夸张，但是还是很有道理的。只有自己亲身经历过一些编写设计垃圾代码，才会深刻理解设计模式真正的意义所在。设计模式都是前辈大牛们在无数次实践中总结出来的，我辈自然要站在巨人肩膀上，实行拿来主义并消化使用之。</p>
 
-<h1>单一职责原则</h1>
+<h1 id="1">单一职责原则</h1>
+
 
 <h2>1、问题的由来</h2>
 
