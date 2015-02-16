@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-16T13:12:56+08:00</updated>
+  <updated>2015-02-16T13:31:43+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -21,124 +21,125 @@
     <content type="html"><![CDATA[<p>这段时间参与的项目要求做几张Excel报表，由于项目框架使用了jxl组件，所以把jxl组件的详细用法归纳总结一下。本文主要讲述了以下内容：</p>
 
 <ul>
-  <li>JXL及相关工具简介</li>
-  <li>如何安装JXL</li>
-  <li>JXL的基本操作
-    <ul>
-      <li>创建文件</li>
-      <li>单元格操作
-        <ul>
-          <li>合并单元格</li>
-          <li>行高和列宽</li>
-        </ul>
-      </li>
-      <li>数据格式化
-        <ul>
-          <li>字符串格式化</li>
-          <li>对齐方式</li>
-        </ul>
-      </li>
-      <li>读取文件</li>
-      <li>修改文件</li>
-    </ul>
-  </li>
-  <li>
-    <p>导出文件实例</p>
-  </li>
-  <li>Put anything here
-!TOC</li>
+<li>JXL及相关工具简介</li>
+<li>如何安装JXL</li>
+<li>JXL的基本操作
+
+<ul>
+<li>创建文件</li>
+<li>单元格操作
+
+<ul>
+<li>合并单元格</li>
+<li>行高和列宽</li>
 </ul>
+</li>
+<li>数据格式化
+
+<ul>
+<li>字符串格式化</li>
+<li>对齐方式</li>
+</ul>
+</li>
+<li>读取文件</li>
+<li>修改文件</li>
+</ul>
+</li>
+<li><p>导出文件实例</p></li>
+<li><p>Put anything here
+!TOC</p></li>
+</ul>
+
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
 
-<h2 id="section">简介</h2>
+<h2>简介</h2>
 
 <p>jxl是一个韩国人写的java操作excel的工具, 在开源世界中，有两套比较有影响的API可供使用，一个是POI，一个是jExcelAPI。其中jExcelAPI功能相对POI比较弱一点。但jExcelAPI对中文支持非常好，API是纯Java的，并不依赖Windows系统，即使运行在Linux下，它同样能够正确的处理Excel文件。另外需要说明的是，这套API对图形和图表的支持很有限，而且仅仅识别PNG格式。</p>
 
-<h2 id="section-1">搭建环境</h2>
+<h2>搭建环境</h2>
 
 <p>网上下载jxl.jar包，然后导入工程项目lib中，即可使用。</p>
 
-<h2 id="section-2">基本操作</h2>
+<h2>基本操作</h2>
 
-<h3 id="section-3">1、创建文件</h3>
+<h3>1、创建文件</h3>
 
 <p>以下实例是生成一个名为“test.xls”的Excel文件，其中第一个工作表被命名为“第一页”。编译执行后，会产生一个Excel文件。</p>
 
-<p>&#8220;`java CreateExcel.java
-// 生成Excel的类 
-import java.io.File;</p>
+<pre><code class="java CreateExcel.java">// 生成Excel的类 
+import java.io.File;
 
-<p>import jxl.Workbook;
+import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;</p>
+import jxl.write.WritableWorkbook;
 
-<p>public class CreateExcel {
+public class CreateExcel {
     public static void main(String args[]) {
         try {
             // 打开文件
-            WritableWorkbook book = Workbook.createWorkbook(new File(“c:/test.xls”));
+            WritableWorkbook book = Workbook.createWorkbook(new File("c:/test.xls"));
             // 生成名为“第一页”的工作表，参数0表示这是第一页
-            WritableSheet sheet = book.createSheet(“ 第一页 “, 0);
+            WritableSheet sheet = book.createSheet(" 第一页 ", 0);
             // 在Label对象的构造子中指名单元格位置是第一列第一行(0,0)
             // 以及单元格内容为test
-            Label label = new Label(0, 0, “ test “);
+            Label label = new Label(0, 0, " test ");
             // 将定义好的单元格添加到工作表中
-            sheet.addCell(label);</p>
+            sheet.addCell(label);
 
-<pre><code>        // 生成一个保存数字的单元格，必须使用Number的完整包路径，否则有语法歧义。
-        //单元格位置是第二列，第一行，值为123.456
-        jxl.write.Number number = new jxl.write.Number(1, 0, 123.456);
-        sheet.addCell(number);
+            // 生成一个保存数字的单元格，必须使用Number的完整包路径，否则有语法歧义。
+            //单元格位置是第二列，第一行，值为123.456
+            jxl.write.Number number = new jxl.write.Number(1, 0, 123.456);
+            sheet.addCell(number);
 
-        // 写入数据并关闭文件
-        book.write();
-        book.close();
-    } catch (Exception e) {
-        System.out.println(e);
+            // 写入数据并关闭文件
+            book.write();
+            book.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
-} } ```
+}
 </code></pre>
 
-<h3 id="section-4">2、单元格操作</h3>
+<h3>2、单元格操作</h3>
+
 <p>Excel中很重要的一部分是对单元格的操作，比如行高、列宽、单元格合并等，所幸jExcelAPI提供了这些支持。这些操作相对比较简单，下面只介绍一下相关的API。</p>
 
-<h4 id="section-5">合并单元格</h4>
+<h4>合并单元格</h4>
 
 <p>合并既可以是横向的，也可以是纵向的。合并后的单元格不能再次进行合并，否则会触发异常。</p>
 
-<p>&#8220;`java
-// 方法作用是从(m,n)到(p,q)的单元格全部合并
-WritableSheet.mergeCells( int m, int n, int p, int q);</p>
+<pre><code class="java">// 方法作用是从(m,n)到(p,q)的单元格全部合并
+WritableSheet.mergeCells( int m, int n, int p, int q);
 
-<p>// 合并第1列第1行到第3列第4行的所有单元格
-sheet.mergeCells(0, 0, 2, 3);</p>
+// 合并第1列第1行到第3列第4行的所有单元格
+sheet.mergeCells(0, 0, 2, 3);
 
-<p>// 先合并单元格，再添加内容。并且定义的列行方位在合并的单元格第一个列行方位，否则添加不上内容，如下所示：
-Label label = new Label(0, 0, “ 测试 “);
+// 先合并单元格，再添加内容。并且定义的列行方位在合并的单元格第一个列行方位，否则添加不上内容，如下所示：
+Label label = new Label(0, 0, " 测试 ");
 sheet.addCell(label);
-&#8220;`</p>
+</code></pre>
 
-<h4 id="section-6">行高和列宽</h4>
+<h4>行高和列宽</h4>
 
-<p>&#8220;`java
-// 作用是指定第i+1行的高度
-WritableSheet.setRowView( int i, int height);</p>
+<pre><code class="java">// 作用是指定第i+1行的高度
+WritableSheet.setRowView( int i, int height);
 
-<p>// 将第一行的高度设为200
-sheet.setRowView(0, 200);</p>
+// 将第一行的高度设为200
+sheet.setRowView(0, 200);
 
-<p>// 作用是指定第i+1列的宽度
-WritableSheet.setColumnView( int i, int width);</p>
+// 作用是指定第i+1列的宽度
+WritableSheet.setColumnView( int i, int width);
 
-<p>// 将第一列的宽度设为30
+// 将第一列的宽度设为30
 sheet.setColumnView(0, 30);
-&#8220;`</p>
+</code></pre>
 
-<h3 id="section-7">3、数据格式化</h3>
+<h3>3、数据格式化</h3>
 
-<h4 id="section-8">字串格式化</h4>
+<h4>字串格式化</h4>
 
 <p>字符串的格式化涉及到的是字体、粗细、字号等元素，这些功能主要由WritableFont和WritableCellFormat类来负责。</p>
 
@@ -146,38 +147,35 @@ sheet.setColumnView(0, 30);
 
 <p>WritableCellFormat类非常重要，通过它可以指定单元格的各种属性，后面的单元格格式化中会有更多描述。</p>
 
-<p><code>java
-//字体样式：宋体；11号；粗体
+<pre><code class="java">//字体样式：宋体；11号；粗体
 WritableFont font1 = new WritableFont(WritableFont.createFont("宋体"), 11, WritableFont.BOLD);
 WritableCellFormat format1 = new  WritableCellFormat(font1);
 Label label = new  Label( 0 , 0 , "test", format1);
-</code></p>
+</code></pre>
 
-<h4 id="section-9">对齐方式</h4>
+<h4>对齐方式</h4>
 
 <p>在WritableCellFormat类中，还有一个很重要的方法是指定数据的对齐方式，比如针对我们上面的实例，可以指定：</p>
 
-<p><code>java
-// 把水平对齐方式指定为居中 
+<pre><code class="java">// 把水平对齐方式指定为居中 
 format1.setAlignment(jxl.format.Alignment.CENTRE);
 // 把垂直对齐方式指定为居中 
 format1.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-</code></p>
+</code></pre>
 
-<h3 id="section-10">4、读取文件</h3>
+<h3>4、读取文件</h3>
 
-<p>&#8220;`java ReadExcel.java
-// 读取Excel的类 
-import java.io.File;</p>
+<pre><code class="java ReadExcel.java">// 读取Excel的类 
+import java.io.File;
 
-<p>import jxl.Cell;
+import jxl.Cell;
 import jxl.Sheet;
-import jxl.Workbook;</p>
+import jxl.Workbook;
 
-<p>public class ReadExcel {
+public class ReadExcel {
     public static void main(String args[]) {
         try {
-            Workbook book = Workbook.getWorkbook(new File(“c:/test.xls”));
+            Workbook book = Workbook.getWorkbook(new File("c:/test.xls"));
             // 获得第一个工作表对象
             Sheet sheet = book.getSheet(0);
             // 得到第一列第一行的单元格
@@ -190,55 +188,54 @@ import jxl.Workbook;</p>
         }
     }
 }
-&#8220;`</p>
+</code></pre>
 
 <p>程序的输出结果是：test。</p>
 
 <p>Cell接口的方法还可以获取单元格行、列位置，单元格是否隐藏等属性。具体的参考jxl的API。</p>
 
-<h3 id="section-11">5、修改文件</h3>
+<h3>5、修改文件</h3>
 
 <p>修改Excel文件除了打开文件的方式不同之外，其他与创建Excel是一样的。</p>
 
-<p>&#8220;`java UpdateExcel.java
-// 修改Excel的类 
-import java.io.File;</p>
+<pre><code class="java UpdateExcel.java">// 修改Excel的类 
+import java.io.File;
 
-<p>import jxl.Workbook;
+import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;</p>
+import jxl.write.WritableWorkbook;
 
-<p>public class UpdateExcel {
+public class UpdateExcel {
     public static void main(String args[]) {
         try {
             // 获得Excel文件
-            Workbook wb = Workbook.getWorkbook(new File(“c:/test.xls”));
+            Workbook wb = Workbook.getWorkbook(new File("c:/test.xls"));
             // 打开一个文件的副本，并且指定数据写回到原文件
-            WritableWorkbook book = Workbook.createWorkbook(new File(“c:/test.xls”), wb);</p>
+            WritableWorkbook book = Workbook.createWorkbook(new File("c:/test.xls"), wb);
 
-<pre><code>        //修改原工作表数据
-        WritableSheet sheet1 = book.getSheet(0);
-        sheet1.addCell(new Label(0, 0, "覆盖原来的test"));
-        
-        // 添加一个新工作表
-        WritableSheet sheet2 = book.createSheet(" 第二页 ", 1);
-        sheet2.addCell(new Label(0, 0, " 第二页的测试数据 "));
-        
-        book.write();
-        book.close();
-    } catch (Exception e) {
-        System.out.println(e);
+            //修改原工作表数据
+            WritableSheet sheet1 = book.getSheet(0);
+            sheet1.addCell(new Label(0, 0, "覆盖原来的test"));
+
+            // 添加一个新工作表
+            WritableSheet sheet2 = book.createSheet(" 第二页 ", 1);
+            sheet2.addCell(new Label(0, 0, " 第二页的测试数据 "));
+
+            book.write();
+            book.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
-} } ```
+}
 </code></pre>
 
-<h2 id="section-12">导出文件</h2>
+<h2>导出文件</h2>
 
 <p>附上一个导出文件例子。</p>
 
-<p><code>javascript
-$( function() {
+<pre><code class="javascript">$( function() {
     /** 报表导出按钮 */
     $( '#exportBtn' ).click( function() {
         if( !$( '#frm' ).validationEngine( 'validate' ) )
@@ -251,44 +248,43 @@ $( function() {
         }, 5000 );
     } );
 } );
-</code></p>
+</code></pre>
 
-<p>&#8220;`java
-/** 根据浏览器类型，转换为当前浏览器支持的中文*/
-String fileName = “Excel工作表”;</p>
+<pre><code class="java">/** 根据浏览器类型，转换为当前浏览器支持的中文*/
+String fileName = "Excel工作表";
 
-<p>/** header 浏览器key */
-String userAgent = request.getHeader(“USER-AGENT”).toUpperCase();
+/** header 浏览器key */
+String userAgent = request.getHeader("USER-AGENT").toUpperCase();
 if (userAgent != null &amp;&amp; userAgent.length() != 0 &amp;&amp; fileName != null &amp;&amp; fileName.length() != 0) {
     /** header IE */
-    if ( -1 != userAgent.indexOf(“MSIE”) )
-        fileName = URLEncoder.encode(fileName, “UTF-8”);
+    if ( -1 != userAgent.indexOf("MSIE") )
+        fileName = URLEncoder.encode(fileName, "UTF-8");
     /** header Mozilla */
-    else if ( -1 != userAgent.indexOf(“MOZILLA”) )
-        fileName = new String(fileName.getBytes(), “ISO8859-1”);
+    else if ( -1 != userAgent.indexOf("MOZILLA") )
+        fileName = new String(fileName.getBytes(), "ISO8859-1");
     /** header Safari */
-    else if ( -1 != userAgent.indexOf(“SAFARI”) )
-        fileName = new String( fileName.getBytes(), “ISO8859-1”);
+    else if ( -1 != userAgent.indexOf("SAFARI") )
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
     /** header Opera */
-    else if ( -1 != userAgent.indexOf(“OPERA”) )
-        fileName = new String( fileName.getBytes(), “ISO8859-1”);
+    else if ( -1 != userAgent.indexOf("OPERA") )
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
     /** header 其它内核浏览器 */
     else
-        fileName = new String( fileName.getBytes(), “ISO8859-1”);
-}</p>
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
+}
 
-<p>response.setCharacterEncoding(“UTF-8”);
-response.setContentType(“application/vnd.ms-excel”);
-response.setHeader(“Content-disposition”, new StringBuffer(“attachment”).append( “;filename=” ).append( fileName ).append(“.xls”).toString() );</p>
+response.setCharacterEncoding("UTF-8");
+response.setContentType("application/vnd.ms-excel");
+response.setHeader("Content-disposition", new StringBuffer("attachment").append( ";filename=" ).append( fileName ).append(".xls").toString() );
 
-<p>WritableWorkbook book = Workbook.createWorkbook(response.getOutputStream());
-WritableSheet sheet = book.createSheet(“Excel工作表”, 0);</p>
+WritableWorkbook book = Workbook.createWorkbook(response.getOutputStream());
+WritableSheet sheet = book.createSheet("Excel工作表", 0);
 
-<p>//…</p>
+//...
 
-<p>book.write();
+book.write();
 book.close();
-&#8220;`</p>
+</code></pre>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
@@ -304,233 +300,230 @@ book.close();
     <content type="html"><![CDATA[<p>本文介绍了Listener以下几个方面的内容：</p>
 
 <ul>
-  <li>Listener的定义与作用</li>
-  <li>Listener的分类与使用
-    <ul>
-      <li>ServletContext监听</li>
-      <li>Session监听</li>
-      <li>Request监听</li>
-    </ul>
-  </li>
-  <li>Listener的应用实例
-    <ul>
-      <li>利用HttpSessionListener统计最多在线用户人数</li>
-      <li>Spring使用ContextLoaderListener加载ApplicationContext配置信息</li>
-      <li>Spring使用Log4jConfigListener配置Log4j日志</li>
-      <li>Spring使用IntrospectorCleanupListener清理缓存</li>
-    </ul>
-  </li>
+<li>Listener的定义与作用</li>
+<li>Listener的分类与使用
+
+<ul>
+<li>ServletContext监听</li>
+<li>Session监听</li>
+<li>Request监听</li>
+</ul>
+</li>
+<li>Listener的应用实例
+
+<ul>
+<li>利用HttpSessionListener统计最多在线用户人数</li>
+<li>Spring使用ContextLoaderListener加载ApplicationContext配置信息</li>
+<li>Spring使用Log4jConfigListener配置Log4j日志</li>
+<li>Spring使用IntrospectorCleanupListener清理缓存</li>
+</ul>
+</li>
 </ul>
 
+
 <!--more-->
+
 
 <p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/27/java-listener/">http://tianweili.github.com/blog/2015/01/27/java-listener/</a></p>
 
 <p><a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">之前写了一篇关于Filter的文章</a>，现在再来一篇Listener的，Filter和Listener在项目中是经常用到的，巧妙的使用可以达到事半功倍的效果。故把两者的用法总结一下。</p>
 
-<h2 id="listener">Listener的定义与作用</h2>
+<h2>Listener的定义与作用</h2>
 
 <p>监听器Listener就是在application,session,request三个对象创建、销毁或者往其中添加修改删除属性时自动执行代码的功能组件。</p>
 
 <p>Listener是Servlet的监听器，可以监听客户端的请求，服务端的操作等。</p>
 
-<h2 id="listener-1">Listener的分类与使用</h2>
+<h2>Listener的分类与使用</h2>
 
 <p>主要有以下三类：</p>
 
-<h3 id="servletcontext">1、ServletContext监听</h3>
+<h3>1、ServletContext监听</h3>
 
 <p>ServletContextListener：用于对Servlet整个上下文进行监听（创建、销毁）。</p>
 
-<p><code>java
-//上下文初始化
+<pre><code class="java">//上下文初始化
 public void contextInitialized(ServletContextEvent sce);
 //上下文销毁
 public void contextDestroyed(ServletContextEvent sce);
 //ServletContextEvent事件：取得一个ServletContext（application）对象
 public ServletContext getServletContext();
-</code></p>
+</code></pre>
 
 <p>ServletContextAttributeListener：对Servlet上下文属性的监听（增删改属性）。</p>
 
-<p>&#8220;`java
-//增加属性
+<pre><code class="java">//增加属性
 public void attributeAdded(ServletContextAttributeEvent scab);
 //属性删除
 public void attributeRemoved(ServletContextAttributeEvent scab);
 //属性替换（第二次设置同一属性）
-public void attributeRepalced(ServletContextAttributeEvent scab);</p>
+public void attributeRepalced(ServletContextAttributeEvent scab);
 
-<p>//ServletContextAttributeEvent事件：能取得设置属性的名称与内容
+//ServletContextAttributeEvent事件：能取得设置属性的名称与内容
 //得到属性名称
 public String getName();
 //取得属性的值
 public Object getValue();
-&#8220;`</p>
+</code></pre>
 
-<h3 id="session">2、Session监听</h3>
+<h3>2、Session监听</h3>
 
 <p>Session属于http协议下的内容，接口位于javax.servlet.http.*包下。</p>
 
 <p>HttpSessionListener接口：对Session的整体状态的监听。</p>
 
-<p>&#8220;`java
-//session创建
+<pre><code class="java">//session创建
 public void sessionCreated(HttpSessionEvent se);
 //session销毁
-public void sessionDestroyed(HttpSessionEvent se);</p>
+public void sessionDestroyed(HttpSessionEvent se);
 
-<p>//HttpSessionEvent事件：
+//HttpSessionEvent事件：
 //取得当前操作的session
 public HttpSession getSession();
-&#8220;`
-HttpSessionAttributeListener接口：对session的属性监听。</p>
+</code></pre>
 
-<p>&#8220;`java
-public void attributeAdded(HttpSessionBindingEvent se);//增加属性
+<p>HttpSessionAttributeListener接口：对session的属性监听。</p>
+
+<pre><code class="java">public void attributeAdded(HttpSessionBindingEvent se);//增加属性
 public void attributeRemoved(HttpSessionBindingEvent se);//删除属性
-public void attributeReplaced(HttpSessionBindingEvent se);//替换属性</p>
+public void attributeReplaced(HttpSessionBindingEvent se);//替换属性
 
-<p>//HttpSessionBindingEvent事件：
+//HttpSessionBindingEvent事件：
 public String getName();//取得属性的名称
 public Object getValue();//取得属性的值
 public HttpSession getSession();//取得当前的session
-&#8220;`
-session的销毁有两种情况：</p>
+</code></pre>
+
+<p>session的销毁有两种情况：</p>
 
 <p>1.session超时，web.xml配置：</p>
 
-<p>&#8220;`xml</p>
-<session-config>
-    <session-timeout>120</session-timeout><!--session120分钟后超时销毁-->
-</session-config>
-<p>&#8220;`</p>
+<pre><code class="xml">&lt;session-config&gt;
+    &lt;session-timeout&gt;120&lt;/session-timeout&gt;&lt;!--session120分钟后超时销毁--&gt;
+&lt;/session-config&gt;
+</code></pre>
 
 <p>2.手工使session失效</p>
 
-<p><code>java
-//使session失效方法。session.invalidate();
+<pre><code class="java">//使session失效方法。session.invalidate();
 public void invalidate();
-</code></p>
+</code></pre>
 
-<h3 id="request">3、Request监听</h3>
+<h3>3、Request监听</h3>
 
 <p>ServletRequestListener：用于对Request请求进行监听（创建、销毁）。</p>
 
-<p>&#8220;`java
-public void requestInitialized(ServletRequestEvent sre);//request初始化
-public void requestDestroyed(ServletRequestEvent sre);//request销毁</p>
+<pre><code class="java">public void requestInitialized(ServletRequestEvent sre);//request初始化
+public void requestDestroyed(ServletRequestEvent sre);//request销毁
 
-<p>//ServletRequestEvent事件：
+//ServletRequestEvent事件：
 public ServletRequest getServletRequest();//取得一个ServletRequest对象
 public ServletContext getServletContext();//取得一个ServletContext（application）对象
-&#8220;`</p>
+</code></pre>
 
 <p>ServletRequestAttributeListener：对Request属性的监听（增删改属性）。</p>
 
-<p>&#8220;`java
-public void attributeAdded(ServletRequestAttributeEvent srae);//增加属性
+<pre><code class="java">public void attributeAdded(ServletRequestAttributeEvent srae);//增加属性
 public void attributeRemoved(ServletRequestAttributeEvent srae);//属性删除
-public void attributeReplaced(ServletRequestAttributeEvent srae);//属性替换（第二次设置同一属性）</p>
+public void attributeReplaced(ServletRequestAttributeEvent srae);//属性替换（第二次设置同一属性）
 
-<p>//ServletRequestAttributeEvent事件：能取得设置属性的名称与内容
+//ServletRequestAttributeEvent事件：能取得设置属性的名称与内容
 public String getName();//得到属性名称
 public Object getValue();//取得属性的值
-&#8220;`</p>
+</code></pre>
 
-<h3 id="webxml">4、在web.xml中配置</h3>
+<h3>4、在web.xml中配置</h3>
 
 <p>Listener配置信息必须在Filter和Servlet配置之前，Listener的初始化（ServletContentListener初始化）比Servlet和Filter都优先，而销毁比Servlet和Filter都慢。</p>
 
-<p>&#8220;`xml</p>
-<listener>
-    <listener-class>com.listener.class</listener-class>
-</listener>
-<p>&#8220;`
-##Listener应用实例</p>
+<pre><code class="xml">&lt;listener&gt;
+    &lt;listener-class&gt;com.listener.class&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
 
-<h3 id="httpsessionlistener">1、利用HttpSessionListener统计最多在线用户人数</h3>
+<h2>Listener应用实例</h2>
 
-<p>&#8220;`java HttpSessionListenerImpl.java
-import java.text.DateFormat;
+<h3>1、利用HttpSessionListener统计最多在线用户人数</h3>
+
+<pre><code class="java HttpSessionListenerImpl.java">import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;</p>
+import javax.servlet.http.HttpSessionListener;
 
-<p>public class HttpSessionListenerImpl implements HttpSessionListener {</p>
+public class HttpSessionListenerImpl implements HttpSessionListener {
 
-<pre><code>public void sessionCreated(HttpSessionEvent event) {
-    ServletContext app = event.getSession().getServletContext();
-    int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
-    count++;
-    app.setAttribute("onLineCount", count);
-    int maxOnLineCount = Integer.parseInt(app.getAttribute("maxOnLineCount").toString());
-    if (count &gt; maxOnLineCount) {
-        //记录最多人数是多少
-        app.setAttribute("maxOnLineCount", count);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //记录在那个时刻达到上限
-        app.setAttribute("date", df.format(new Date()));
+    public void sessionCreated(HttpSessionEvent event) {
+        ServletContext app = event.getSession().getServletContext();
+        int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
+        count++;
+        app.setAttribute("onLineCount", count);
+        int maxOnLineCount = Integer.parseInt(app.getAttribute("maxOnLineCount").toString());
+        if (count &gt; maxOnLineCount) {
+            //记录最多人数是多少
+            app.setAttribute("maxOnLineCount", count);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            //记录在那个时刻达到上限
+            app.setAttribute("date", df.format(new Date()));
+        }
+    }
+    //session注销、超时时候调用，停止tomcat不会调用
+    public void sessionDestroyed(HttpSessionEvent event) {
+        ServletContext app = event.getSession().getServletContext();
+        int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
+        count--;
+        app.setAttribute("onLineCount", count);    
+
     }
 }
-//session注销、超时时候调用，停止tomcat不会调用
-public void sessionDestroyed(HttpSessionEvent event) {
-    ServletContext app = event.getSession().getServletContext();
-    int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
-    count--;
-    app.setAttribute("onLineCount", count);    
-    
-} } ```
 </code></pre>
 
-<h3 id="springcontextloaderlistenerapplicationcontext">2、Spring使用ContextLoaderListener加载ApplicationContext配置信息</h3>
+<h3>2、Spring使用ContextLoaderListener加载ApplicationContext配置信息</h3>
 
 <p>ContextLoaderListener的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。因为它实现了ServletContextListener这个接口，在web.xml配置这个监听器，启动容器时，就会默认执行它实现的方法。</p>
 
-<p>ContextLoaderListener如何查找ApplicationContext.xml的配置位置以及配置多个xml：如果在web.xml中不写任何参数配置信息，默认的路径是”/WEB-INF/applicationContext.xml”，在WEB-INF目录下创建的xml文件的名称必须是applicationContext.xml（在MyEclipse中把xml文件放置在src目录下）。如果是要自定义文件名可以在web.xml里加入contextConfigLocation这个context参数。</p>
+<p>ContextLoaderListener如何查找ApplicationContext.xml的配置位置以及配置多个xml：如果在web.xml中不写任何参数配置信息，默认的路径是&#8221;/WEB-INF/applicationContext.xml&#8221;，在WEB-INF目录下创建的xml文件的名称必须是applicationContext.xml（在MyEclipse中把xml文件放置在src目录下）。如果是要自定义文件名可以在web.xml里加入contextConfigLocation这个context参数。</p>
 
-<p>&#8220;`xml</p>
-<context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:spring/applicationContext-*.xml</param-value><!-- 采用的是通配符方式，查找WEB-INF/spring目录下xml文件。如有多个xml文件，以“,”分隔。 -->
-</context-param>
-<listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-</listener>
-<p>&#8220;`</p>
+<pre><code class="xml">&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;classpath:spring/applicationContext-*.xml&lt;/param-value&gt;&lt;!-- 采用的是通配符方式，查找WEB-INF/spring目录下xml文件。如有多个xml文件，以“,”分隔。 --&gt;
+&lt;/context-param&gt;
+&lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
 
-<h3 id="springlog4jconfiglistenerlog4j">3、Spring使用Log4jConfigListener配置Log4j日志</h3>
+<h3>3、Spring使用Log4jConfigListener配置Log4j日志</h3>
 
 <p>Spring使用Log4jConfigListener的好处：</p>
 
 <ul>
-  <li>动态的改变记录级别和策略，不需要重启Web应用。</li>
-  <li>把log文件定在 /WEB-INF/logs/ 而不需要写绝对路径。因为系统把web目录的路径压入一个叫webapp.root的系统变量。这样写log文件路径时不用写绝对路径了。</li>
-  <li>可以把log4j.properties和其他properties一起放在/WEB-INF/ ，而不是Class-Path。</li>
-  <li>设置log4jRefreshInterval时间，开一条watchdog线程每隔段时间扫描一下配置文件的变化。</li>
+<li>动态的改变记录级别和策略，不需要重启Web应用。</li>
+<li>把log文件定在 /WEB-INF/logs/ 而不需要写绝对路径。因为系统把web目录的路径压入一个叫webapp.root的系统变量。这样写log文件路径时不用写绝对路径了。</li>
+<li>可以把log4j.properties和其他properties一起放在/WEB-INF/ ，而不是Class-Path。</li>
+<li>设置log4jRefreshInterval时间，开一条watchdog线程每隔段时间扫描一下配置文件的变化。</li>
 </ul>
 
-<p>&#8220;`xml</p>
-<context-param>
-    <param-name>webAppRootKey</param-name>
-    <param-value>project.root</param-value><!-- 用于定位log文件输出位置在web应用根目录下，log4j配置文件中写输出位置：log4j.appender.FILE.File=${project.root}/logs/project.log -->
-</context-param>
-<context-param>
-    <param-name>log4jConfigLocation</param-name>
-    <param-value>classpath:log4j.properties</param-value><!-- 载入log4j配置文件 -->
-</context-param>
-<context-param>
-    <param-name>log4jRefreshInterval</param-name>
-    <param-value>60000</param-value><!--Spring刷新Log4j配置文件的间隔60秒,单位为millisecond-->
-</context-param>
-<listener>
-    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-</listener>
-<p>&#8220;`</p>
 
-<h3 id="springintrospectorcleanuplistener">4、Spring使用IntrospectorCleanupListener清理缓存</h3>
+<pre><code class="xml">&lt;context-param&gt;
+    &lt;param-name&gt;webAppRootKey&lt;/param-name&gt;
+    &lt;param-value&gt;project.root&lt;/param-value&gt;&lt;!-- 用于定位log文件输出位置在web应用根目录下，log4j配置文件中写输出位置：log4j.appender.FILE.File=${project.root}/logs/project.log --&gt;
+&lt;/context-param&gt;
+&lt;context-param&gt;
+    &lt;param-name&gt;log4jConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;classpath:log4j.properties&lt;/param-value&gt;&lt;!-- 载入log4j配置文件 --&gt;
+&lt;/context-param&gt;
+&lt;context-param&gt;
+    &lt;param-name&gt;log4jRefreshInterval&lt;/param-name&gt;
+    &lt;param-value&gt;60000&lt;/param-value&gt;&lt;!--Spring刷新Log4j配置文件的间隔60秒,单位为millisecond--&gt;
+&lt;/context-param&gt;
+&lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.util.Log4jConfigListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
+
+<h3>4、Spring使用IntrospectorCleanupListener清理缓存</h3>
 
 <p>这个监听器的作用是在web应用关闭时刷新JDK的JavaBeans的Introspector缓存，以确保Web应用程序的类加载器以及其加载的类正确的释放资源。</p>
 
@@ -544,13 +537,12 @@ public void sessionDestroyed(HttpSessionEvent event) {
 
 <p>需要注意的是一个简单Introspector泄漏将会导致整个Web应用程序的类加载器不会被回收！这样做的结果，将会是在web应用程序关闭时，该应用程序所有的静态类资源（比如：单实例对象）都没有得到释放。而导致内存泄露的根本原因其实并不是这些未被回收的类！</p>
 
-<p>注意：IntrospectorCleanupListener应该注册为web.xml中的第一个Listener，在任何其他Listener之前注册，比如在Spring’s ContextLoaderListener注册之前，才能确保IntrospectorCleanupListener在Web应用的生命周期适当时机生效。</p>
+<p>注意：IntrospectorCleanupListener应该注册为web.xml中的第一个Listener，在任何其他Listener之前注册，比如在Spring&rsquo;s ContextLoaderListener注册之前，才能确保IntrospectorCleanupListener在Web应用的生命周期适当时机生效。</p>
 
-<p>&#8220;`xml</p>
-<listener><!-- memory clean -->
-    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
-</listener>
-<p>&#8220;`</p>
+<pre><code class="xml">&lt;listener&gt;&lt;!-- memory clean --&gt;
+    &lt;listener-class&gt;org.springframework.web.util.IntrospectorCleanupListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
@@ -566,166 +558,170 @@ public void sessionDestroyed(HttpSessionEvent event) {
     <content type="html"><![CDATA[<p>本文主要详细介绍了Filter的以下几个方面内容：</p>
 
 <ul>
-  <li>Filter概念介绍</li>
-  <li>Filter的用途</li>
-  <li>如何借助Filter实现拦截功能</li>
-  <li>Filter的开发步骤和配置详解</li>
-  <li>Filter链</li>
-  <li>Filter的生命周期</li>
-  <li>Filter的使用案例
-    <ul>
-      <li>使用Filter验证用户登录安全控制</li>
-      <li>防止中文乱码过滤器</li>
-      <li>Spring+Hibernate的OpenSessionInViewFilter控制session的开关</li>
-      <li>Struts2的web.xml配置</li>
-    </ul>
-  </li>
+<li>Filter概念介绍</li>
+<li>Filter的用途</li>
+<li>如何借助Filter实现拦截功能</li>
+<li>Filter的开发步骤和配置详解</li>
+<li>Filter链</li>
+<li>Filter的生命周期</li>
+<li>Filter的使用案例
+
+<ul>
+<li>使用Filter验证用户登录安全控制</li>
+<li>防止中文乱码过滤器</li>
+<li>Spring+Hibernate的OpenSessionInViewFilter控制session的开关</li>
+<li>Struts2的web.xml配置</li>
 </ul>
+</li>
+</ul>
+
 
 <!--more-->
 
+
 <p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/26/java-filter/">http://tianweili.github.com/blog/2015/01/26/java-filter/</a></p>
 
-<h2 id="filter">Filter简介</h2>
+<h2>Filter简介</h2>
 
 <p>Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。</p>
 
 <p>它主要用于对用户请求进行预处理，也可以对HttpServletResponse 进行后处理。使用Filter 的完整流程：Filter 对用户请求进行预处理，接着将请求交给Servlet 进行处理并生成响应，最后Filter 再对服务器响应进行后处理。</p>
 
-<h2 id="filter-1">Filter功能</h2>
+<h2>Filter功能</h2>
 
 <ul>
-  <li>在HttpServletRequest 到达 Servlet 之前，拦截客户的 HttpServletRequest 。根据需要检查 HttpServletRequest ，也可以修改HttpServletRequest 头和数据。</li>
-  <li>在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。根据需要检查 HttpServletResponse ，也可以修改HttpServletResponse头和数据。</li>
+<li>在HttpServletRequest 到达 Servlet 之前，拦截客户的 HttpServletRequest 。根据需要检查 HttpServletRequest ，也可以修改HttpServletRequest 头和数据。</li>
+<li>在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。根据需要检查 HttpServletResponse ，也可以修改HttpServletResponse头和数据。</li>
 </ul>
 
-<h2 id="filter-2">如何借助Filter实现拦截功能</h2>
+
+<h2>如何借助Filter实现拦截功能</h2>
 
 <p>Filter接口中有一个doFilter方法，当开发人员编写好Filter，并配置对哪个web资源进行拦截后，WEB服务器每次在调用web资源的service方法之前，都会先调用一下filter的doFilter方法，因此，在该方法内编写代码可达到如下目的：</p>
 
 <ul>
-  <li>调用目标资源之前，让一段代码执行。</li>
-  <li>是否调用目标资源（即是否让用户访问web资源）。</li>
+<li>调用目标资源之前，让一段代码执行。</li>
+<li>是否调用目标资源（即是否让用户访问web资源）。</li>
 </ul>
+
 
 <p>web服务器在调用doFilter方法时，会传递一个filterChain对象进来，<strong>filterChain对象是filter接口中最重要的一个对象</strong>，它也提供了一个doFilter方法，开发人员可以根据需求决定是否调用此方法，调用该方法，则web服务器就会调用web资源的service方法，即web资源就会被访问，否则web资源不会被访问。</p>
 
-<h2 id="filter-3">Filter开发两步走</h2>
+<h2>Filter开发两步走</h2>
 
 <ol>
-  <li>编写java类实现Filter接口，并实现其doFilter方法。</li>
-  <li>在 web.xml 文件中使用<filter>和<filter-mapping>元素对编写的filter类进行注册，并设置它所能拦截的资源。</filter-mapping></filter></li>
+<li>编写java类实现Filter接口，并实现其doFilter方法。</li>
+<li>在 web.xml 文件中使用<filter>和<filter-mapping>元素对编写的filter类进行注册，并设置它所能拦截的资源。</li>
 </ol>
+
 
 <p>web.xml配置各节点介绍：</p>
 
 <ul>
-  <li><code>&lt;filter&gt;</code>指定一个过滤器。
-    <ul>
-      <li><code>&lt;filter-name&gt;</code>用于为过滤器指定一个名字，该元素的内容不能为空。</li>
-      <li><code>&lt;filter-class&gt;</code>元素用于指定过滤器的完整的限定类名。</li>
-      <li><code>&lt;init-param&gt;</code>元素用于为过滤器指定初始化参数，它的子元素<code>&lt;param-name&gt;</code>指定参数的名字，<code>&lt;param-value&gt;</code>指定参数的值。</li>
-      <li>在过滤器中，可以使用<code>FilterConfig</code>接口对象来访问初始化参数。</li>
-    </ul>
-  </li>
-  <li><code>&lt;filter-mapping&gt;</code>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径 
-    <ul>
-      <li><code>&lt;filter-name&gt;</code>子元素用于设置filter的注册名称。该值必须是在<code>&lt;filter&gt;</code>元素中声明过的过滤器的名字 </li>
-      <li><code>&lt;url-pattern&gt;</code>设置 filter 所拦截的请求路径(过滤器关联的URL样式) </li>
-    </ul>
-  </li>
-  <li><code>&lt;servlet-name&gt;</code>指定过滤器所拦截的Servlet名称。 </li>
-  <li><code>&lt;dispatcher&gt;</code>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是<code>REQUEST</code>,<code>INCLUDE</code>,<code>FORWARD</code>和<code>ERROR</code>之一，默认<code>REQUEST</code>。用户可以设置多个<code>&lt;dispatcher&gt;</code>子元素用来指定 Filter 对资源的多种调用方式进行拦截。 </li>
-  <li><code>&lt;dispatcher&gt;</code>子元素可以设置的值及其意义
-    <ul>
-      <li><code>REQUEST</code>：当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。 </li>
-      <li><code>INCLUDE</code>：如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。 </li>
-      <li><code>FORWARD</code>：如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。 </li>
-      <li><code>ERROR</code>：如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。</li>
-    </ul>
-  </li>
+<li><code>&lt;filter&gt;</code>指定一个过滤器。
+
+<ul>
+<li><code>&lt;filter-name&gt;</code>用于为过滤器指定一个名字，该元素的内容不能为空。</li>
+<li><code>&lt;filter-class&gt;</code>元素用于指定过滤器的完整的限定类名。</li>
+<li><code>&lt;init-param&gt;</code>元素用于为过滤器指定初始化参数，它的子元素<code>&lt;param-name&gt;</code>指定参数的名字，<code>&lt;param-value&gt;</code>指定参数的值。</li>
+<li>在过滤器中，可以使用<code>FilterConfig</code>接口对象来访问初始化参数。</li>
+</ul>
+</li>
+<li><code>&lt;filter-mapping&gt;</code>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径
+
+<ul>
+<li><code>&lt;filter-name&gt;</code>子元素用于设置filter的注册名称。该值必须是在<code>&lt;filter&gt;</code>元素中声明过的过滤器的名字</li>
+<li><code>&lt;url-pattern&gt;</code>设置 filter 所拦截的请求路径(过滤器关联的URL样式)</li>
+</ul>
+</li>
+<li><code>&lt;servlet-name&gt;</code>指定过滤器所拦截的Servlet名称。</li>
+<li><code>&lt;dispatcher&gt;</code>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是<code>REQUEST</code>,<code>INCLUDE</code>,<code>FORWARD</code>和<code>ERROR</code>之一，默认<code>REQUEST</code>。用户可以设置多个<code>&lt;dispatcher&gt;</code>子元素用来指定 Filter 对资源的多种调用方式进行拦截。</li>
+<li><code>&lt;dispatcher&gt;</code>子元素可以设置的值及其意义
+
+<ul>
+<li><code>REQUEST</code>：当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。</li>
+<li><code>INCLUDE</code>：如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。</li>
+<li><code>FORWARD</code>：如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。</li>
+<li><code>ERROR</code>：如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。</li>
+</ul>
+</li>
 </ul>
 
-<h2 id="filter-4">Filter链</h2>
+
+<h2>Filter链</h2>
 
 <p>在一个web应用中，可以开发编写多个Filter，这些Filter组合起来称之为一个Filter链。</p>
 
 <p><strong>web服务器根据Filter在web.xml文件中的注册顺序，决定先调用哪个Filter</strong>，当第一个Filter的doFilter方法被调用时，web服务器会创建一个代表Filter链的FilterChain对象传递给该方法。在doFilter方法中，开发人员如果调用了FilterChain对象的doFilter方法，则web服务器会检查FilterChain对象中是否还有filter，如果有，则调用第2个filter，如果没有，则调用目标资源。</p>
 
-<h2 id="filter-5">Filter的生命周期</h2>
+<h2>Filter的生命周期</h2>
 
-<p><code>java
-public void init(FilterConfig filterConfig) throws ServletException;//初始化
-</code></p>
+<pre><code class="java">public void init(FilterConfig filterConfig) throws ServletException;//初始化
+</code></pre>
 
 <p>和我们编写的Servlet程序一样，Filter的创建和销毁由WEB服务器负责。 web 应用程序启动时，web 服务器将创建Filter 的实例对象，并调用其init方法，读取web.xml配置，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作（<strong>filter对象只会创建一次，init方法也只会执行一次</strong>）。开发人员通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象。</p>
 
-<p><code>java
-public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException;//拦截请求
-</code></p>
+<pre><code class="java">public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException;//拦截请求
+</code></pre>
 
 <p>这个方法完成实际的过滤操作。当客户请求访问与过滤器关联的URL的时候，Servlet过滤器将先执行doFilter方法。FilterChain参数用于访问后续过滤器。</p>
 
-<p><code>java
-public void destroy();//销毁
-</code></p>
+<pre><code class="java">public void destroy();//销毁
+</code></pre>
 
 <p>Filter对象创建后会驻留在内存，当web应用移除或服务器停止时才销毁。在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。</p>
 
-<h2 id="filterconfig">FilterConfig接口</h2>
+<h2>FilterConfig接口</h2>
 
-<p>用户在配置filter时，可以使用<init-param>为filter配置一些初始化参数，当web容器实例化Filter对象，调用其init方法时，会把封装了filter初始化参数的filterConfig对象传递进来。因此开发人员在编写filter时，通过filterConfig对象的方法，就可获得以下内容：</init-param></p>
+<p>用户在配置filter时，可以使用<init-param>为filter配置一些初始化参数，当web容器实例化Filter对象，调用其init方法时，会把封装了filter初始化参数的filterConfig对象传递进来。因此开发人员在编写filter时，通过filterConfig对象的方法，就可获得以下内容：</p>
 
-<p><code>java
-String getFilterName();//得到filter的名称。 
+<pre><code class="java">String getFilterName();//得到filter的名称。 
 String getInitParameter(String name);//返回在部署描述中指定名称的初始化参数的值。如果不存在返回null. 
 Enumeration getInitParameterNames();//返回过滤器的所有初始化参数的名字的枚举集合。 
 public ServletContext getServletContext();//返回Servlet上下文对象的引用。
-</code></p>
+</code></pre>
 
-<h2 id="filter-6">Filter使用案例</h2>
+<h2>Filter使用案例</h2>
 
-<h3 id="filter-7">使用Filter验证用户登录安全控制</h3>
+<h3>使用Filter验证用户登录安全控制</h3>
 
 <p>前段时间参与维护一个项目，用户退出系统后，再去地址栏访问历史，根据url，仍然能够进入系统响应页面。我去检查一下发现对请求未进行过滤验证用户登录。添加一个filter搞定问题！</p>
 
 <p>先在web.xml配置</p>
 
-<p>&#8220;`XML web.xml</p>
-<filter>
-    <filter-name>SessionFilter</filter-name>
-    <filter-class>com.action.login.SessionFilter</filter-class>
-    <init-param>
-        <param-name>logonStrings</param-name><!-- 对登录页面不进行过滤 -->
-        <param-value>/project/index.jsp;login.do</param-value>
-    </init-param>
-    <init-param>
-        <param-name>includeStrings</param-name><!-- 只对指定过滤参数后缀进行过滤 -->
-        <param-value>.do;.jsp</param-value>
-    </init-param>
-    <init-param>
-        <param-name>redirectPath</param-name><!-- 未通过跳转到登录界面 -->
-        <param-value>/index.jsp</param-value>
-    </init-param>
-    <init-param>
-        <param-name>disabletestfilter</param-name><!-- Y:过滤无效 -->
-        <param-value>N</param-value>
-    </init-param>
-</filter>
-<filter-mapping>
-    <filter-name>SessionFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-</filter-mapping>
-<p>&#8220;`</p>
+<pre><code class="XML web.xml">&lt;filter&gt;
+    &lt;filter-name&gt;SessionFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;com.action.login.SessionFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;logonStrings&lt;/param-name&gt;&lt;!-- 对登录页面不进行过滤 --&gt;
+        &lt;param-value&gt;/project/index.jsp;login.do&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;includeStrings&lt;/param-name&gt;&lt;!-- 只对指定过滤参数后缀进行过滤 --&gt;
+        &lt;param-value&gt;.do;.jsp&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;redirectPath&lt;/param-name&gt;&lt;!-- 未通过跳转到登录界面 --&gt;
+        &lt;param-value&gt;/index.jsp&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;disabletestfilter&lt;/param-name&gt;&lt;!-- Y:过滤无效 --&gt;
+        &lt;param-value&gt;N&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;SessionFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</code></pre>
 
 <p>接着编写FilterServlet：</p>
 
-<p>&#8220;`java FilterServlet.java
-package com.action.login;</p>
+<pre><code class="java FilterServlet.java">package com.action.login;
 
-<p>import java.io.IOException;</p>
+import java.io.IOException;
 
-<p>import javax.servlet.Filter;
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -733,97 +729,97 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;</p>
+import javax.servlet.http.HttpServletResponseWrapper;
 
-<p>/**
+/**
  *    判断用户是否登录,未登录则退出系统
  */
-public class SessionFilter implements Filter {</p>
+public class SessionFilter implements Filter {
 
-<pre><code>public FilterConfig config;
+    public FilterConfig config;
 
-public void destroy() {
-    this.config = null;
-}
+    public void destroy() {
+        this.config = null;
+    }
 
-public static boolean isContains(String container, String[] regx) {
-    boolean result = false;
+    public static boolean isContains(String container, String[] regx) {
+        boolean result = false;
 
-    for (int i = 0; i &lt; regx.length; i++) {
-        if (container.indexOf(regx[i]) != -1) {
-            return true;
+        for (int i = 0; i &lt; regx.length; i++) {
+            if (container.indexOf(regx[i]) != -1) {
+                return true;
+            }
+        }
+        return result;
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest hrequest = (HttpServletRequest)request;
+        HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
+
+        String logonStrings = config.getInitParameter("logonStrings");        // 登录登陆页面
+        String includeStrings = config.getInitParameter("includeStrings");    // 过滤资源后缀参数
+        String redirectPath = hrequest.getContextPath() + config.getInitParameter("redirectPath");// 没有登陆转向页面
+        String disabletestfilter = config.getInitParameter("disabletestfilter");// 过滤器是否有效
+
+        if (disabletestfilter.toUpperCase().equals("Y")) {    // 过滤无效
+            chain.doFilter(request, response);
+            return;
+        }
+        String[] logonList = logonStrings.split(";");
+        String[] includeList = includeStrings.split(";");
+
+        if (!this.isContains(hrequest.getRequestURI(), includeList)) {// 只对指定过滤参数后缀进行过滤
+            chain.doFilter(request, response);
+            return;
+        }
+
+        if (this.isContains(hrequest.getRequestURI(), logonList)) {// 对登录页面不进行过滤
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String user = ( String ) hrequest.getSession().getAttribute("useronly");//判断用户是否登录
+        if (user == null) {
+            wrapper.sendRedirect(redirectPath);
+            return;
+        }else {
+            chain.doFilter(request, response);
+            return;
         }
     }
-    return result;
-}
 
-public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-    HttpServletRequest hrequest = (HttpServletRequest)request;
-    HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
-    
-    String logonStrings = config.getInitParameter("logonStrings");        // 登录登陆页面
-    String includeStrings = config.getInitParameter("includeStrings");    // 过滤资源后缀参数
-    String redirectPath = hrequest.getContextPath() + config.getInitParameter("redirectPath");// 没有登陆转向页面
-    String disabletestfilter = config.getInitParameter("disabletestfilter");// 过滤器是否有效
-    
-    if (disabletestfilter.toUpperCase().equals("Y")) {    // 过滤无效
-        chain.doFilter(request, response);
-        return;
-    }
-    String[] logonList = logonStrings.split(";");
-    String[] includeList = includeStrings.split(";");
-    
-    if (!this.isContains(hrequest.getRequestURI(), includeList)) {// 只对指定过滤参数后缀进行过滤
-        chain.doFilter(request, response);
-        return;
-    }
-    
-    if (this.isContains(hrequest.getRequestURI(), logonList)) {// 对登录页面不进行过滤
-        chain.doFilter(request, response);
-        return;
-    }
-    
-    String user = ( String ) hrequest.getSession().getAttribute("useronly");//判断用户是否登录
-    if (user == null) {
-        wrapper.sendRedirect(redirectPath);
-        return;
-    }else {
-        chain.doFilter(request, response);
-        return;
+    public void init(FilterConfig filterConfig) throws ServletException {
+        config = filterConfig;
     }
 }
-
-public void init(FilterConfig filterConfig) throws ServletException {
-    config = filterConfig;
-} } ```
 </code></pre>
 
 <p>这样既可完成对用户所有请求，均要经过这个Filter进行验证用户登录。</p>
 
-<h3 id="section">防止中文乱码过滤器</h3>
+<h3>防止中文乱码过滤器</h3>
 
 <p>项目使用spring框架时。当前台JSP页面和JAVA代码中使用了不同的字符集进行编码的时候就会出现表单提交的数据或者上传/下载中文名称文件出现乱码的问题，那就可以使用这个过滤器。</p>
 
-<p>&#8220;`XML web.xml</p>
-<filter>
-    <filter-name>encoding</filter-name>
-    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-    <init-param>
-        <param-name>encoding</param-name><!--用来指定一个具体的字符集-->
-        <param-value>UTF-8</param-value>
-    </init-param>
-    <init-param>
-        <param-name>forceEncoding</param-name><!--true：无论request是否指定了字符集，都是用encoding；false：如果request已指定一个字符集，则不使用encoding-->
-        <param-value>false</param-value>
-    </init-param>
-</filter>
-<filter-mapping>
-    <filter-name>encoding</filter-name>
-    <url-pattern>/*</url-pattern>
-</filter-mapping>
-<p>&#8220;`</p>
+<pre><code class="XML web.xml">&lt;filter&gt;
+    &lt;filter-name&gt;encoding&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;encoding&lt;/param-name&gt;&lt;!--用来指定一个具体的字符集--&gt;
+        &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;forceEncoding&lt;/param-name&gt;&lt;!--true：无论request是否指定了字符集，都是用encoding；false：如果request已指定一个字符集，则不使用encoding--&gt;
+        &lt;param-value&gt;false&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;encoding&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</code></pre>
 
-<h3 id="springhibernateopensessioninviewfiltersession">Spring+Hibernate的OpenSessionInViewFilter控制session的开关</h3>
+<h3>Spring+Hibernate的OpenSessionInViewFilter控制session的开关</h3>
 
 <p>当hibernate+spring配合使用的时候，如果设置了lazy=true（延迟加载）,那么在读取数据的时候，当读取了父数据后，hibernate 会自动关闭session，这样，当要使用与之关联数据、子数据的时候，系统会抛出lazyinit的错误，这时就需要使用spring提供的OpenSessionInViewFilter过滤器。</p>
 
@@ -831,26 +827,25 @@ public void init(FilterConfig filterConfig) throws ServletException {
 
 <p>注意：OpenSessionInViewFilter配置要写在struts2的配置前面。因为tomcat容器在加载过滤器的时候是按照顺序加载的，如果配置文件先写的是struts2的过滤器配置，然后才是OpenSessionInViewFilter过滤器配置，所以加载的顺序导致，action在获得数据的时候session并没有被spring管理。</p>
 
-<p>&#8220;`xml web.xml</p>
-<filter><!-- lazy loading enabled in spring -->
-    <filter-name>OpenSessionInViewFilter</filter-name>
-    <filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
-    <init-param>
-        <param-name>sessionFactoryBeanName</param-name><!-- 可缺省。默认是从spring容器中找id为sessionFactory的bean，如果id不为sessionFactory，则需要配置如下，此处SessionFactory为spring容器中的bean。 -->
-        <param-value>sessionFactory</param-value>
-    </init-param>
-    <init-param>
-        <param-name>singleSession</param-name><!-- singleSession默认为true,若设为false则等于没用OpenSessionInView -->
-        <param-value>true</param-value>
-    </init-param>
-</filter>
-<filter-mapping>
-    <filter-name>OpenSessionInViewFilter</filter-name>
-    <url-pattern>*.do</url-pattern>
-</filter-mapping>
-<p>&#8220;`</p>
+<pre><code class="xml web.xml">&lt;filter&gt;&lt;!-- lazy loading enabled in spring --&gt;
+    &lt;filter-name&gt;OpenSessionInViewFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.orm.hibernate3.support.OpenSessionInViewFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;sessionFactoryBeanName&lt;/param-name&gt;&lt;!-- 可缺省。默认是从spring容器中找id为sessionFactory的bean，如果id不为sessionFactory，则需要配置如下，此处SessionFactory为spring容器中的bean。 --&gt;
+        &lt;param-value&gt;sessionFactory&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;singleSession&lt;/param-name&gt;&lt;!-- singleSession默认为true,若设为false则等于没用OpenSessionInView --&gt;
+        &lt;param-value&gt;true&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;OpenSessionInViewFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;*.do&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</code></pre>
 
-<h3 id="struts2webxml">Struts2的web.xml配置</h3>
+<h3>Struts2的web.xml配置</h3>
 
 <p>项目中使用Struts2同样需要在web.xml配置过滤器，用来截取请求，转到Struts2的Action进行处理。</p>
 
@@ -859,14 +854,18 @@ public void init(FilterConfig filterConfig) throws ServletException {
 <p>三个初始化参数配置：</p>
 
 <ul>
-  <li>config参数：指定要加载的配置文件。逗号分割。</li>
-  <li>actionPackages参数：指定Action类所在的包空间。逗号分割。</li>
-  <li>configProviders参数：自定义配置文件提供者，需要实现ConfigurationProvider接口类。逗号分割。</li>
+<li>config参数：指定要加载的配置文件。逗号分割。</li>
+<li>actionPackages参数：指定Action类所在的包空间。逗号分割。</li>
+<li>configProviders参数：自定义配置文件提供者，需要实现ConfigurationProvider接口类。逗号分割。</li>
 </ul>
 
-<p>&#8220;`XML web.xml
-<!-- struts 2.x filter --></p>
-<filter>
+
+<p>&#8220;`XML web.xml</p>
+
+<!-- struts 2.x filter -->
+
+
+<p><filter>
     <filter-name>struts2</filter-name>
     <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
 </filter>
@@ -874,7 +873,7 @@ public void init(FilterConfig filterConfig) throws ServletException {
     <filter-name>struts2</filter-name>
     <url-pattern>*.do</url-pattern>
 </filter-mapping>
-<p>&#8220;`</p>
+&#8220;`</p>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 

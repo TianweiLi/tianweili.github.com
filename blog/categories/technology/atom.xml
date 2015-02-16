@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Technology | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/technology/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-16T13:12:56+08:00</updated>
+  <updated>2015-02-16T13:31:43+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -21,23 +21,27 @@
     <content type="html"><![CDATA[<p>本文主要讲述了对Octopress搭建的博客进行一些个性化的配置，主要包括以下几个方面：</p>
 
 <ul>
-  <li>优化提高博客的访问速度</li>
-  <li>设置链接在新窗口打开</li>
-  <li>配置首页文章以摘要形式展示</li>
-  <li>代码着色</li>
-  <li>添加侧边栏文章分类</li>
-  <li>添加多说评论系统</li>
-  <li>自动为图片添加URL前缀</li>
-  <li>添加访客统计</li>
+<li>优化提高博客的访问速度</li>
+<li>设置链接在新窗口打开</li>
+<li>配置首页文章以摘要形式展示</li>
+<li>代码着色</li>
+<li>添加侧边栏文章分类</li>
+<li>添加多说评论系统</li>
+<li>自动为图片添加URL前缀</li>
+<li>添加访客统计</li>
 </ul>
 
+
 <!--more-->
+
+
 <p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/">http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/</a></p>
 
-<h2 id="section">提高博客访问速度</h2>
+<h2>提高博客访问速度</h2>
+
 <p>因为“墙”的关系，所以Octopress建立以后会发现访问速度奇慢无比，竟然超过了40s。</p>
 
-<p>{% img /setup-octopress-blog/call-octopress-blog-slowly.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/setup-octopress-blog/call-octopress-blog-slowly.png"></p>
 
 <p>仔细分析后我们发现其中都是一些被墙的请求报了404Error，所以导致访问博客巨慢无比，下面我们就一次阉割掉这些被墙的请求。T_T</p>
 
@@ -56,9 +60,12 @@
 
 <pre><code># Twitter
 #twitter_user:
-#twitter_tweet_button: true 把`\source\_includes\after_footer.html`文件中的twitter内容给注释掉：
+#twitter_tweet_button: true
+</code></pre>
 
-{% raw %}&lt;!--{% include twitter_sharing.html %}--&gt;{% endraw %}
+<p>把<code>\source\_includes\after_footer.html</code>文件中的twitter内容给注释掉：</p>
+
+<pre><code>&lt;!--{% include twitter_sharing.html %}--&gt;
 </code></pre>
 
 <p><strong>3.删除Google font</strong></p>
@@ -69,21 +76,26 @@
 &lt;link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"&gt;
 </code></pre>
 
-<h2 id="section-1">设置链接在新窗口打开</h2>
+<h2>设置链接在新窗口打开</h2>
+
 <p>在博文中，如果点击链接直接在本窗口打开了，那么用户体验就不是很好。而markdown的标准语法是不支持链接在新窗口打开的，虽然可以通过在markdown中直接写html标签来解决这个问题，但是这与markdown的简洁书写特性不符。但是我们可以通过设置Octopress来达到这种效果，即在<code>\source\_includes\custom\head.html</code>文件中添加如下一段代码：</p>
 
 <pre><code>&lt;script&gt;
-	function addBlankTargetForLinks () {
-	  $('a[href^="http"]').each(function(){
-		  $(this).attr('target', '_blank');
-	  });
-	}
+    function addBlankTargetForLinks () {
+      $('a[href^="http"]').each(function(){
+          $(this).attr('target', '_blank');
+      });
+    }
 
-	$(document).bind('DOMNodeInserted', function(event) {
-	  addBlankTargetForLinks();
-	});
-&lt;/script&gt; ##首页文章以摘要形式展示 1.在文章对应的markdown文件中，在需要显示在首页的文字后面添加`&lt;!--more--&gt;`，执行rake generate后在首页上会看到只显示&lt;!—more—&gt;前面的文字，文字后面会显示`Read on`链接，点击后进入文字的详细页面;
+    $(document).bind('DOMNodeInserted', function(event) {
+      addBlankTargetForLinks();
+    });
+&lt;/script&gt;
 </code></pre>
+
+<h2>首页文章以摘要形式展示</h2>
+
+<p>1.在文章对应的markdown文件中，在需要显示在首页的文字后面添加<code>&lt;!--more--&gt;</code>，执行rake generate后在首页上会看到只显示&lt;!—more—>前面的文字，文字后面会显示<code>Read on</code>链接，点击后进入文字的详细页面;</p>
 
 <p>2.如果想将Read on修改为中文，可以修改_config.yml文件</p>
 
@@ -91,7 +103,8 @@
 excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bottom of excerpted articles
 </code></pre>
 
-<h2 id="section-2">代码着色</h2>
+<h2>代码着色</h2>
+
 <p>Octopress使用的是Pygments来进行代码着色的，使用方式也比较简单如下所示：</p>
 
 <pre><code>```java xxx.java
@@ -101,9 +114,10 @@ excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bo
 
 <p><a href="http://pygments.org/languages/">Pygments支持的语言列表</a></p>
 
-<p>有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入{% raw %}和{% endraw %}代码。</p>
+<p>有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入和代码。</p>
 
-<h2 id="category">添加侧边栏文章分类（category）</h2>
+<h2>添加侧边栏文章分类（category）</h2>
+
 <p>1.在<code>plugins</code>目录下创建<code>category_list_tag.rb</code>文件，内容如下：</p>
 
 <pre><code>module Jekyll 
@@ -126,14 +140,14 @@ Liquid::Template.register_tag('category_list', Jekyll::CategoryListTag)
 </code></pre>
 
 <p>2.添加<code>source/_includes/asides/category_list.html</code>文件，内容如下：
-	{% raw %}
-	&lt;section&gt;
-	  &lt;h1&gt;文章分类&lt;/h1&gt;
-	  &lt;ul id=&#8221;categories&#8221;&gt;
-	    {% category_list %}
-	  &lt;/ul&gt;
-	&lt;/section&gt;
-	{% endraw %}
+    
+    <section>
+      <h1>文章分类</h1>
+      <ul id="categories">
+        {% category_list %}
+      </ul>
+    </section>
+    
 3.修改<code>_config.yml</code>文件，在<code>default_asides</code>项中添加<code>asides/category_list.html</code>，值之间以逗号隔开，值的先后顺序代表了侧边栏展现的先后顺序。</p>
 
 <pre><code>default_asides: [asides/category_list.html, asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
@@ -141,7 +155,8 @@ Liquid::Template.register_tag('category_list', Jekyll::CategoryListTag)
 
 <p>在侧边栏还可以添加其他组件，如微博、标签云等，添加方式和上面类似。</p>
 
-<h2 id="section-3">添加多说评论</h2>
+<h2>添加多说评论</h2>
+
 <p>Octopress默认自带了DISQUS，但是对于国内不是很好用。所以在经过考虑之后选择了国内比较流行的多说评论系统。
 首先要去<a href="http://duoshuo.com/">多说网站注册</a>，获取站点的<code>short_name</code>。</p>
 
@@ -149,32 +164,30 @@ Liquid::Template.register_tag('category_list', Jekyll::CategoryListTag)
 
 <pre><code># duoshuo comments
 duoshuo_comments: true
-duoshuo_short_name: yourname 在`./source/_layouts/post.html`中的`disqus`代码
+duoshuo_short_name: yourname
+</code></pre>
 
-{% if site.disqus_short_name and page.comments == true %}
-  &lt;section&gt;
-    &lt;h1&gt;Comments&lt;/h1&gt;
-    &lt;div id="disqus_thread" aria-live="polite"&gt;{% include post/disqus_thread.html %}&lt;/div&gt;
-  &lt;/section&gt;
-{% endif %}
+<p>在<code>./source/_layouts/post.html</code>中的<code>disqus</code>代码</p>
+
+<pre><code>
 </code></pre>
 
 <p>下方添加多说评论模块：
-	{% raw %}
-	{% if site.duoshuo_short_name and site.duoshuo_comments == true and page.comments == true %}
-	  &lt;section&gt;
-	    &lt;h1&gt;Comments&lt;/h1&gt;
-	    &lt;div id=&#8221;comments&#8221; aria-live=&#8221;polite&#8221;&gt;{% include post/duoshuo.html %}&lt;/div&gt;
-	  &lt;/section&gt;
-	{% endif %}
-	{% endraw %}
+    
+    {% if site.duoshuo_short_name and site.duoshuo_comments == true and page.comments == true %}
+      <section>
+        <h1>Comments</h1>
+        <div id="comments" aria-live="polite">{% include post/duoshuo.html %}</div>
+      </section>
+    {% endif %}
+    
 如果你希望一些单独的页面下方也放置评论功能，那么在<code>./source/_layouts/page.html</code>中也做如上修改。
 然后创建一个<code>./source/_includes/post/duoshuo.html</code>文件，内容如下：</p>
 
 <pre><code>&lt;!-- Duoshuo Comment BEGIN --&gt;
-&lt;div class="ds-thread" data-title="{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}"&gt;&lt;/div&gt;
+&lt;div class="ds-thread" data-title="Category: Technology"&gt;&lt;/div&gt;
 &lt;script type="text/javascript"&gt;
-  var duoshuoQuery = {short_name:"{{ site.duoshuo_short_name }}"};
+  var duoshuoQuery = {short_name:"tianweili"};
   (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
@@ -184,36 +197,41 @@ duoshuo_short_name: yourname 在`./source/_layouts/post.html`中的`disqus`代�
     || document.getElementsByTagName('body')[0]).appendChild(ds);
   })();
 &lt;/script&gt;
-&lt;!-- Duoshuo Comment END --&gt; 最后再修改`_includes/article.html`文件，在
+&lt;!-- Duoshuo Comment END --&gt;
+</code></pre>
 
-{% if site.disqus_short_name and page.comments != false and post.comments != false and site.disqus_show_comment_count == true %}
-         | &lt;a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#disqus_thread"&gt;Comments&lt;/a&gt;
-{% endif %} 下方添加下面代码：
+<p>最后再修改<code>_includes/article.html</code>文件，在</p>
 
-{% raw %}
+<pre><code>
+</code></pre>
+
+<p>下方添加下面代码：</p>
+
+<pre><code>
 {% if site.duoshuo_short_name and page.comments != false and post.comments != false and site.duoshuo_comments == true %}
       | &lt;a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#comments"&gt;Comments&lt;/a&gt;
 {% endif %}
-{% endraw %}
+
 </code></pre>
 
-<h2 id="url">自动为图片添加url前缀</h2>
+<h2>自动为图片添加url前缀</h2>
 
 <p>我把图片资源都<a href="https://portal.qiniu.com/">放在了七牛云存储</a>上，写博客时候就是用七牛的外链。但是这样有几个问题：</p>
 
 <ul>
-  <li>每次写博客插入图片外链地址时候都很麻烦，需要给每张图片都添加七牛外链地址url前缀；</li>
-  <li>如果以后更换了存储，那就麻烦了，需要依次编辑替换每个图片的url前缀</li>
+<li>每次写博客插入图片外链地址时候都很麻烦，需要给每张图片都添加七牛外链地址url前缀；</li>
+<li>如果以后更换了存储，那就麻烦了，需要依次编辑替换每个图片的url前缀</li>
 </ul>
+
 
 <p>现在我们就使用一种灵活的方式来配置并自动生成图片的URL前缀：</p>
 
 <p>首先修改<code>/plugins/image_tag.rb</code>文件，在<code>@img['class'].gsub!(/"/, '') if @img['class']</code>后添加下面一行代码：</p>
 
-<p><code>ruby ./plugins/image_tag.rb
-@img['src'] = Jekyll.configuration({})['static_file_prefix'] + @img['src'] if @img['src'][0] == '/'
-</code>
-然后再修改根目录下的<code>_config.yml</code>文件，添加如下配置：</p>
+<pre><code class="ruby ./plugins/image_tag.rb">@img['src'] = Jekyll.configuration({})['static_file_prefix'] + @img['src'] if @img['src'][0] == '/'
+</code></pre>
+
+<p>然后再修改根目录下的<code>_config.yml</code>文件，添加如下配置：</p>
 
 <pre><code># Add url prefix for image automatically
 static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
@@ -223,19 +241,20 @@ static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
 
 <p>本地预览先generate后preview，这样一来插入图片就灵活方便多了。</p>
 
-<h2 id="section-4">添加访客统计</h2>
+<h2>添加访客统计</h2>
+
 <p>本博客的访客统计系统使用的是Flag Counter，所以要<a href="http://www.flagcounter.com/">先去Flag Counter获取代码</a>。</p>
 
 <p>拿到代码后添加<code>.\source\_includes\custom\asides\flag_counter.html</code>文件：</p>
 
-<p>&#8220;`html flag_counter.html</p>
-<section>
-	<h1>访客统计</h1>
-	<br />
-	<a href="http://s07.flagcounter.com/more/2SH"><img src="http://s07.flagcounter.com/count/2SH/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0" /></a>
-</section>
-<p>&#8220;`
-将页面添加到侧边栏，在<code>./_config.yml</code>配置文件中添加下面一行配置：</p>
+<pre><code class="html flag_counter.html">&lt;section&gt;
+    &lt;h1&gt;访客统计&lt;/h1&gt;
+    &lt;br/&gt;
+    &lt;a href="http://s07.flagcounter.com/more/2SH"&gt;&lt;img src="http://s07.flagcounter.com/count/2SH/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0"&gt;&lt;/a&gt;
+&lt;/section&gt;
+</code></pre>
+
+<p>将页面添加到侧边栏，在<code>./_config.yml</code>配置文件中添加下面一行配置：</p>
 
 <pre><code>default_asides: [……, custom/asides/flag_counter.html]
 </code></pre>
@@ -246,7 +265,7 @@ static_file_prefix: http://7u2i08.com1.z0.glb.clouddn.com
 flag_counter: true
 </code></pre>
 
-<h2 id="seo">SEO</h2>
+<h2>SEO</h2>
 
 <p><a href="http://zhanzhang.baidu.com/site/index">百度站长工具</a></p>
 
@@ -270,19 +289,23 @@ flag_counter: true
     <updated>2015-01-11T21:43:31+08:00</updated>
     <id>http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows</id>
     <content type="html"><![CDATA[<!--more-->
+
+
 <p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
 
-<h2 id="github">将博客发布到GitHub</h2>
+<h2>将博客发布到GitHub</h2>
+
 <p>进入博客源代码所在目录。编辑markdown后</p>
 
 <ol>
-  <li>执行<code>rake new_post['my first blog']</code>来生成一篇博文；</li>
-  <li>执行<code>rake generate</code>生成博客网页；</li>
-  <li>执行<code>rake preview</code>后在本地输入<localhost:4000>来预览博客；</localhost:4000></li>
-  <li>执行<code>rake setup_github_pages</code>命令后，按照提示输入对应的GitHub的repository地址：<code>git@github.com:TianweiLi/tianweili.github.com.git</code>；（不执行这一步会可能会报<code>No such file or directory - _deploy</code>错误）</li>
-  <li>执行<code>rake deploy</code>将博客站点发布到GitHub<code>master</code>分支上，这样就可以访问博客了（这一步就是把public目录下文件push到master分支上）；</li>
-  <li>将修改后的octopress源码push到GitHub的<code>source</code>分支上：</li>
+<li>执行<code>rake new_post['my first blog']</code>来生成一篇博文；</li>
+<li>执行<code>rake generate</code>生成博客网页；</li>
+<li>执行<code>rake preview</code>后在本地输入&lt;localhost:4000>来预览博客；</li>
+<li>执行<code>rake setup_github_pages</code>命令后，按照提示输入对应的GitHub的repository地址：<code>git@github.com:TianweiLi/tianweili.github.com.git</code>；（不执行这一步会可能会报<code>No such file or directory - _deploy</code>错误）</li>
+<li>执行<code>rake deploy</code>将博客站点发布到GitHub<code>master</code>分支上，这样就可以访问博客了（这一步就是把public目录下文件push到master分支上）；</li>
+<li>将修改后的octopress源码push到GitHub的<code>source</code>分支上：</li>
 </ol>
+
 
 <p>依次执行下面命令</p>
 
@@ -291,17 +314,24 @@ git commit -m 'build octopress blog'
 git push origin source
 </code></pre>
 
-<h2 id="section">换一台电脑写博客</h2>
+<h2>换一台电脑写博客</h2>
+
 <p>如果需要在另一台电脑写博客并提交上去，那么可以采用下面步骤来实现。</p>
 
 <p>先要找到GitHub的repository url，然后clone source分支到本地：</p>
 
-<pre><code>git clone -b source git@github.com:TianweiLi/tianweili.github.com.git octopress 然后clone master分支到本地：
+<pre><code>git clone -b source git@github.com:TianweiLi/tianweili.github.com.git octopress
+</code></pre>
 
-cd octopress
-git clone git@github.com:TianweiLi/tianweili.github.com.git _deploy 然后进行一些相关依赖的安装，依次执行下面命令：
+<p>然后clone master分支到本地：</p>
 
-gem install bundler
+<pre><code>cd octopress
+git clone git@github.com:TianweiLi/tianweili.github.com.git _deploy
+</code></pre>
+
+<p>然后进行一些相关依赖的安装，依次执行下面命令：</p>
+
+<pre><code>gem install bundler
 bundle install
 rake install
 rake setup_github_pages
