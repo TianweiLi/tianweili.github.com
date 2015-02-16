@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-16T13:31:43+08:00</updated>
+  <updated>2015-02-16T13:32:53+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -45,10 +45,11 @@
 <li>修改文件</li>
 </ul>
 </li>
-<li><p>导出文件实例</p></li>
-<li><p>Put anything here
-!TOC</p></li>
+<li>导出文件实例</li>
 </ul>
+
+
+<!--more-->
 
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
