@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-16T12:23:54+08:00</updated>
+  <updated>2015-02-16T13:12:56+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -20,18 +20,33 @@
     <id>http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel</id>
     <content type="html"><![CDATA[<p>这段时间参与的项目要求做几张Excel报表，由于项目框架使用了jxl组件，所以把jxl组件的详细用法归纳总结一下。本文主要讲述了以下内容：</p>
 
-<ul id="markdown-toc">
-  <li><a href="#section">简介</a></li>
-  <li><a href="#section-1">搭建环境</a></li>
-  <li><a href="#section-2">基本操作</a>    <ul>
-      <li><a href="#section-3">1、创建文件</a></li>
-      <li><a href="#section-4">2、单元格操作</a></li>
-      <li><a href="#section-7">3、数据格式化</a></li>
-      <li><a href="#section-10">4、读取文件</a></li>
-      <li><a href="#section-11">5、修改文件</a></li>
+<ul>
+  <li>JXL及相关工具简介</li>
+  <li>如何安装JXL</li>
+  <li>JXL的基本操作
+    <ul>
+      <li>创建文件</li>
+      <li>单元格操作
+        <ul>
+          <li>合并单元格</li>
+          <li>行高和列宽</li>
+        </ul>
+      </li>
+      <li>数据格式化
+        <ul>
+          <li>字符串格式化</li>
+          <li>对齐方式</li>
+        </ul>
+      </li>
+      <li>读取文件</li>
+      <li>修改文件</li>
     </ul>
   </li>
-  <li><a href="#section-12">导出文件</a></li>
+  <li>
+    <p>导出文件实例</p>
+  </li>
+  <li>Put anything here
+!TOC</li>
 </ul>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
