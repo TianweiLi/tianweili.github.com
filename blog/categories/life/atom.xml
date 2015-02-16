@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Life | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/life/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-16T11:20:48+08:00</updated>
+  <updated>2015-02-16T11:37:04+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -24,9 +24,10 @@
 
 <!--more-->
 
+
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/">http://tianweili.github.io/blog/2015/01/10/my-first-blog/</a></p>
 
-<h2 id="section">为什么不再使用博客园写博客</h2>
+<h2>为什么不再使用博客园写博客</h2>
 
 <p><strong>1.博客园氛围以.NET技术社区为主</strong></p>
 
@@ -58,7 +59,7 @@
 
 <p>最后，不过我仍然很感谢<a href="http://www.cnblogs.com/hellojava/">在博客园的那一段时光</a>，在博客园写博客的那一段日子也让自己进不了不少。（虽然还有很多的博文都存放在草稿里没有发布出来，那就让它继续躺在草稿箱里吧，-_-）至少博客园的博客部分是我所见过几个主流社区里最好的，只是感觉还不太适合自己而已。</p>
 
-<h2 id="octopress">为什么选择Octopress来写博客</h2>
+<h2>为什么选择Octopress来写博客</h2>
 
 <p>基本上博客园的诸多不爽在这里都得到了解决，-_-!</p>
 
@@ -72,16 +73,16 @@
 
 <p>而且Octopress<a href="http://pygments.org/">使用Pygments来进行代码着色</a>，代码风格样式也是自己比较喜欢的，比如：</p>
 
-<p>&#8220;`java Sample.java
-package com.ltw;</p>
+<pre><code class="java Sample.java">package com.ltw;
 
-<p>public class Sample{
-	public static void main(String[] args){
-		System.out.println(“Hello world!”);
-	}
+public class Sample{
+    public static void main(String[] args){
+        System.out.println("Hello world!");
+    }
 }
-&#8220;`
-并且Octopress搭建的博客无论是在PC端还是移动端，它的页面兼容性都比较好哦。</p>
+</code></pre>
+
+<p>并且Octopress搭建的博客无论是在PC端还是移动端，它的页面兼容性都比较好哦。</p>
 
 <p><strong>3.写博客比较爽</strong></p>
 
@@ -95,7 +96,7 @@ package com.ltw;</p>
 
 <p>总之博客搭建过程中会遇到各种问题，滋味那叫一个酸爽。当然也有人一次成功，那即使运气了。不过遇到问题，解决问题也学到了不少东西。后面我会把一部分博客配置和遇到各种问题的解决方式写成博客记录和分享。</p>
 
-<h2 id="section-1">最后</h2>
+<h2>最后</h2>
 
 <p>新的一年，开通了新的博客！迎来了一个好的开端。接下来我就使用这个博客来记录和分享自己的学习和生活经历吧！</p>
 
@@ -106,7 +107,6 @@ package com.ltw;</p>
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/">http://tianweili.github.io/blog/2015/01/10/my-first-blog/</a></p>
 
 <p>转载请注明作者和文章出处，谢谢。</p>
-
 ]]></content>
   </entry>
   
