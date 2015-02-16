@@ -6,6 +6,8 @@ function generateTOC(insertBefore, heading) {
   if (heading != undefined && heading != null) {
     container.append('<span class="tocHeading">' + heading + '</span>');
   }
+  
+  if (startLv === undefined) { startLv = 1; }
 
   div.tableOfContents(content);
   container.append(div);
