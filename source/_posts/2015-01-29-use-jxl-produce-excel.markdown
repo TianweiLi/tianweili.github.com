@@ -8,6 +8,7 @@ keywords: jxl, excel, java
 description: 使用JXL组件操作Excel和导出文件
 ---
 
+
 这段时间参与的项目要求做几张Excel报表，由于项目框架使用了jxl组件，所以把jxl组件的详细用法归纳总结一下。本文主要讲述了以下内容：
 
 * JXL及相关工具简介
@@ -25,6 +26,7 @@ description: 使用JXL组件操作Excel和导出文件
 * 导出文件实例
 
 <!--more-->
+
 
 原文链接：<http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/>
 
