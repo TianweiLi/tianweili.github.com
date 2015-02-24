@@ -1,0 +1,36 @@
+---
+layout: post
+title: "linux中的awk命令"
+date: 2015-02-24 10:33:41 +0800
+comments: true
+categories: linux
+keywords: linux, awk, 命令
+description: linux中的awk命令介绍
+---
+
+本文主要介绍了Linux中的awk命令的一些知识以及如何使用awk编程。不同于grep的查找、sed的编辑等命令，awk命令在文本处理和生成报告等地方是经常用到的一个强大命令。
+
+<!--more-->
+
+原文链接：<>
+
+##简介
+
+awk命令主要用于文本分析。它的处理方式是读入文本，将每行记录以一定的分隔符（默认为空格）分割成不同的域，然后对不同的域进行各种处理与输出。
+
+##命令格式
+
+awk命令的一个基本格式如下：
+
+	awk '{pattern + action}' {filenames}
+
+
+
+
+
+
+
+
+
+
+
