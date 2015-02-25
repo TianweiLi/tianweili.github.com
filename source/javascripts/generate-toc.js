@@ -9,11 +9,9 @@ $(document).ready(function() {
 		
 		div.find(":header").each(function(i){
 			if($(this).prop("tagName") == 'H2') {
-				var h2 = $("<li><a href='#h2" + i + "'>"+ $(this).text() +"</a></li>");
-				ul.append(h2);
+				ul.append("<li><a href='#h2" + i + "'>"+ $(this).text() +"</a></li>");
 				$(this).attr('id', 'h2' + i);
-			}
-			if($(this).prop("tagName") == 'H3') {
+			}else if($(this).prop("tagName") == 'H3') {
 				var li_last = $("#toc").children().last();
 				
 				if(!li_last.has('ul').length) {
