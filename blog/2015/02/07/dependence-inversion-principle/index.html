@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>设计模式六大原则 - 依赖倒置原则 - 李天炜</title>
+  <meta name="author" content="李天炜 litianwei2013[AT]gmail.com">
+
+  
+  <meta name="description" content="设计模式六大原则之依赖倒置原则">
+  <meta name="keywords" content="依赖倒置原则, java, 设计模式, 六大原则">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="baidu-site-verification" content="56FDlmWosN" />
+
+  
+  <link rel="canonical" href="http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="李天炜" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script>
+	function addBlankTargetForLinks () {
+	  $('a[href^="http"]').each(function(){
+		  $(this).attr('target', '_blank');
+	  });
+	}
+
+	$(document).bind('DOMNodeInserted', function(event) {
+	  addBlankTargetForLinks();
+	});
+</script>
+
+<script src="/javascripts/jquery-1.11.2.min.js" type="text/javascript"></script>
+<script src="/javascripts/generate-toc.js" type="text/javascript"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58552615-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <!--Google Analytics-->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58552615-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!--Baidu count-->
+  <script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?6b6008dd331408470ad77cbc9b30612a";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+  </script>
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">李天炜</a></h1>
+  
+    <h2>不积跬步无以至千里</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="tianweili.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+	<li><a href="/">首页</a></li>
+	<li><a href="/blog/archives">博文列表</a></li>
+	<li><a href="/aboutme/index.html">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">设计模式六大原则 - 依赖倒置原则</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-07T22:45:14+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:45 pm</span></time>
+        
+		
+-		   | <a href="#comments">Comments</a>
+-       
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>类A直接依赖于类B，假如要将类A修改为依赖类C，则必须通过修改类A的代码来达成。这种场景下，类A一般是高层模块，负责复杂的业务逻辑。类B和C是底层模块，负责基本的原子操作。假如修改类A，将会给程序带来不必要的风险。而遵循依赖倒置原则的程序设计可以解决这一问题。</p>
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle/">http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle/</a></p>
+
+<h2>什么是依赖倒置原则</h2>
+
+<p>英文缩写DIP（Dependence Inversion Principle）。</p>
+
+<p>原始定义：High level modules should not depend upon low level modules. Both should depend upon abstractions. Abstractions should not depend upon details. Details should depend upon abstractions.</p>
+
+<p>翻译过来就三层含义：</p>
+
+<ul>
+<li>高层模块不应该依赖低层模块，两者都应该依赖其抽象；</li>
+<li>抽象不应该依赖细节；</li>
+<li>细节应该依赖抽象。</li>
+</ul>
+
+
+<p>抽象：即抽象类或接口，两者是不能够实例化的。</p>
+
+<p>细节：即具体的实现类，实现接口或者继承抽象类所产生的类，两者可以通过关键字new直接被实例化。</p>
+
+<p>现在我们来通过实例还原开篇问题的场景，以便更好的来理解。下面代码描述了一个简单的场景，Jim作为人有吃的方法，苹果有取得自己名字的方法，然后实现Jim去吃苹果。</p>
+
+<p>代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//具体Jim人类</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Jim</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eat</span><span class="o">(</span><span class="n">Apple</span> <span class="n">apple</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Jim eat &quot;</span> <span class="o">+</span> <span class="n">apple</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">//具体苹果类</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Apple</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;apple&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Jim</span> <span class="n">jim</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Jim</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">Apple</span> <span class="n">apple</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Apple</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">jim</span><span class="o">.</span><span class="na">eat</span><span class="o">(</span><span class="n">apple</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果：Jim eat apple</p>
+
+<p>上面代码看起来比较简单，但其实是一个非常脆弱的设计。现在Jim可以吃苹果了，但是不能只吃苹果而不吃别的水果啊，这样下去肯定会造成营养失衡。现在想让Jim吃香蕉了（好像香蕉里含钾元素比较多，吃点比较有益），突然发现Jim是吃不了香蕉的，那怎么办呢？看来只有修改代码了啊，由于上面代码中Jim类依赖于Apple类，所以导致不得不去改动Jim类里面的代码。那如果下次Jim又要吃别的水果了呢？继续修改代码？这种处理方式显然是不可取的，频繁修改会带来很大的系统风险，改着改着可能就发现Jim不会吃水果了。</p>
+
+<p>上面的代码之所以会出现上述难堪的问题，就是因为Jim类依赖于Apple类，两者是紧耦合的关系，其导致的结果就是系统的可维护性大大降低。要增加香蕉类却要去修改Jim类代码，这是不可忍受的，你改你的代码为什么要动我的啊，显然Jim不乐意了。我们常说要设计一个健壮稳定的系统，而这里只是增加了一个香蕉类，就要去修改Jim类，健壮和稳定还从何谈起。</p>
+
+<p>而根据依赖倒置原则，我们可以对上述代码做些修改，提取抽象的部分。首先我们提取出两个接口：People和Fruit，都提供各自必需的抽象方法，这样以后无论是增加Jim人类，还是增加Apple、Banana等各种水果，都只需要增加自己的实现类就可以了。由于遵循依赖倒置原则，只依赖于抽象，而不依赖于细节，所以增加类无需修改其他类。</p>
+
+<p>代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//人接口</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">People</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eat</span><span class="o">(</span><span class="n">Fruit</span> <span class="n">fruit</span><span class="o">);</span><span class="c1">//人都有吃的方法，不然都饿死了</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">//水果接口</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Fruit</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span><span class="c1">//水果都是有名字的</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">//具体Jim人类</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Jim</span> <span class="kd">implements</span> <span class="n">People</span><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eat</span><span class="o">(</span><span class="n">Fruit</span> <span class="n">fruit</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Jim eat &quot;</span> <span class="o">+</span> <span class="n">fruit</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">//具体苹果类</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Apple</span> <span class="kd">implements</span> <span class="n">Fruit</span><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;apple&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="c1">//具体香蕉类</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Banana</span> <span class="kd">implements</span> <span class="n">Fruit</span><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;banana&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">People</span> <span class="n">jim</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Jim</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">Fruit</span> <span class="n">apple</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Apple</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">Fruit</span> <span class="n">Banana</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Banana</span><span class="o">();</span><span class="c1">//这里符合了里氏替换原则</span>
+</span><span class='line'>        <span class="n">jim</span><span class="o">.</span><span class="na">eat</span><span class="o">(</span><span class="n">apple</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">jim</span><span class="o">.</span><span class="na">eat</span><span class="o">(</span><span class="n">Banana</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果：</p>
+
+<pre><code>Jim eat apple
+Jim eat banana
+</code></pre>
+
+<ul>
+<li>People类是复杂的业务逻辑，属于高层模块，而Fruit是原子模块，属于低层模块。People依赖于抽象的Fruit接口，这就做到了：高层模块不应该依赖低层模块，两者都应该依赖于抽象（抽象类或接口）。</li>
+<li>People和Fruit接口与各自的实现类没有关系，增加实现类不会影响接口，这就做到了：抽象（抽象类或接口）不应该依赖于细节（具体实现类）。</li>
+<li>Jim、Apple、Banana实现类都要去实现各自的接口所定义的抽象方法，所以是依赖于接口的。这就做到了：细节（具体实现类）应该依赖抽象。</li>
+</ul>
+
+
+<h2>什么是倒置</h2>
+
+<p>到了这里，我们对依赖倒置原则的“依赖”就很好理解了，但是什么是“倒置”呢。是这样子的，刚开始按照正常人的一般思维方式，我想吃香蕉就是吃香蕉，想吃苹果就吃苹果，编程也是这样，都是按照面向实现的思维方式来设计。而现在要倒置思维，提取公共的抽象，面向接口（抽象类）编程。不再依赖于具体实现了，而是依赖于接口或抽象类，这就是依赖的思维方式“倒置”了。</p>
+
+<h2>依赖的三种实现方式</h2>
+
+<p>对象的依赖关系有三种方式来传递：</p>
+
+<h3>接口方法中声明依赖对象。</h3>
+
+<p>就是我们上面代码所展示的那样。</p>
+
+<h3>构造方法传递依赖对象。</h3>
+
+<p>在构造函数中的需要传递的参数是抽象类或接口的方式实现。代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//具体Jim人类</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Jim</span> <span class="kd">implements</span> <span class="n">People</span><span class="o">{</span>
+</span><span class='line'>     
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Fruit</span> <span class="n">fruit</span><span class="o">;</span>
+</span><span class='line'>     
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Jim</span><span class="o">(</span><span class="n">Fruit</span> <span class="n">fruit</span><span class="o">){</span><span class="c1">//构造方法传递依赖对象</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">fruit</span> <span class="o">=</span> <span class="n">fruit</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>     
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eat</span><span class="o">(</span><span class="n">Fruit</span> <span class="n">fruit</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Jim eat &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">fruit</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Setter方法传递依赖对象。</h3>
+
+<p>在我们设置的setXXX方法中的参数为抽象类或接口，来实现传递依赖对象。代码如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//具体Jim人类</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Jim</span> <span class="kd">implements</span> <span class="n">People</span><span class="o">{</span>
+</span><span class='line'>     
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Fruit</span> <span class="n">fruit</span><span class="o">;</span>
+</span><span class='line'>     
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFruit</span><span class="o">(</span><span class="n">Fruit</span> <span class="n">fruit</span><span class="o">){</span><span class="c1">//setter方式传递依赖对象</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">fruit</span> <span class="o">=</span> <span class="n">fruit</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>     
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eat</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Jim eat &quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">fruit</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>优点</h2>
+
+<p>从上面的代码修改过程中，我们可以看到由于类之间松耦合的设计，面向接口编程依赖抽象而不依赖细节，所以在修改某个类的代码时，不会牵涉到其他类的修改，显著降低系统风险，提高系统健壮性。</p>
+
+<p>还有一个优点是，在我们实际项目开发中，都是多人团队协作，每人负责某一模块。比如一个人负责开发People模块，一人负责开发Fruit模块，如果未采用依赖倒置原则，没有提取抽象，那么开发People模块的人必须等Fruit模块开发完成后自己才能开发，否则编译都无法通过，这就是单线程的开发。为了能够两人并行开发，设计时遵循依赖倒置原则，提取抽象，就可以大大提高开发进度。</p>
+
+<h2>总结</h2>
+
+<p>说到底，依赖倒置原则的核心就是面向接口编程的思想，尽量对每个实现类都提取抽象和公共接口形成接口或抽象类，依赖于抽象而不要依赖于具体实现。依赖倒置原则的本质其实就是通过抽象（抽象类或接口）使各个类或模块的实现彼此独立，不相互影响，实现模块间的松耦合。但是这个原则也是6个设计原则中最难以实现的了，如果没有实现这个原则，那么也就意味着开闭原则（对扩展开放，对修改关闭）也无法实现。</p>
+
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle/">http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle/</a></p>
+
+<p>转载请注明作者及出处，谢谢。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">李天炜 litianwei2013[AT]gmail.com</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-07T22:45:14+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:45 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/design-pattern/'>design-pattern</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/04/liskov-substitution-principle/" title="Previous Post: 设计模式六大原则 - 里氏替换原则">&laquo; 设计模式六大原则 - 里氏替换原则</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/24/linux-awk/" title="Next Post: linux中的awk命令">linux中的awk命令 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+	<section>
+		<h1>Comments</h1>
+		<div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="设计模式六大原则 - 依赖倒置原则"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"tianweili"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+	</section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>文章分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/design-pattern/'>design-pattern (3)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (3)</a></li>
+<li class='category'><a href='/blog/categories/life/'>life (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (1)</a></li>
+<li class='category'><a href='/blog/categories/technology/'>technology (2)</a></li>
+
+  </ul>
+</section><section>
+  <h1>最新文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/24/linux-awk/">Linux中的awk命令</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/07/dependence-inversion-principle/">设计模式六大原则 - 依赖倒置原则</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/04/liskov-substitution-principle/">设计模式六大原则 - 里氏替换原则</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/01/single-responsibility-principle/">设计模式六大原则 - 单一职责原则</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/29/use-jxl-produce-excel/">使用JXL组件操作Excel和导出文件</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/TianweiLi">@TianweiLi</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'TianweiLi',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+<section>
+	<h1>访客统计</h1>
+	<br/>
+	<a href="http://s07.flagcounter.com/more/2SH"><img src="http://s07.flagcounter.com/count/2SH/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0"></a>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - 李天炜 litianwei2013[AT]gmail.com -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow64.js"></script>
+</body>
+</html>
