@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-25T21:53:16+08:00</updated>
+  <updated>2015-02-25T21:55:37+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -111,6 +111,13 @@
 <p>其中<code>-f</code>指定了要调用的包含awk命令的文件。</p>
 
 <h2>awk应用示例</h2>
+
+<h3>切割字段并打印</h3>
+
+<p>打印当前目录下所有的文件名列表：</p>
+
+<pre><code>ll | awk 'print $9'
+</code></pre>
 
 <p>参考：<a href="http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html">http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html</a></p>
 
