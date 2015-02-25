@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "设计模式六大原则 - 单一职责原则"
-date: 2015-02-25 17:56:35 +0800
+date: 2015-02-01 17:56:35 +0800
 comments: true
 categories: design-pattern
 keywords: java, 设计模式, 六大原则, 单一职责原则
