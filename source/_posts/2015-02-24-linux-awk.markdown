@@ -61,7 +61,7 @@ awk -f awk-script-file input-file(s)
 打印当前目录下所有的文件名和文件大小列表，以tab键分割：
 
 ```bash
-ls -lh | awk 'print $9"\t"$4'
+ls -lh | awk '{print $5"\t"$9}'
 ```
 
 $0变量是指当前一行记录，$1是指第一个域数据，$2指第二个域数据……以此类推。
@@ -122,6 +122,10 @@ RS                 指定用来切片的分隔符
 ###条件语句
 
 ###循环语句
+
+```bash
+awk 'BEGIN {FS="\t"}{count[$6]++} END {for(x in count) print x,count[x]}' incoming_daily_20150223.dat
+```
 
 ###数组
 
