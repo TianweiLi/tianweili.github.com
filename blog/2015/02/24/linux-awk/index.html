@@ -188,7 +188,7 @@
 <p>打印当前目录下所有的文件名和文件大小列表，以tab键分割：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;print $9&quot;\t&quot;$4&#39;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;{print $5&quot;\t&quot;$9}&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -265,6 +265,11 @@
 
 <h3>循环语句</h3>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{count[$6]++} END {for(x in count) print x,count[x]}&#39;</span> incoming_daily_20150223.dat
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h3>数组</h3>
 
 <p>参考：<a href="http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html">http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html</a></p>
@@ -313,6 +318,8 @@
         <a class="basic-alignment left" href="/blog/2015/02/10/interface-segregation-principle/" title="Previous Post: 设计模式六大原则 - 接口隔离原则">&laquo; 设计模式六大原则 - 接口隔离原则</a>
       
       
+        <a class="basic-alignment right" href="/blog/2015/02/25/linux-sort/" title="Next Post: linux中的sort命令">linux中的sort命令 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -346,13 +353,17 @@
     <li class='category'><a href='/blog/categories/design-pattern/'>design-pattern (4)</a></li>
 <li class='category'><a href='/blog/categories/java/'>java (3)</a></li>
 <li class='category'><a href='/blog/categories/life/'>life (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (2)</a></li>
 <li class='category'><a href='/blog/categories/technology/'>technology (2)</a></li>
 
   </ul>
 </section><section>
   <h1>最新文章</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/25/linux-sort/">Linux中的sort命令</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/02/24/linux-awk/">Linux中的awk命令</a>
@@ -368,10 +379,6 @@
     
       <li class="post">
         <a href="/blog/2015/02/04/liskov-substitution-principle/">设计模式六大原则 - 里氏替换原则</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/01/single-responsibility-principle/">设计模式六大原则 - 单一职责原则</a>
       </li>
     
   </ul>

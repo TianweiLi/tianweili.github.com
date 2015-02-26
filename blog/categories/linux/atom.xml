@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-25T23:19:21+08:00</updated>
+  <updated>2015-02-26T18:19:49+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,55 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Linux中的sort命令]]></title>
+    <link href="http://tianweili.github.io/blog/2015/02/25/linux-sort/"/>
+    <updated>2015-02-25T23:44:09+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/02/25/linux-sort</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
+
+<h2>简介</h2>
+
+<p>sort命令死根据不同的数据类型以行为单位对数据进行排序。</p>
+
+<p>sort的默认比较规则是从首字符向后，按照ASCII码值进行比较，将结果按照升序输出。</p>
+
+<h2>用法</h2>
+
+<p>sort命令的基本格式如下：</p>
+
+<pre><code class="bash">sort [-bcfMnrtk] [source-file] [-o output-file]
+</code></pre>
+
+<p>sort命令可使用的参数有：</p>
+
+<pre><code>-b   忽略每行前面开始出的空格字符。
+-c   检查文件是否已经按照顺序排序。
+-f   排序时，忽略大小写字母。
+-M   将前面3个字母依照月份的缩写进行排序。
+-n   依照数值的大小排序。
+-o   将排序后的结果存入指定的文件
+-r   降序输出
+-t   &lt;分隔字符&gt;   指定排序时所用的栏位分隔字符
+-u   在输出行中去除重复行
+-k   选择以哪个区间进行排序。
+</code></pre>
+
+<h2>示例</h2>
+
+<p>参考链接：<a href="http://www.cnblogs.com/dong008259/archive/2011/12/08/2281214.html">http://www.cnblogs.com/dong008259/archive/2011/12/08/2281214.html</a></p>
+
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
+
+<p>转载请注明作者及出处，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Linux中的awk命令]]></title>
@@ -68,7 +117,7 @@
 
 <p>打印当前目录下所有的文件名和文件大小列表，以tab键分割：</p>
 
-<pre><code class="bash">ls -lh | awk 'print $9"\t"$4'
+<pre><code class="bash">ls -lh | awk '{print $5"\t"$9}'
 </code></pre>
 
 <p>$0变量是指当前一行记录，$1是指第一个域数据，$2指第二个域数据……以此类推。</p>
@@ -123,6 +172,9 @@ RS                 指定用来切片的分隔符
 <h3>条件语句</h3>
 
 <h3>循环语句</h3>
+
+<pre><code class="bash">awk 'BEGIN {FS="\t"}{count[$6]++} END {for(x in count) print x,count[x]}' incoming_daily_20150223.dat
+</code></pre>
 
 <h3>数组</h3>
 

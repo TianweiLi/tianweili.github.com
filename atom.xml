@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-25T23:19:21+08:00</updated>
+  <updated>2015-02-26T18:19:49+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Linux中的sort命令]]></title>
+    <link href="http://tianweili.github.io/blog/2015/02/25/linux-sort/"/>
+    <updated>2015-02-25T23:44:09+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/02/25/linux-sort</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
+
+<h2>简介</h2>
+
+<p>sort命令死根据不同的数据类型以行为单位对数据进行排序。</p>
+
+<p>sort的默认比较规则是从首字符向后，按照ASCII码值进行比较，将结果按照升序输出。</p>
+
+<h2>用法</h2>
+
+<p>sort命令的基本格式如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort <span class="o">[</span>-bcfMnrtk<span class="o">]</span> <span class="o">[</span><span class="nb">source</span>-file<span class="o">]</span> <span class="o">[</span>-o output-file<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sort命令可使用的参数有：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>-b   忽略每行前面开始出的空格字符。
+</span><span class='line'>-c   检查文件是否已经按照顺序排序。
+</span><span class='line'>-f   排序时，忽略大小写字母。
+</span><span class='line'>-M   将前面3个字母依照月份的缩写进行排序。
+</span><span class='line'>-n   依照数值的大小排序。
+</span><span class='line'>-o   将排序后的结果存入指定的文件
+</span><span class='line'>-r   降序输出
+</span><span class='line'>-t   &lt;分隔字符&gt;   指定排序时所用的栏位分隔字符
+</span><span class='line'>-u   在输出行中去除重复行
+</span><span class='line'>-k   选择以哪个区间进行排序。
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>示例</h2>
+
+<p>参考链接：<a href="http://www.cnblogs.com/dong008259/archive/2011/12/08/2281214.html">http://www.cnblogs.com/dong008259/archive/2011/12/08/2281214.html</a></p>
+
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
+
+<p>转载请注明作者及出处，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Linux中的awk命令]]></title>
@@ -75,7 +137,7 @@
 <p>打印当前目录下所有的文件名和文件大小列表，以tab键分割：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;print $9&quot;\t&quot;$4&#39;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;{print $5&quot;\t&quot;$9}&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -151,6 +213,11 @@
 <h3>条件语句</h3>
 
 <h3>循环语句</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{count[$6]++} END {for(x in count) print x,count[x]}&#39;</span> incoming_daily_20150223.dat
+</span></code></pre></td></tr></table></div></figure>
+
 
 <h3>数组</h3>
 
