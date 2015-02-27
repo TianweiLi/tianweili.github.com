@@ -86,6 +86,25 @@ Octopress使用的是Pygments来进行代码着色的，使用方式也比较简
 
 [Pygments支持的语言列表](http://pygments.org/languages/)
 
+###修改代码生成css
+
+当然你也可以修改Pygments生成的代码css样式。
+
+Pygments默认提供了很多css样式，你可以在python shell中用下面命令列出当前pygments所支持的样式：
+
+```bash
+>>> from pygments.styles import STYLE_MAP
+>>> STYLE_MAP.keys()
+['manni', 'igor', 'xcode', 'vim', 'autumn', 'vs', 'rrt', 'native', 'perldoc', 'borland', 'tango', 'emacs', 'friendly', 'monokai', 'paraiso-dark', 'colorful', 'murphy', 'bw', 'pastie', 'paraiso-light', 'trac', 'default', 'fruity']
+>>>
+```
+通过-S来选择，需要生成default的样式：
+
+```bash
+pygmentize -S default -f html > your/path/pygments.css
+```
+
+
 有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入{% raw %}和{% endraw %}代码。
 
 ##添加侧边栏文章分类（category）
