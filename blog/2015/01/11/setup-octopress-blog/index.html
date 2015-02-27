@@ -227,6 +227,30 @@ excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bo
 
 <p><a href="http://pygments.org/languages/">Pygments支持的语言列表</a></p>
 
+<h3>修改代码生成css</h3>
+
+<p>当然你也可以修改Pygments生成的代码css样式。</p>
+
+<p>Pygments默认提供了很多css样式，你可以在python shell中用下面命令列出当前pygments所支持的样式：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&gt;&gt;&gt; from pygments.styles import STYLE_MAP
+</span><span class='line'>&gt;&gt;&gt; STYLE_MAP.keys<span class="o">()</span>
+</span><span class='line'><span class="o">[</span><span class="s1">&#39;manni&#39;</span>, <span class="s1">&#39;igor&#39;</span>, <span class="s1">&#39;xcode&#39;</span>, <span class="s1">&#39;vim&#39;</span>, <span class="s1">&#39;autumn&#39;</span>, <span class="s1">&#39;vs&#39;</span>, <span class="s1">&#39;rrt&#39;</span>, <span class="s1">&#39;native&#39;</span>, <span class="s1">&#39;perldoc&#39;</span>, <span class="s1">&#39;borland&#39;</span>, <span class="s1">&#39;tango&#39;</span>, <span class="s1">&#39;emacs&#39;</span>, <span class="s1">&#39;friendly&#39;</span>, <span class="s1">&#39;monokai&#39;</span>, <span class="s1">&#39;paraiso-dark&#39;</span>, <span class="s1">&#39;colorful&#39;</span>, <span class="s1">&#39;murphy&#39;</span>, <span class="s1">&#39;bw&#39;</span>, <span class="s1">&#39;pastie&#39;</span>, <span class="s1">&#39;paraiso-light&#39;</span>, <span class="s1">&#39;trac&#39;</span>, <span class="s1">&#39;default&#39;</span>, <span class="s1">&#39;fruity&#39;</span><span class="o">]</span>
+</span><span class='line'>&gt;&gt;&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>通过-S来选择，需要生成default的样式：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>pygmentize -S default -f html &gt; your/path/pygments.css
+</span></code></pre></td></tr></table></div></figure>
+
+
 <p>有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入和代码。</p>
 
 <h2>添加侧边栏文章分类（category）</h2>

@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-02-26T22:44:28+08:00</updated>
+  <updated>2015-02-27T18:16:58+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -50,12 +50,10 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>-b   忽略每行前面的所有空格字符，从第一个可见字符开始比较。
-</span><span class='line'>-c   检查文件是否已经排好序，如果乱序则输出第一个乱序行的相关信息，最后返回1
-</span><span class='line'>-C   检查文件是否已经排好序，如果乱序，则不输出内容，仅返回1
-</span><span class='line'>-f   排序时忽略大小写字母。
-</span><span class='line'>-M   将前面3个字母依照月份的缩写进行排序，比如JAN小于FEB。
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>-b   忽略每行前面开始出的空格字符。
+</span><span class='line'>-c   检查文件是否已经按照顺序排序。
+</span><span class='line'>-f   排序时，忽略大小写字母。
+</span><span class='line'>-M   将前面3个字母依照月份的缩写进行排序。
 </span><span class='line'>-n   依照数值的大小排序。
 </span><span class='line'>-o   将排序后的结果存入指定的文件
 </span><span class='line'>-r   降序输出
@@ -65,40 +63,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>下面将会对这些参数进行介绍，其中简单的参数就不再赘述了。</p>
-
-<h2>参数</h2>
-
-<h3>-o选项</h3>
-
-<p>sort是把排序后结果输出到标准输出，所以需要使用重定向将结果写入指定的文件，比如<code>sort file &gt; newfile</code>。</p>
-
-<p>但是重定向的方式在遇到这种需求就无能为力了——把结果输出到原文件中。</p>
-
-<p>如果还是使用重定向的方式，则会把原文件给清空。</p>
-
-<p>而使用<code>-o</code>参数则可以完美解决这个问题：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -r test.dat -o test.dat
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>-t与-o选项</h3>
-
-<p>对于某些有固定格式的文件，比如：</p>
-
-<pre><code>a   12
-b   32
-c   3
-</code></pre>
-
-<p>如果想以第二列数值大小降序输出，则需要使用-t和-o参数了。其中-k指定分隔符，-k指定待排序的列。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -nr -t<span class="s1">&#39;\t&#39;</span> -k2 test.bat -o test.bat
-</span></code></pre></td></tr></table></div></figure>
-
+<h2>示例</h2>
 
 <p>参考链接：<a href="http://www.cnblogs.com/dong008259/archive/2011/12/08/2281214.html">http://www.cnblogs.com/dong008259/archive/2011/12/08/2281214.html</a></p>
 
@@ -201,18 +166,14 @@ c   3
 <h3>BEGIN&hellip;END</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;BEGIN {print &quot;size\tfilename&quot;}  {print $5&quot;\t&quot;$9} END {print &quot;---end---&quot;}&#39;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/passwd <span class="p">|</span> awk  -F <span class="s1">&#39;:&#39;</span>  <span class="s1">&#39;BEGIN {print &quot;name,shell&quot;}  {print $1&quot;,&quot;$7} END {print &quot;blue,/bin/nosh&quot;}&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><code>BEGIN...END</code>语句的执行流程是，awk命令读入数据，然后从BEGIN语句开始，依次读取每一行记录，并打印相应的域，当所有记录都处理后再执行END语句后的程序。也就是说<code>BEGIN...END</code>语句块中的内容在读取数据过程中会反复执行，直到数据读取完成。</p>
-
-<h3>pattern正则匹配</h3>
-
-<p>下面的例子表示打印当前目录下，所有以.bat后缀结尾的文件名列表：</p>
+<h3>pattern正则搜索</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk -F: <span class="s1">&#39;/\.dat$/{print $9}&#39;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk -F: <span class="s1">&#39;/root/{print $7}&#39;</span> /etc/passwd
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -236,7 +197,7 @@ c   3
 </span><span class='line'>ENVIRON            支持队列中系统环境变量的使用
 </span><span class='line'>FILENAME           awk浏览的文件名
 </span><span class='line'>FNR                浏览文件的记录数
-</span><span class='line'>FS                 设置输入域分隔符，等价于命令行-F选项
+</span><span class='line'>FS                 设置输入域分隔符，等价于命令行 -F选项
 </span><span class='line'>NF                 浏览记录的域的个数
 </span><span class='line'>NR                 已读的记录数
 </span><span class='line'>OFS                输出域分隔符
@@ -245,101 +206,22 @@ c   3
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>awk中的内置变量都是很有用处的，可以直接使用。比如上面讲过的指定分隔符操作就可以用FS变量来代替：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ll <span class="p">|</span> awk <span class="s1">&#39;{FS=&quot;\t&quot;;} {print $9}&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>下面会有很多实用awk内置变量的例子。</p>
-
 <h2>awk编程</h2>
 
-<h3>定义变量和运算</h3>
-
-<p>awk可以自定义变量，并参与运算。</p>
-
-<p>比如统计当前目录下列出的文件总大小，以M为单位显示出来：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk <span class="s1">&#39;BEGIN {size=0;} {size+=$5;} END {print &quot;size is &quot;, size}&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意此统计没有把文件夹下的所有文件算在内。</p>
-
-<p>自定义的变量有时候可以不用作初始化操作，不过正规起见，还是建议作初始化操作为好。</p>
+<h3>定义变量</h3>
 
 <h3>条件语句</h3>
 
-<p>awk中的条件语句跟C语言类似，声明方式如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
-</span><span class='line'>  statement1<span class="p">;</span>
-</span><span class='line'>  statement2<span class="p">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
-</span><span class='line'>  statement1<span class="p">;</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>  statement2<span class="p">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="o">(</span>expression1<span class="o">){</span>
-</span><span class='line'>  statement1<span class="p">;</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span>expression2<span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>  statement2<span class="p">;</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>  statement3<span class="p">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>看下面例子，将第三列为12，第六列为0的行打印输出：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{if($3==12 &amp;&amp; $6==0) print $0} END&#39;</span> incoming_daily_20150223.dat
-</span></code></pre></td></tr></table></div></figure>
-
-
 <h3>循环语句</h3>
-
-<p>awk中的循环语句同样与C语言中的类似，支持while、do/while、for、break、continue关键字。</p>
-
-<p>看下面的例子，输出每行的行号和第一列的数据：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;;} {data[NR] = $1} END {for(i=1; i&lt;=NR; i++) print i&quot;\t&quot;data[i]}&#39;</span> incoming_daily_20150223.dat
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>数组</h3>
-
-<p>看下面例子，统计第六列每一个值出现的次数：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{count[$6]++} END {for(x in count) print x,count[x]}&#39;</span> incoming_daily_20150223.dat
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h3>数组</h3>
+
+<p>参考：<a href="http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html">http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html</a></p>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
@@ -2653,6 +2535,30 @@ excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bo
 </code></pre>
 
 <p><a href="http://pygments.org/languages/">Pygments支持的语言列表</a></p>
+
+<h3>修改代码生成css</h3>
+
+<p>当然你也可以修改Pygments生成的代码css样式。</p>
+
+<p>Pygments默认提供了很多css样式，你可以在python shell中用下面命令列出当前pygments所支持的样式：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&gt;&gt;&gt; from pygments.styles import STYLE_MAP
+</span><span class='line'>&gt;&gt;&gt; STYLE_MAP.keys<span class="o">()</span>
+</span><span class='line'><span class="o">[</span><span class="s1">&#39;manni&#39;</span>, <span class="s1">&#39;igor&#39;</span>, <span class="s1">&#39;xcode&#39;</span>, <span class="s1">&#39;vim&#39;</span>, <span class="s1">&#39;autumn&#39;</span>, <span class="s1">&#39;vs&#39;</span>, <span class="s1">&#39;rrt&#39;</span>, <span class="s1">&#39;native&#39;</span>, <span class="s1">&#39;perldoc&#39;</span>, <span class="s1">&#39;borland&#39;</span>, <span class="s1">&#39;tango&#39;</span>, <span class="s1">&#39;emacs&#39;</span>, <span class="s1">&#39;friendly&#39;</span>, <span class="s1">&#39;monokai&#39;</span>, <span class="s1">&#39;paraiso-dark&#39;</span>, <span class="s1">&#39;colorful&#39;</span>, <span class="s1">&#39;murphy&#39;</span>, <span class="s1">&#39;bw&#39;</span>, <span class="s1">&#39;pastie&#39;</span>, <span class="s1">&#39;paraiso-light&#39;</span>, <span class="s1">&#39;trac&#39;</span>, <span class="s1">&#39;default&#39;</span>, <span class="s1">&#39;fruity&#39;</span><span class="o">]</span>
+</span><span class='line'>&gt;&gt;&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>通过-S来选择，需要生成default的样式：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>pygmentize -S default -f html &gt; your/path/pygments.css
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入和代码。</p>
 
