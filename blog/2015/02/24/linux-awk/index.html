@@ -217,14 +217,18 @@
 <h3>BEGIN&hellip;END</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat /etc/passwd <span class="p">|</span> awk  -F <span class="s1">&#39;:&#39;</span>  <span class="s1">&#39;BEGIN {print &quot;name,shell&quot;}  {print $1&quot;,&quot;$7} END {print &quot;blue,/bin/nosh&quot;}&#39;</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;BEGIN {print &quot;size\tfilename&quot;}  {print $5&quot;\t&quot;$9} END {print &quot;---end---&quot;}&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>pattern正则搜索</h3>
+<p><code>BEGIN...END</code>语句的执行流程是，awk命令读入数据，然后从BEGIN语句开始，依次读取每一行记录，并打印相应的域，当所有记录都处理后再执行END语句后的程序。也就是说<code>BEGIN...END</code>语句块中的内容在读取数据过程中会反复执行，直到数据读取完成。</p>
+
+<h3>pattern正则匹配</h3>
+
+<p>下面的例子表示打印当前目录下，所有以.bat后缀结尾的文件名列表：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk -F: <span class="s1">&#39;/root/{print $7}&#39;</span> /etc/passwd
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk -F: <span class="s1">&#39;/\.dat$/{print $9}&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -248,7 +252,7 @@
 </span><span class='line'>ENVIRON            支持队列中系统环境变量的使用
 </span><span class='line'>FILENAME           awk浏览的文件名
 </span><span class='line'>FNR                浏览文件的记录数
-</span><span class='line'>FS                 设置输入域分隔符，等价于命令行 -F选项
+</span><span class='line'>FS                 设置输入域分隔符，等价于命令行-F选项
 </span><span class='line'>NF                 浏览记录的域的个数
 </span><span class='line'>NR                 已读的记录数
 </span><span class='line'>OFS                输出域分隔符
@@ -257,22 +261,101 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>awk中的内置变量都是很有用处的，可以直接使用。比如上面讲过的指定分隔符操作就可以用FS变量来代替：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ll <span class="p">|</span> awk <span class="s1">&#39;{FS=&quot;\t&quot;;} {print $9}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面会有很多实用awk内置变量的例子。</p>
+
 <h2>awk编程</h2>
 
-<h3>定义变量</h3>
+<h3>定义变量和运算</h3>
+
+<p>awk可以自定义变量，并参与运算。</p>
+
+<p>比如统计当前目录下列出的文件总大小，以M为单位显示出来：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk <span class="s1">&#39;BEGIN {size=0;} {size+=$5;} END {print &quot;size is &quot;, size}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意此统计没有把文件夹下的所有文件算在内。</p>
+
+<p>自定义的变量有时候可以不用作初始化操作，不过正规起见，还是建议作初始化操作为好。</p>
 
 <h3>条件语句</h3>
 
-<h3>循环语句</h3>
+<p>awk中的条件语句跟C语言类似，声明方式如下：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{count[$6]++} END {for(x in count) print x,count[x]}&#39;</span> incoming_daily_20150223.dat
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
+</span><span class='line'>  statement1<span class="p">;</span>
+</span><span class='line'>  statement2<span class="p">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
+</span><span class='line'>  statement1<span class="p">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>  statement2<span class="p">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span><span class="o">(</span>expression1<span class="o">){</span>
+</span><span class='line'>  statement1<span class="p">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span>expression2<span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  statement2<span class="p">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>  statement3<span class="p">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>看下面例子，将第三列为12，第六列为0的行打印输出：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{if($3==12 &amp;&amp; $6==0) print $0} END&#39;</span> incoming_daily_20150223.dat
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>循环语句</h3>
+
+<p>awk中的循环语句同样与C语言中的类似，支持while、do/while、for、break、continue关键字。</p>
+
+<p>看下面的例子，输出每行的行号和第一列的数据：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;;} {data[NR] = $1} END {for(i=1; i&lt;=NR; i++) print i&quot;\t&quot;data[i]}&#39;</span> incoming_daily_20150223.dat
 </span></code></pre></td></tr></table></div></figure>
 
 
 <h3>数组</h3>
 
-<p>参考：<a href="http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html">http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858470.html</a></p>
+<p>看下面例子，统计第六列每一个值出现的次数：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{count[$6]++} END {for(x in count) print x,count[x]}&#39;</span> incoming_daily_20150223.dat
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
