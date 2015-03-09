@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-09T21:32:40+08:00</updated>
+  <updated>2015-03-09T21:36:58+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -404,7 +404,7 @@ ProductB Method ...
 
 <p>原文链接：</p>
 
-<p><a href="http://tianweili.github.com/blog/2015/03/03/log4j/">http://tianweili.github.com/blog/2015/03/03/log4j/</a></p>
+<p><a href="http://tianweili.github.io/blog/2015/03/03/log4j/">http://tianweili.github.io/blog/2015/03/03/log4j/</a></p>
 
 <h2>简介</h2>
 
@@ -878,9 +878,9 @@ ProductB Method ...
 
 <p><img src="http://7u2i08.com1.z0.glb.clouddn.com/log4j/log4j_mail_output.png"></p>
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/03/03/log4j/">http://tianweili.github.com/blog/2015/03/03/log4j/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/03/log4j/">http://tianweili.github.io/blog/2015/03/03/log4j/</a></p>
 
 <p>转载请注明作者和文章出处，谢谢。</p>
 ]]></content>
@@ -1206,7 +1206,7 @@ ProductB Method ...
 </ul>
 
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/02/singleton-pattern/">http://tianweili.github.io/blog/2015/03/02/singleton-pattern/</a></p>
 
@@ -1540,7 +1540,7 @@ c   3
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/24/linux-awk/">http://tianweili.github.io/blog/2015/02/24/linux-awk/</a></p>
 
@@ -1790,7 +1790,7 @@ c   3
 
 <p>原则是前人经验的总结，在软件设计中具有一定的指导作用，但是不能完全照搬这些原则。对于接口隔离原则来说，接口尽量小，但是也要有限度。对接口进行细化可以提高程序设计灵活性是不争的事实，但是如果过小，则会造成接口数量过多，使设计复杂化，所以一定要适度。</p>
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/">http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/</a></p>
 
@@ -2058,7 +2058,7 @@ Jim eat banana
 
 <p>说到底，依赖倒置原则的核心就是面向接口编程的思想，尽量对每个实现类都提取抽象和公共接口形成接口或抽象类，依赖于抽象而不要依赖于具体实现。依赖倒置原则的本质其实就是通过抽象（抽象类或接口）使各个类或模块的实现彼此独立，不相互影响，实现模块间的松耦合。但是这个原则也是6个设计原则中最难以实现的了，如果没有实现这个原则，那么也就意味着开闭原则（对扩展开放，对修改关闭）也无法实现。</p>
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle/">http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle/</a></p>
 
@@ -2375,7 +2375,7 @@ Jim eat banana
 
 <p>继承作为面向对象三大特性之一，在给程序设计带来巨大便利的同时，也带来了一些弊端，它增加了对象之间的耦合性。因此在系统设计时，遵循里氏替换原则，尽量避免子类重写父类的方法，可以有效降低代码出错的可能性。</p>
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/04/liskov-substitution-principle/">http://tianweili.github.io/blog/2015/02/04/liskov-substitution-principle/</a></p>
 
@@ -2423,7 +2423,7 @@ Jim eat banana
 </ul>
 
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/single-responsibility-principle/">http://tianweili.github.io/blog/2015/02/25/single-responsibility-principle/</a></p>
 
@@ -2879,7 +2879,7 @@ Jim eat banana
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
 ]]></content>
@@ -2917,7 +2917,7 @@ Jim eat banana
 <!--more-->
 
 
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/27/java-listener/">http://tianweili.github.com/blog/2015/01/27/java-listener/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
 
 <p><a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">之前写了一篇关于Filter的文章</a>，现在再来一篇Listener的，Filter和Listener在项目中是经常用到的，巧妙的使用可以达到事半功倍的效果。故把两者的用法总结一下。</p>
 
@@ -3262,9 +3262,9 @@ Jim eat banana
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/27/java-listener/">http://tianweili.github.com/blog/2015/01/27/java-listener/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
 ]]></content>
   </entry>
   
@@ -3297,7 +3297,7 @@ Jim eat banana
 <!--more-->
 
 
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/26/java-filter/">http://tianweili.github.com/blog/2015/01/26/java-filter/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">http://tianweili.github.io/blog/2015/01/26/java-filter/</a></p>
 
 <h2>Filter简介</h2>
 
@@ -3746,9 +3746,9 @@ Jim eat banana
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/26/java-filter/">http://tianweili.github.com/blog/2015/01/26/java-filter/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">http://tianweili.github.io/blog/2015/01/26/java-filter/</a></p>
 ]]></content>
   </entry>
   
@@ -4056,7 +4056,7 @@ flag_counter: true
     <content type="html"><![CDATA[<!--more-->
 
 
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
 
 <h2>将博客发布到GitHub</h2>
 
@@ -4102,9 +4102,9 @@ rake install
 rake setup_github_pages
 </code></pre>
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
 
 <p>转载请注明作者和文章出处，谢谢。</p>
 ]]></content>
@@ -4207,7 +4207,7 @@ rake setup_github_pages
 
 <hr />
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/">http://tianweili.github.io/blog/2015/01/10/my-first-blog/</a></p>
 
