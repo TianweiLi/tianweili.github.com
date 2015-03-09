@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-03T21:39:21+08:00</updated>
+  <updated>2015-03-09T09:26:17+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,174 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[简单工厂模式]]></title>
+    <link href="http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern/"/>
+    <updated>2015-03-08T19:49:20+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>原文链接：</p>
+
+<p><a href="http://tianweili.github.com/blog/2015/03/08/simple-factory-pattern/">http://tianweili.github.com/blog/2015/03/08/simple-factory-pattern/</a></p>
+
+<h2>介绍</h2>
+
+<p>简单工厂模式属于创建型模式，又叫做静态工厂方法(static factory method)。但是它并没有归为23种GOF设计模式其中。</p>
+
+<p>简单工厂模式是<strong>由工厂对象来决定创建哪一种产品类的实例</strong>。</p>
+
+<p>简单说就是工厂对象根据传入的参数，动态的决定创建哪一种产品类的实例，而这些产品类继承自一个父类或一个接口。</p>
+
+<h2>UML类图</h2>
+
+<p>简单工厂模式的一个基本的UML类图如下所示：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/simple-factory-patternsimple-factory-uml.png"></p>
+
+<p>在这个UML类图中包含以下角色：</p>
+
+<p>工厂（Factory）</p>
+
+<p>这是简单工厂模式的核心，由它来负责实现创建所有实例的逻辑。工厂对象用来被外界调用，根据传入的参数来决定创建哪一个产品对象。</p>
+
+<p>抽象产品（Abstract Product）</p>
+
+<p>抽象类或接口。是所有具体产品对象的父类，由它来定义所有具体产品的公共接口。</p>
+
+<p>具体产品（Concrete Product）</p>
+
+<p>具体产品是简单工厂模式的创建目标，所有创建的对象都是某个具体产品类的实例。</p>
+
+<h2>代码示例</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Product</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">function</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ProductA</span> <span class="kd">implements</span> <span class="n">Product</span><span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">function</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;ProductA function ...&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ProductB</span> <span class="kd">implements</span> <span class="n">Product</span><span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">function</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;ProductB function ...&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Factory</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Product</span> <span class="nf">create</span><span class="o">(</span><span class="n">String</span> <span class="n">productName</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">productName</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="s">&quot;&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">productName</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="s">&quot;productA&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">productName</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">ProductA</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="s">&quot;productB&quot;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">productName</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">ProductB</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Factory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Factory</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">Product</span> <span class="n">product1</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">&quot;productA&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Product</span> <span class="n">product2</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">&quot;productB&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">product1</span><span class="o">.</span><span class="na">function</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">product2</span><span class="o">.</span><span class="na">function</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>输出结果：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">ProductA</span> <span class="n">function</span> <span class="o">...</span>
+</span><span class='line'><span class="n">ProductB</span> <span class="n">function</span> <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>优点</h2>
+
+<p>客户类和工厂类分开。消费者任何时候需要某种产品，只需向工厂请求即可。消费者无须修改就可以接纳新产品。</p>
+
+<p>外界不用关注对象创建逻辑，产品对象具体的创建过程由工厂来实现。外界直接给定信息来决定创建哪个产品对象。</p>
+
+<p>明确了各自的职责，有利于整个软件体系结构的优化。</p>
+
+<h2>缺点</h2>
+
+<p>违反高内聚责任分配原则，将所有的创建逻辑都集中在了工厂类身上。</p>
+
+<p>如果需要添加新的产品类，则需要修改工厂类。</p>
+
+<p>当产品类不断增多，工厂类对产品类型的判断条件过多交织在了一起，会造成逻辑过于复杂，对系统的扩展和维护不利。</p>
+
+<h2>使用场景</h2>
+
+<p>工厂类创建的产品对象比较少。</p>
+
+<p>外界只需要传入工厂类参数来获得产品对象，对于产品对象的创建过程不关心。</p>
+
+<p>简单工厂模式很容易违反高内聚责任分配原则，所以只是在一些很简单的情况下使用。</p>
+
+<h2>应用实例</h2>
+
+<h3>附件的解压</h3>
+
+<p>在工作中，有一个项目模块中要求的功能是：登录邮箱，获取邮件，然后抓取邮件中的附件，下载下来，如果是压缩包，则进行解压，然后进行相应处理。在解压时就用到了简单工厂模式。附件压缩包格式不一，有zip,rar等格式，则把每一种格式的解压和处理都放到一个产品对象中，然后使用一个工厂类来决定创建哪一个产品进行相应的处理。</p>
+
+<p>由于这个压缩包解压方式并不多，判断逻辑并不太复杂，所以也没必要用工厂方法模式，增加代码复杂度。</p>
+
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.com/blog/2015/03/08/simple-factory-pattern/">http://tianweili.github.com/blog/2015/03/08/simple-factory-pattern/</a></p>
+
+<p>转载请注明作者和文章出处，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Log4j的配置与使用详解]]></title>
