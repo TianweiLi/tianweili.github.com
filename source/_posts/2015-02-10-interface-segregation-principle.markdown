@@ -145,7 +145,7 @@ public class D implements I2,I3{
 
 原则是前人经验的总结，在软件设计中具有一定的指导作用，但是不能完全照搬这些原则。对于接口隔离原则来说，接口尽量小，但是也要有限度。对接口进行细化可以提高程序设计灵活性是不争的事实，但是如果过小，则会造成接口数量过多，使设计复杂化，所以一定要适度。
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
 原文链接：<http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/>
 

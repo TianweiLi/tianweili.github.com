@@ -272,6 +272,6 @@ book.write();
 book.close();
 ```
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
 原文链接：<http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/>

@@ -172,7 +172,7 @@ public class Jim implements People{
 
 说到底，依赖倒置原则的核心就是面向接口编程的思想，尽量对每个实现类都提取抽象和公共接口形成接口或抽象类，依赖于抽象而不要依赖于具体实现。依赖倒置原则的本质其实就是通过抽象（抽象类或接口）使各个类或模块的实现彼此独立，不相互影响，实现模块间的松耦合。但是这个原则也是6个设计原则中最难以实现的了，如果没有实现这个原则，那么也就意味着开闭原则（对扩展开放，对修改关闭）也无法实现。
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
 原文链接：<http://tianweili.github.io/blog/2015/02/07/dependence-inversion-principle/>
 

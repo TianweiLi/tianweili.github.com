@@ -11,7 +11,7 @@ description: 简单工厂模式
 <!--more-->
 原文链接：
 
-<http://tianweili.github.com/blog/2015/03/08/simple-factory-pattern/>
+<http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern/>
 
 ##介绍
 
@@ -25,7 +25,7 @@ description: 简单工厂模式
 
 简单工厂模式的一个基本的UML类图如下所示：
 
-{% img /simple-factory-patternsimple-factory-uml.png %}
+{% img /design-pattern/simple-factory-uml.png %}
 
 在这个UML类图中包含以下角色：
 
@@ -122,8 +122,8 @@ ProductB function ...
 
 由于这个压缩包解压方式并不多，判断逻辑并不太复杂，所以也没必要用工厂方法模式，增加代码复杂度。
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
-原文链接：<http://tianweili.github.com/blog/2015/03/08/simple-factory-pattern/>
+原文链接：<http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern/>
 
 转载请注明作者和文章出处，谢谢。

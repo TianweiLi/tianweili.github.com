@@ -92,9 +92,8 @@ Octopress用的是Markdown来写博客，这正合自己的心意。用[Markdown
 
 ---
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
 原文链接：<http://tianweili.github.io/blog/2015/01/10/my-first-blog/>
 
 转载请注明作者和文章出处，谢谢。
-

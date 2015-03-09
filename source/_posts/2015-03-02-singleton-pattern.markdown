@@ -211,7 +211,7 @@ public enum Singleton {
 * 频繁访问数据库或文件的对象。
 
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
 原文链接：<http://tianweili.github.io/blog/2015/03/02/singleton-pattern/>
 

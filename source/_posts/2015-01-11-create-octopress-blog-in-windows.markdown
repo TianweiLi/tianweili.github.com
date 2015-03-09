@@ -9,7 +9,7 @@ description: 在Windows下搭建Octopress博客。
 ---
 
 <!--more-->
-原文链接：<http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/>
+原文链接：<http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/>
 
 ##将博客发布到GitHub
 进入博客源代码所在目录。编辑markdown后
@@ -47,8 +47,8 @@ description: 在Windows下搭建Octopress博客。
 
 
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
-原文链接：<http://tianweili.github.com/blog/2015/01/11/create-octopress-blog-in-windows/>
+原文链接：<http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/>
 
 转载请注明作者和文章出处，谢谢。

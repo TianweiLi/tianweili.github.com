@@ -25,7 +25,7 @@ description: Java中的Filter过滤器详解
 
 <!--more-->
 
-原文链接：<http://tianweili.github.com/blog/2015/01/26/java-filter/>
+原文链接：<http://tianweili.github.io/blog/2015/01/26/java-filter/>
 
 ##Filter简介
 
@@ -301,6 +301,6 @@ OpenSessionInViewFilter主要是保持Session状态直到request将全部页面�
 </filter-mapping>
 ```
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
-原文链接：<http://tianweili.github.com/blog/2015/01/26/java-filter/>
+原文链接：<http://tianweili.github.io/blog/2015/01/26/java-filter/>

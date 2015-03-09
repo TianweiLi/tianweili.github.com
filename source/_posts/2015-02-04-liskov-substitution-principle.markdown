@@ -197,7 +197,7 @@ public class Client{
 继承作为面向对象三大特性之一，在给程序设计带来巨大便利的同时，也带来了一些弊端，它增加了对象之间的耦合性。因此在系统设计时，遵循里氏替换原则，尽量避免子类重写父类的方法，可以有效降低代码出错的可能性。
 
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
 原文链接：<http://tianweili.github.io/blog/2015/02/04/liskov-substitution-principle/>
 

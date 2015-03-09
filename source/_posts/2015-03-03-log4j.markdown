@@ -13,7 +13,7 @@ Log4j是Apache的一个开放源代码项目，通过使用Log4j，我们可以�
 <!--more-->
 原文链接：
 
-<http://tianweili.github.com/blog/2015/03/03/log4j/>
+<http://tianweili.github.io/blog/2015/03/03/log4j/>
 
 ##简介
 
@@ -340,8 +340,8 @@ log4j.appender.MAIL.layout=org.apache.log4j.HTMLLayout
 
 {% img /log4j/log4j_mail_output.png %}
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
-原文链接：<http://tianweili.github.com/blog/2015/03/03/log4j/>
+原文链接：<http://tianweili.github.io/blog/2015/03/03/log4j/>
 
 转载请注明作者和文章出处，谢谢。

@@ -40,7 +40,7 @@ description: 设计模式六大原则之单一职责原则
 * 变更引起的风险变低了。单一职责最大的优点就是修改一个功能，对其他功能的影响显著降低。
 
 
-作者：[李天炜](http://tianweili.github.com/)
+作者：[李天炜](http://tianweili.github.io/)
 
 原文链接：<http://tianweili.github.io/blog/2015/02/25/single-responsibility-principle/>
 
