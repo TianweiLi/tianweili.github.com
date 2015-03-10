@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Design-pattern | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/design-pattern/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-10T19:16:32+08:00</updated>
+  <updated>2015-03-10T19:23:06+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -39,7 +39,7 @@
 
 <p>工厂方法模式的UML类图如下所示：</p>
 
-<p>{% img /design-pattern/factory-method-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/factory-method-uml.png"></p>
 
 <p>在上面的UML图中主要包含了四中角色：</p>
 
@@ -155,7 +155,7 @@ Iterator i = c.iterator();
 
 <p>基本的UML类图如下所示：</p>
 
-<p>{% img /design-pattern/collection-iterator-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/collection-iterator-uml.png"></p>
 
 <h3>JDBC数据库开发</h3>
 
@@ -205,7 +205,7 @@ Iterator i = c.iterator();
 
 <p>简单工厂模式的一个基本的UML类图如下所示：</p>
 
-<p>{% img /design-pattern/simple-factory-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/simple-factory-uml.png"></p>
 
 <p>在这个UML类图中包含以下角色：</p>
 

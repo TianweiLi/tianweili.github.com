@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-09T21:36:58+08:00</updated>
+  <updated>2015-03-10T19:23:06+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -18,7 +18,9 @@
     <link href="http://tianweili.github.io/blog/2015/03/09/factory-method-pattern/"/>
     <updated>2015-03-09T21:07:29+08:00</updated>
     <id>http://tianweili.github.io/blog/2015/03/09/factory-method-pattern</id>
-    <content type="html"><![CDATA[<!--more-->
+    <content type="html"><![CDATA[<p>工厂方法模式是简单工厂模式的衍生，核心工厂类不再负责具体产品的创建，而是一个抽象工厂的角色，仅仅定义子类工厂必须实现的接口。这样进一步抽象的好处是可以使系统在不修改具体工厂类的方式下引进新的产品。</p>
+
+<!--more-->
 
 
 <p>原文链接：</p>
@@ -28,8 +30,6 @@
 <h2>介绍</h2>
 
 <p>工厂方法模式定义：Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses。<strong>定义一个用于创建对象的接口，让子类决定实例化哪一个类。工厂方法使一个类的实例化延迟到其子类。</strong></p>
-
-<p>工厂方法模式是简单工厂模式的衍生，核心工厂类不再负责具体产品的创建，而是一个抽象工厂的角色，仅仅定义子类工厂必须实现的接口。这样进一步抽象的好处是可以使系统在不修改具体工厂类的方式下引进新的产品。</p>
 
 <p>工厂方法模式的对简单工厂模式进行了抽象。有一个抽象的Factory类（可以是抽象类和接口），这个类将不再负责具体的产品生产，而是只制定一些规范，具体的生产工作由其子类去完成。在这个模式中，工厂类和产品类往往可以依次对应。即一个抽象工厂对应一个抽象产品，一个具体工厂对应一个具体产品，这个具体的工厂就负责生产对应的产品。</p>
 
@@ -229,7 +229,9 @@ ProductB Method ...
     <link href="http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern/"/>
     <updated>2015-03-08T19:49:20+08:00</updated>
     <id>http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern</id>
-    <content type="html"><![CDATA[<!--more-->
+    <content type="html"><![CDATA[<p>简单工厂模式就是工厂对象根据传入的参数，动态的决定创建哪一种产品类的实例，而这些产品类继承自一个父类或一个接口。</p>
+
+<!--more-->
 
 
 <p>原文链接：</p>
@@ -1219,14 +1221,18 @@ ProductB Method ...
     <link href="http://tianweili.github.io/blog/2015/02/25/linux-sort/"/>
     <updated>2015-02-25T23:44:09+08:00</updated>
     <id>http://tianweili.github.io/blog/2015/02/25/linux-sort</id>
-    <content type="html"><![CDATA[<!--more-->
+    <content type="html"><![CDATA[<p>sort命令是根据不同的数据类型以行为单位对数据进行排序。</p>
+
+<!--more-->
 
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
+<p>原文链接：</p>
+
+<p><a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
 
 <h2>简介</h2>
 
-<p>sort命令死根据不同的数据类型以行为单位对数据进行排序。</p>
+<p>sort命令是根据不同的数据类型以行为单位对数据进行排序。</p>
 
 <p>sort的默认比较规则是从首字符向后，按照ASCII码值进行比较，将结果按照升序输出。</p>
 
