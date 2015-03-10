@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Technology | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/technology/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-10T18:20:25+08:00</updated>
+  <updated>2015-03-10T19:16:32+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -41,7 +41,7 @@
 
 <p>因为“墙”的关系，所以Octopress建立以后会发现访问速度奇慢无比，竟然超过了40s。</p>
 
-<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/setup-octopress-blog/call-octopress-blog-slowly.png"></p>
+<p>{% img /setup-octopress-blog/call-octopress-blog-slowly.png %}</p>
 
 <p>仔细分析后我们发现其中都是一些被墙的请求报了404Error，所以导致访问博客巨慢无比，下面我们就一次阉割掉这些被墙的请求。T_T</p>
 
@@ -65,7 +65,7 @@
 
 <p>把<code>\source\_includes\after_footer.html</code>文件中的twitter内容给注释掉：</p>
 
-<pre><code>&lt;!--{% include twitter_sharing.html %}--&gt;
+<pre><code>{% raw %}&lt;!--{% include twitter_sharing.html %}--&gt;{% endraw %}
 </code></pre>
 
 <p><strong>3.删除Google font</strong></p>
@@ -131,7 +131,7 @@ excerpt_link: "阅读全文&amp;rarr;"  # "Continue reading" link text at the bo
 <pre><code class="bash">pygmentize -S default -f html &gt; your/path/pygments.css
 </code></pre>
 
-<p>有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入和代码。</p>
+<p>有时候Octopress会把我们想要展示的Ruby代码解析成HTML，如果只是想展示代码，而不让Octopress来解析，那么可以在代码前后加入{% raw %}和{% endraw %}代码。</p>
 
 <h2>添加侧边栏文章分类（category）</h2>
 
@@ -157,14 +157,14 @@ Liquid::Template.register_tag('category_list', Jekyll::CategoryListTag)
 </code></pre>
 
 <p>2.添加<code>source/_includes/asides/category_list.html</code>文件，内容如下：
-    
+    {% raw %}
     <section>
       <h1>文章分类</h1>
       <ul id="categories">
         {% category_list %}
       </ul>
     </section>
-    
+    {% endraw %}
 3.修改<code>_config.yml</code>文件，在<code>default_asides</code>项中添加<code>asides/category_list.html</code>，值之间以逗号隔开，值的先后顺序代表了侧边栏展现的先后顺序。</p>
 
 <pre><code>default_asides: [asides/category_list.html, asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
@@ -186,25 +186,30 @@ duoshuo_short_name: yourname
 
 <p>在<code>./source/_layouts/post.html</code>中的<code>disqus</code>代码</p>
 
-<pre><code>
+<pre><code>{% if site.disqus_short_name and page.comments == true %}
+  &lt;section&gt;
+    &lt;h1&gt;Comments&lt;/h1&gt;
+    &lt;div id="disqus_thread" aria-live="polite"&gt;{% include post/disqus_thread.html %}&lt;/div&gt;
+  &lt;/section&gt;
+{% endif %}
 </code></pre>
 
 <p>下方添加多说评论模块：
-    
+    {% raw %}
     {% if site.duoshuo_short_name and site.duoshuo_comments == true and page.comments == true %}
       <section>
         <h1>Comments</h1>
         <div id="comments" aria-live="polite">{% include post/duoshuo.html %}</div>
       </section>
     {% endif %}
-    
+    {% endraw %}
 如果你希望一些单独的页面下方也放置评论功能，那么在<code>./source/_layouts/page.html</code>中也做如上修改。
 然后创建一个<code>./source/_includes/post/duoshuo.html</code>文件，内容如下：</p>
 
 <pre><code>&lt;!-- Duoshuo Comment BEGIN --&gt;
-&lt;div class="ds-thread" data-title="Category: Technology"&gt;&lt;/div&gt;
+&lt;div class="ds-thread" data-title="{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}"&gt;&lt;/div&gt;
 &lt;script type="text/javascript"&gt;
-  var duoshuoQuery = {short_name:"tianweili"};
+  var duoshuoQuery = {short_name:"{{ site.duoshuo_short_name }}"};
   (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
@@ -219,16 +224,18 @@ duoshuo_short_name: yourname
 
 <p>最后再修改<code>_includes/article.html</code>文件，在</p>
 
-<pre><code>
+<pre><code>{% if site.disqus_short_name and page.comments != false and post.comments != false and site.disqus_show_comment_count == true %}
+         | &lt;a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#disqus_thread"&gt;Comments&lt;/a&gt;
+{% endif %}
 </code></pre>
 
 <p>下方添加下面代码：</p>
 
-<pre><code>
+<pre><code>{% raw %}
 {% if site.duoshuo_short_name and page.comments != false and post.comments != false and site.duoshuo_comments == true %}
       | &lt;a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#comments"&gt;Comments&lt;/a&gt;
 {% endif %}
-
+{% endraw %}
 </code></pre>
 
 <h2>自动为图片添加url前缀</h2>
