@@ -8,13 +8,17 @@ keywords: linux, sort, 命令
 description: linux中的sort命令介绍
 ---
 
+sort命令是根据不同的数据类型以行为单位对数据进行排序。
+
 <!--more-->
 
-原文链接：<http://tianweili.github.io/blog/2015/02/25/linux-sort/>
+原文链接：
+
+<http://tianweili.github.io/blog/2015/02/25/linux-sort/>
 
 ##简介
 
-sort命令死根据不同的数据类型以行为单位对数据进行排序。
+sort命令是根据不同的数据类型以行为单位对数据进行排序。
 
 sort的默认比较规则是从首字符向后，按照ASCII码值进行比较，将结果按照升序输出。
 

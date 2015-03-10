@@ -8,19 +8,16 @@ keywords: 工厂方法模式, 设计模式, java
 description: 工厂方法模式
 ---
 
+工厂方法模式是简单工厂模式的衍生，核心工厂类不再负责具体产品的创建，而是一个抽象工厂的角色，仅仅定义子类工厂必须实现的接口。这样进一步抽象的好处是可以使系统在不修改具体工厂类的方式下引进新的产品。
+
 <!--more-->
 原文链接：
 
 <http://tianweili.github.io/blog/2015/03/09/factory-method-pattern/>
 
-
 ##介绍
 
 工厂方法模式定义：Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses。**定义一个用于创建对象的接口，让子类决定实例化哪一个类。工厂方法使一个类的实例化延迟到其子类。**
-
-
-工厂方法模式是简单工厂模式的衍生，核心工厂类不再负责具体产品的创建，而是一个抽象工厂的角色，仅仅定义子类工厂必须实现的接口。这样进一步抽象的好处是可以使系统在不修改具体工厂类的方式下引进新的产品。
-
 
 工厂方法模式的对简单工厂模式进行了抽象。有一个抽象的Factory类（可以是抽象类和接口），这个类将不再负责具体的产品生产，而是只制定一些规范，具体的生产工作由其子类去完成。在这个模式中，工厂类和产品类往往可以依次对应。即一个抽象工厂对应一个抽象产品，一个具体工厂对应一个具体产品，这个具体的工厂就负责生产对应的产品。
 
