@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-10T14:54:10+08:00</updated>
+  <updated>2015-03-10T18:20:25+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Monitor Pattern]]></title>
+    <link href="http://tianweili.github.io/blog/2015/03/10/monitor-pattern/"/>
+    <updated>2015-03-10T17:39:56+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/03/10/monitor-pattern</id>
+    <content type="html"><![CDATA[<p>监视器模式又叫做观察者模式，</p>
+
+<p>Java多线程中的线程同步就使用到了监视器模式，进入和退出同步代码块的字节指令也称为monitor enter和monitor exit，Java的内置锁也称为监视器锁或监视器。</p>
+
+<p>Vector和Hashtable这两种线程安全的容器类也都使用了监视器模式。</p>
+
+<p>参见《Java并发编程实战》4.2.1节。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[工厂方法模式]]></title>
