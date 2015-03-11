@@ -9,7 +9,7 @@
   <meta name="author" content="李天炜 litianwei2013[AT]gmail.com">
 
   
-  <meta name="description" content="工厂方法模式是简单工厂模式的衍生，核心工厂类不再负责具体产品的创建，而是一个抽象工厂的角色，仅仅定义子类工厂必须实现的接口。这样进一步抽象的好处是可以使系统在不修改具体工厂类的方式下引进新的产品。 ">
+  <meta name="description" content="抽象工厂模式是工厂方法模式的升级版本，主要是引入了一个产品族的概念，将针对单一产品升级到了针对多个产品品种和产品分类。 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -109,6 +109,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/11/abstract-factory-pattern/">抽象工厂模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-11T16:32:58+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:32 pm</span></time>
+        
+		
+-		   | <a href="/blog/2015/03/11/abstract-factory-pattern/#comments">Comments</a>
+-       
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>抽象工厂模式是工厂方法模式的升级版本，主要是引入了一个产品族的概念，将针对单一产品升级到了针对多个产品品种和产品分类。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/11/abstract-factory-pattern/">阅读全文 &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -443,43 +480,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/02/01/single-responsibility-principle/">设计模式六大原则 - 单一职责原则</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-02-01T17:56:35+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>5:56 pm</span></time>
-        
-		
--		   | <a href="/blog/2015/02/01/single-responsibility-principle/#comments">Comments</a>
--       
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>初学者在编程的时候可能一开始会有这样的经历，使用一个类来实现很多的功能，新添加的甚至不相关的功能都放在一个类里来实现，煮成了一锅大杂烩，往往使得某个类包罗万象，无所不能。可能刚开始实现功能比较简单，这样做不会引发什么特别大的问题。但是随着项目复杂度的提升，各种不相关的实现代码耦合在一起，一旦有功能的更改或增删，修改的代码很可能会导致其他功能的正常运行。这种编程方式显然是不可取的，也就是违背了所谓的单一职责原则。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/02/01/single-responsibility-principle/">阅读全文 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; 较旧的文章</a>
@@ -497,12 +497,16 @@
 <li class='category'><a href='/blog/categories/linux/'>linux (2)</a></li>
 <li class='category'><a href='/blog/categories/qi-ta-ji-zhu/'>其他技术 (2)</a></li>
 <li class='category'><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li>
-<li class='category'><a href='/blog/categories/she-ji-mo-shi/'>设计模式 (7)</a></li>
+<li class='category'><a href='/blog/categories/she-ji-mo-shi/'>设计模式 (8)</a></li>
 
   </ul>
 </section><section>
   <h1>最新文章</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/11/abstract-factory-pattern/">抽象工厂模式</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/03/09/factory-method-pattern/">工厂方法模式</a>
@@ -518,10 +522,6 @@
     
       <li class="post">
         <a href="/blog/2015/03/02/singleton-pattern/">单例模式的八种写法比较</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/25/linux-sort/">Linux中的sort命令</a>
       </li>
     
   </ul>
