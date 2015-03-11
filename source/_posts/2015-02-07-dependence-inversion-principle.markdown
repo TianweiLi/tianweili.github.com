@@ -3,7 +3,7 @@ layout: post
 title: "设计模式六大原则 - 依赖倒置原则"
 date: 2015-02-07 22:45:14 +0800
 comments: true
-categories: design-pattern
+categories: 设计模式
 keywords: 依赖倒置原则, java, 设计模式, 六大原则
 description: 设计模式六大原则之依赖倒置原则
 ---

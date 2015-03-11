@@ -3,7 +3,7 @@ layout: post
 title: "设计模式六大原则 - 里氏替换原则"
 date: 2015-02-04 22:34:39 +0800
 comments: true
-categories: design-pattern
+categories: 设计模式
 keywords: java, 设计模式, 六大原则, 里氏替换原则
 description: 设计模式六大原则之里氏替换原则
 ---

@@ -3,7 +3,7 @@ layout: post
 title: "第一篇博文"
 date: 2015-01-09 17:28:08
 comments: true
-categories: Life
+categories: 生活
 keywords: octopress,blog,github
 description: 李天炜的第一篇博文，使用Octopress搭建。讲述了为什么要搭建这么一篇博客站点。
 ---

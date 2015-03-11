@@ -3,7 +3,7 @@ layout: post
 title: "Octopress博客的个性化配置"
 date: 2015-01-11 21:52:49 +0800
 comments: true
-categories: Technology
+categories: 其他技术
 keywords: octopress, blog, github, 优化访问速度， 多说评论， 添加访客统计
 description: Octopress博客的一些个性化配置，如何提高Octopress博客访问速度，增加文章分类，添加多说评论系统，添加访客统计等。
 ---

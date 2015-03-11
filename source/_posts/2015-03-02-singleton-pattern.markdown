@@ -3,7 +3,7 @@ layout: post
 title: "单例模式的八种写法比较"
 date: 2015-03-02 19:08:39 +0800
 comments: true
-categories: design-pattern
+categories: 设计模式
 keywords: 单例模式, 设计模式, java
 description: 单例模式的八种写法比较
 ---

@@ -3,7 +3,7 @@ layout: post
 title: "设计模式六大原则 - 接口隔离原则"
 date: 2015-02-10 23:01:20 +0800
 comments: true
-categories: design-pattern
+categories: 设计模式
 keywords: java, 设计模式, 六大原则, 接口隔离原则
 description: 设计模式六大原则之接口隔离原则
 ---

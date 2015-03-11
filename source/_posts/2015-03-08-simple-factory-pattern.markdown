@@ -3,7 +3,7 @@ layout: post
 title: "简单工厂模式"
 date: 2015-03-08 19:49:20 +0800
 comments: true
-categories: design-pattern
+categories: 设计模式
 keywords: 简单工厂模式, 设计模式, java
 description: 简单工厂模式
 ---

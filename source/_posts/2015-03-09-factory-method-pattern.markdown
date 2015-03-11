@@ -3,7 +3,7 @@ layout: post
 title: "工厂方法模式"
 date: 2015-03-09 21:07:29 +0800
 comments: true
-categories: design-pattern
+categories: 设计模式
 keywords: 工厂方法模式, 设计模式, java
 description: 工厂方法模式
 ---

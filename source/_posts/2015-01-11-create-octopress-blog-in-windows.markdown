@@ -3,7 +3,7 @@ layout: post
 title: "windows下搭建Octopress博客"
 date: 2015-01-11 21:43:31 +0800
 comments: true
-categories: Technology
+categories: 其他技术
 keywords: octopress,blog,github
 description: 在Windows下搭建Octopress博客。
 ---
