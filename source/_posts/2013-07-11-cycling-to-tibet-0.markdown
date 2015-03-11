@@ -164,6 +164,8 @@ description: 今天是骑车去西藏第0天，对成都的印象。
 ##骑行日志
 
 * [骑车去西藏—第0天—成都印象](http://tianweili.github.io/blog/2013/03/11/cycling-to-tibet-0/)
+* [骑车去西藏—第1天—出师不利](http://tianweili.github.io/blog/2013/07/12/cycling-to-tibet-1/)
+* [骑车去西藏—第2天—牛刀小试](http://tianweili.github.io/blog/2013/07/13/cycling-to-tibet-2/)
 
 
 
