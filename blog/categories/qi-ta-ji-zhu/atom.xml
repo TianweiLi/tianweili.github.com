@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Technology | 李天炜]]></title>
-  <link href="http://tianweili.github.io/blog/categories/technology/atom.xml" rel="self"/>
+  <title><![CDATA[Category: 其他技术 | 李天炜]]></title>
+  <link href="http://tianweili.github.io/blog/categories/qi-ta-ji-zhu/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-10T19:23:06+08:00</updated>
+  <updated>2015-03-11T12:25:55+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -202,7 +202,7 @@ duoshuo_short_name: yourname
 然后创建一个<code>./source/_includes/post/duoshuo.html</code>文件，内容如下：</p>
 
 <pre><code>&lt;!-- Duoshuo Comment BEGIN --&gt;
-&lt;div class="ds-thread" data-title="Category: Technology"&gt;&lt;/div&gt;
+&lt;div class="ds-thread" data-title="Category: 其他技术"&gt;&lt;/div&gt;
 &lt;script type="text/javascript"&gt;
   var duoshuoQuery = {short_name:"tianweili"};
   (function() {
