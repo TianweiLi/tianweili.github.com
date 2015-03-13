@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 设计模式 | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/she-ji-mo-shi/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-13T16:53:28+08:00</updated>
+  <updated>2015-03-13T22:06:24+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,488 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[代理模式]]></title>
+    <link href="http://tianweili.github.io/blog/2015/03/13/proxy-pattern/"/>
+    <updated>2015-03-13T21:55:18+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/03/13/proxy-pattern</id>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<p>原文链接：</p>
+
+<p><a href="http://tianweili.github.io/blog/2015/03/11/abstract-factory-pattern/">http://tianweili.github.io/blog/2015/03/11/abstract-factory-pattern/</a></p>
+
+<h2>介绍</h2>
+
+<p>代理模式属于结构性模式，使用频率很高。</p>
+
+<p>定义：Provide a surrogate or placeholder for another object to control access to it.为其他对象提供一种代理以控制这个对象的访问。</p>
+
+<p>装饰模式、状态模式、策略模式、访问者模式本质上都是在更特殊的场合采用了代理模式。</p>
+
+<h2>UML类图</h2>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/proxy-pattern-uml.png"></p>
+
+<p>从以上UML类图中可以看出代理模式主要有三种角色：</p>
+
+<p><strong>抽象主题角色</strong></p>
+
+<p>可以是接口或抽象类，是某类通用业务的定义。</p>
+
+<p><strong>具体主题角色</strong></p>
+
+<p>作为被代理对象，是具体业务的真实执行者。</p>
+
+<p><strong>代理主题角色</strong></p>
+
+<p>是具体主题对象的代理，负责对具体对象的应用，把所有抽象主题定义的方法委托给具体主题对象来实现，它用来在具体主题对象业务处理的前后做一些处理工作。</p>
+
+<h2>代码示例</h2>
+
+<pre><code class="java">/**
+ * Abstract subject class.
+ */
+public interface Subject {
+    public void someMethod();
+}
+/**
+ * Real subject class.
+ */
+public class RealSubject implements Subject {
+
+    private String name;
+
+    public RealSubject(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void someMethod() {
+        System.out.println(name + "'s someMehtod.");
+    }
+}
+/**
+ * Proxy class.
+ */
+public class ProxySubject implements Subject {
+
+    private Subject subject;
+
+    public ProxySubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    @Override
+    public void someMethod() {
+        this.before();
+        subject.someMethod();
+        this.after();
+    }
+
+    /**
+     * preprocessing
+     */
+    private void before() {
+        // do something...
+    }
+
+    /**
+     * follow-up processing
+     */
+    private void after() {
+        // do something...
+    }
+}
+</code></pre>
+
+<p>从以上代码可以看出ProxySubject对象还有before和after方法，可以在RealSubject对象的someMethod业务方法前后做一些预处理和善后处理工作。</p>
+
+<p>一个代理类可以代理多个被代理对象，只要是实现同一个接口。当然也可以一个被代理对象就有一个代理类，不过一般是一个接口有一个代理类就够了，在应用时具体是代理哪一个被代理对象，这是由场景类也就是高层模块定义的，根据构造方法的传入哪一个被代理对象参数来决定代理哪一个对象。</p>
+
+<p>构造方法：</p>
+
+<pre><code class="java">public ProxySubject(Subject subject) {
+    this.subject = subject;
+}
+</code></pre>
+
+<p>想代理哪个对象就要传入生成这个对象的实例。</p>
+
+<h2>优点</h2>
+
+<p>各个角色职责清晰，比如被代理对象只需要实现属于自己具体的业务逻辑就行了，不用去关心非本职责的业务处理。其他的一些处理业务可以交给代理类来处理。这样做的好处是编程简洁清晰，业务分明。</p>
+
+<p>扩展性好，具体实现对象的业务发生了变化，只需要修改自身业务处理逻辑，或者增加删减一个实现业务接口的对象，不会影响代理业务。</p>
+
+<p>代理模式可以提供非常好的访问控制，由代理类来控制被代理对象，可以做一些预处理消息，过滤消息，消息转发和善后处理工作等等。</p>
+
+<h2>普通代理和强制代理</h2>
+
+<p>普通代理和强制代理是代理模式的两种不同结构，是根据调用者能够访问到代理对象还是具体对象来区分的。就好比网络上的代理服务器设置分为普通代理和透明代理。普通代理需要用户手动设置代理服务器的IP地址，用户必须知道代理的存在。透明代理就是用户不需要设置代理服务器地址，就可以直接访问，不用知道代理的存在。</p>
+
+<h3>普通代理</h3>
+
+<p>普通代理是用户只能访问代理角色，而不能访问真实角色。</p>
+
+<p>只需要对上面代码稍作改动即可实现普通代理的效果，代码如下：</p>
+
+<pre><code class="java">/**
+ * Abstract subject class.
+ */
+public interface Subject {
+    public void someMethod();
+}
+/**
+ * Real subject class.
+ */
+public class RealSubject implements Subject {
+
+    private String name;
+
+    /**
+     * Don't allow client call this.
+     */
+    public RealSubject(Subject subject, String name) throws Exception {
+        if(subject == null) {
+            throw new Exception("Don't allow realSubject created!");
+        } else {
+            this.name = name;
+        }
+    }
+
+    @Override
+    public void someMethod() {
+        System.out.println(name + "'s someMehtod.");
+    }
+}
+/**
+ * Proxy class.
+ */
+public class ProxySubject implements Subject {
+
+    private Subject subject;
+
+    /**
+     * Client call proxy subject.
+     */
+    public ProxySubject(String name) {
+        try {
+            this.subject = new RealSubject(this, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void someMethod() {
+        this.before();
+        subject.someMethod();
+        this.after();
+    }
+
+    /**
+     * preprocessing
+     */
+    private void before() {
+        // do something...
+        System.out.println("before ...");
+    }
+
+    /**
+     * follow-up processing
+     */
+    private void after() {
+        // do something...
+        System.out.println("after ...");
+    }
+}
+public class Client {
+    public static void main(String[] args) {
+        Subject subject = new ProxySubject("ZhangSan");
+        subject.someMethod();
+    }
+}
+</code></pre>
+
+<p>运行程序结果如下：</p>
+
+<pre><code>before ...
+ZhangSan's someMehtod.
+after ...
+</code></pre>
+
+<p>在上面RealSubject的构造方法中是通过传入参数subject来限制用户不能实例化自己，当然也可以通过别的一些限制条件，比如类名必须有Proxy等等。</p>
+
+<h3>强制代理</h3>
+
+<p>普通代理是通过代理角色找到真是角色，而强制代理是强制只能通过真实角色查找代理角色来访问，想直接通过实例化代理角色或真实角色都不能访问。</p>
+
+<p>UML类图如下：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/proxy-pattern-uml-2.png"></p>
+
+<p>从以上UML类图可以看出Subject接口中添加了个获取代理的接口方法。</p>
+
+<p>代码清单：</p>
+
+<pre><code class="java">/**
+ * Abstract subject class.
+ */
+public interface Subject {
+    public void someMethod();
+    public Subject getProxy();
+}
+/**
+ * Real subject class.
+ */
+public class RealSubject implements Subject {
+
+    private String name;
+    private Subject proxy;
+
+    public RealSubject(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void someMethod() {
+        if (this.isProxy()) {
+            System.out.println(name + "'s someMehtod.");
+        } else {
+            System.out.println("Only visit proxy class is allowed!");
+        }
+    }
+
+    @Override
+    public Subject getProxy() {
+        // appoint proxy class.
+        this.proxy = new ProxySubject(this);
+        return proxy;
+    }
+
+    private boolean isProxy() {
+        if (this.proxy == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+/**
+ * Proxy class.
+ */
+public class ProxySubject implements Subject {
+
+    private Subject subject;
+
+    public ProxySubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    @Override
+    public void someMethod() {
+        subject.someMethod();
+    }
+
+    @Override
+    public Subject getProxy() {
+        return this;
+    }
+}
+</code></pre>
+
+<p>当客户端想通过真实角色来访问时，客户端代码如下：</p>
+
+<pre><code class="java">public class Client {
+    public static void main(String[] args) {
+        Subject realSubject = new RealSubject("ZhangSan");
+        realSubject.someMethod();
+    }
+}
+</code></pre>
+
+<p>执行结果：</p>
+
+<pre><code>Only visit proxy class is allowed!
+</code></pre>
+
+<p>访问被拒绝，因为它是通过真实角色来直接访问的，而不是通过真实角色来获取代理角色来访问。</p>
+
+<p>当客户端想通过代理角色来访问时，客户端代码如下：</p>
+
+<pre><code class="java">public class Client {
+    public static void main(String[] args) {
+        Subject realSubject = new RealSubject("ZhangSan");
+        Subject proxy = new ProxySubject(realSubject);
+        proxy.someMethod();
+    }
+}
+</code></pre>
+
+<p>执行结果：</p>
+
+<pre><code>Only visit proxy class is allowed!
+</code></pre>
+
+<p>访问同样被拒绝，因为它是通过代理角色来直接访问的，而不是通过真实角色来获取代理角色来访问。</p>
+
+<p>只有强制客户端通过真实角色来获取代理对象，才能访问。客户端代码如下：</p>
+
+<pre><code class="java">public class Client {
+    public static void main(String[] args) {
+        Subject realSubject = new RealSubject("ZhangSan");
+        Subject proxy = realSubject.getProxy();
+        proxy.someMethod();
+    }
+}
+</code></pre>
+
+<p>执行结果：</p>
+
+<pre><code>ZhangSan's someMehtod.
+</code></pre>
+
+<p>通过真实角色来获取代理对象访问成功。</p>
+
+<h2>动态代理</h2>
+
+<p>这一节之前所讲的代理其实都是静态代理，它有一个特点就是要在实现阶段就要指定代理类以及被代理者，很不灵活。而动态代理就是在实现阶段不用管代理具体对象，而在运行阶段指定代理哪个对象即可生产代理对象。</p>
+
+<p>基本的UML类图如下所示：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/proxy-pattern-uml-3.png"></p>
+
+<p>从类图中可以看出，具体的业务逻辑和代理逻辑是两条线，两者之间没有必然的耦合关系。</p>
+
+<p>InvocationHandler是JDK提供的接口，用来对被代理类的方法进行代理。</p>
+
+<p>注意：<strong>被代理者必须实现一个接口</strong>，否则动态代理无法生成代理对象。</p>
+
+<p>动态代理是根据被代理者的接口生成所有的方法。通过InvocationHandler接口，所有被代理的方法都由InvocationHandler来接管实际的处理逻辑。</p>
+
+<p>代码清单：</p>
+
+<pre><code class="java">/**
+ * Abstract subject class.
+ */
+public interface Subject {
+    public void someMethod();
+}
+/**
+ * Real subject class.
+ */
+public class RealSubject implements Subject {
+
+    private String name;
+
+    public RealSubject(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void someMethod() {
+        System.out.println(name + "'s someMehtod.");
+    }
+}
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+public class MyInvocationHandler implements InvocationHandler {
+
+    private Object obj;
+
+    public MyInvocationHandler(Object obj) {
+        this.obj = obj;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("before...");
+        Object result = method.invoke(obj, args);
+        System.out.println("after...");
+        return result;
+    }
+}
+</code></pre>
+
+<p>invoke方法是接口InvocationHandler中定义必须实现的，它用来完成对真实方法的调用。</p>
+
+<p>客户端调用代码：</p>
+
+<pre><code class="java">import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+public class Client {
+    public static void main(String[] args) {
+        Subject subject = new RealSubject("ZhangSan");
+
+        ClassLoader loader = subject.getClass().getClassLoader();
+        Class[] interfaces = subject.getClass().getInterfaces();
+        InvocationHandler handler = new MyInvocationHandler(subject);
+
+        Subject proxy = (Subject) Proxy.newProxyInstance(loader, interfaces, handler);
+        proxy.someMethod();
+    }
+}
+</code></pre>
+
+<p>执行结果：</p>
+
+<pre><code>before...
+ZhangSan's someMehtod.
+after...
+</code></pre>
+
+<p>从结果中可以看出我们已经达到了代理RealSubject对象的目的。</p>
+
+<p>看了上面的客户端调用代码，我们可以优化一下，将Proxy封装起来，使得调用更简便一些。增加动态代理封装类：</p>
+
+<pre><code class="java">import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+public class DynamicProxy {
+
+    public static Object newProxyInstance(Object object) {
+
+        ClassLoader loader = object.getClass().getClassLoader();
+        Class[] interfaces = object.getClass().getInterfaces();
+        InvocationHandler handler = new MyInvocationHandler(object);
+
+        return Proxy.newProxyInstance(loader, interfaces, handler);
+    }
+}
+</code></pre>
+
+<p>客户端调用：</p>
+
+<pre><code class="java">public class Client {
+    public static void main(String[] args) {
+        Subject subject = new RealSubject("ZhangSan");
+        Subject proxy = (Subject) DynamicProxy.newProxyInstance(subject);
+        proxy.someMethod();
+    }
+}
+</code></pre>
+
+<h2>动态代理优点</h2>
+
+<p>动态代理拥有以上静态代理所有优点，除此之外还有动态代理的代理对象是在需要的时候动态生成的。</p>
+
+<p>在业务逻辑开发时可以不用管代理业务逻辑，这两条线不会耦合。比如在做具体的业务逻辑设计和实现时不用考虑日志、事务、权限等逻辑处理，这些可以通过动态代理来搞定。</p>
+
+<p>Struts2的Form映射和Spring的AOP（Aspect Oriented Programming）就是动态代理的典型应用。</p>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/11/abstract-factory-pattern/">http://tianweili.github.io/blog/2015/03/11/abstract-factory-pattern/</a></p>
+
+<p>转载请注明作者和文章出处，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[抽象工厂模式]]></title>
@@ -687,159 +1169,6 @@ ProductB function ...
 <p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/02/singleton-pattern/">http://tianweili.github.io/blog/2015/03/02/singleton-pattern/</a></p>
-
-<p>转载请注明作者及出处，谢谢。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[设计模式六大原则 - 接口隔离原则]]></title>
-    <link href="http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/"/>
-    <updated>2015-02-10T23:01:20+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle</id>
-    <content type="html"><![CDATA[<p>类A通过接口I依赖类B，类C通过接口I依赖类D，如果接口I对于类B和类D来说不是最小接口，则类B和类D必须去实现他们不需要的方法。</p>
-
-<!--more-->
-
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/">http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/</a></p>
-
-<h2>什么是接口隔离原则</h2>
-
-<p>接口隔离原则比较简单，有两种定义：</p>
-
-<ul>
-<li>Clients should not be forced to depend upon interfaces that they don&rsquo;t use.（客户端不应该强行依赖它不需要的接口）</li>
-<li>The dependency of one class to another one should depend on the smallest possible interface.（类间的依赖关系应该建立在最小的接口上）</li>
-</ul>
-
-
-<p>其实上述两种定义说的是同一种意思。客户端不应该依赖它不需要的接口，意思就是说客户端只要依赖它需要的接口，它需要什么接口，就提供什么接口，不提供多余的接口。“类间的依赖关系应该建立在最小的接口上”也表达这一层意思。通俗的讲就是：接口中的方法应该尽量少，不要使接口过于臃肿，不要有很多不相关的逻辑方法。</p>
-
-<p>通过简单的代码还原开篇的问题，代码如下：</p>
-
-<pre><code class="java">public interface I {
-    public void method1();
-    public void method2();
-    public void method3();
-}
-public class B implements I{
- 
-    @Override
-    public void method1() {
-        System.out.println("类B实现了接口I的方法1");
-    }
- 
-    @Override
-    public void method2() {
-        System.out.println("类B实现了接口I的方法2");
-    }
- 
-    @Override
-    public void method3() {//类B并不需要接口I的方法3功能，但是由于实现接口I，所以不得不实现方法3
-        //在这里写一个空方法
-    }
-}
-public class D implements I{
- 
-    @Override
-    public void method2() {
-        System.out.println("类D实现了接口I的方法2");
-    }
- 
-    @Override
-    public void method3() {
-        System.out.println("类D实现了接口I的方法3");
-    }
- 
-    @Override
-    public void method1() {//类D并不需要接口I的方法1功能，但是由于实现接口I，所以不得不实现方法1
-        //在这里写一个空方法
-    }
-}
-//类A通过接口I依赖类B
-public class A {
-    public void depend1(I i){
-        i.method1();
-    }
-}
-//类C通过接口I依赖类D
-public class C {
-    public void depend1(I i){
-        i.method3();
-    }
-}
-public class Client {
-    public static void main(String[] args) {
-        A a = new A();
-        I i1 = new B();
-        a.depend1(i1);
-         
-        C c = new C();
-        I i2 = new D();
-        c.depend1(i2);
-    }
-}
-</code></pre>
-
-<p>运行结果：</p>
-
-<pre><code>类B实现了接口I的方法1
-类D实现了接口I的方法3
-</code></pre>
-
-<p>从以上代码可以看出，如果接口过于臃肿，不同业务逻辑的抽象方法都放在一个接口内，则会造成它的实现类必须实现自己并不需要的方法，这种设计方式显然是不妥当的。所以我们要修改上述设计方法，把接口I拆分成3个接口，使得实现类只需要实现自己需要的接口即可。只贴出修改后的接口和实现类的代码，修改代码如下：</p>
-
-<pre><code class="java">public interface I1 {
-    public void method1();
-}
-public interface I2 {
-    public void method2();
-}
-public interface I3 {
-    public void method3();
-}
- 
-public class B implements I1,I2{
-    @Override
-    public void method1() {
-        System.out.println("类B实现了接口I的方法1");
-    }
- 
-    @Override
-    public void method2() {
-        System.out.println("类B实现了接口I的方法2");
-    }
-}
- 
-public class D implements I2,I3{
-    @Override
-    public void method2() {
-        System.out.println("类D实现了接口I的方法2");
-    }
- 
-    @Override
-    public void method3() {
-        System.out.println("类D实现了接口I的方法3");
-    }
-}
-</code></pre>
-
-<h2>与单一职责原则的区别</h2>
-
-<p>到了这里，有些人可能觉得接口隔离原则与单一职责原则很相似，其实不然。</p>
-
-<p>第一，单一职责原则注重的是职责；而接口隔离原则注重对接口依赖的隔离。</p>
-
-<p>第二，单一职责原则主要是约束类，其次才是接口和方法，它针对的是程序中的实现和细节；而接口隔离原则主要约束接口，主要针对抽象，针对程序整体框架的构建。</p>
-
-<h2>注意事项</h2>
-
-<p>原则是前人经验的总结，在软件设计中具有一定的指导作用，但是不能完全照搬这些原则。对于接口隔离原则来说，接口尽量小，但是也要有限度。对接口进行细化可以提高程序设计灵活性是不争的事实，但是如果过小，则会造成接口数量过多，使设计复杂化，所以一定要适度。</p>
-
-<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/">http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/</a></p>
 
 <p>转载请注明作者及出处，谢谢。</p>
 ]]></content>
