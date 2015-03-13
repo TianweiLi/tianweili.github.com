@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 设计模式 | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/she-ji-mo-shi/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-13T16:30:53+08:00</updated>
+  <updated>2015-03-13T16:53:28+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -35,7 +35,7 @@
 
 <h2>UML类图</h2>
 
-<p>{% img /design-pattern/abstract-factory-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/abstract-factory-uml.png"></p>
 
 <p>左边的UML图并不复杂，主要包括2个抽象产品和一个抽象工厂。两个具体实现工厂各对应创建两个不同类别产品。</p>
 
@@ -163,7 +163,7 @@ public class Factory2 implements AbstractFactory{
 
 <p>关键逻辑删减版类图如下</p>
 
-<p>{% img /design-pattern/sitecrawler-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/sitecrawler-uml.png"></p>
 
 <p>这样就实现了良好的封装性，高层模块想调用知道某个网站的一些统计分析数据时，只需要知道相应的工厂来生产就行了，不需要知道具体的实现过程和复杂的处理逻辑。在产品等级也就是网站层面上扩展性好，后来有新增站点的时候，直接增加产品等级，实现相应的抽象产品类，再增加一个具体实现工厂就好了。</p>
 
@@ -203,7 +203,7 @@ public class Factory2 implements AbstractFactory{
 
 <p>工厂方法模式的UML类图如下所示：</p>
 
-<p>{% img /design-pattern/factory-method-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/factory-method-uml.png"></p>
 
 <p>在上面的UML图中主要包含了四中角色：</p>
 
@@ -319,7 +319,7 @@ Iterator i = c.iterator();
 
 <p>基本的UML类图如下所示：</p>
 
-<p>{% img /design-pattern/collection-iterator-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/collection-iterator-uml.png"></p>
 
 <h3>JDBC数据库开发</h3>
 
@@ -369,7 +369,7 @@ Iterator i = c.iterator();
 
 <p>简单工厂模式的一个基本的UML类图如下所示：</p>
 
-<p>{% img /design-pattern/simple-factory-uml.png %}</p>
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/simple-factory-uml.png"></p>
 
 <p>在这个UML类图中包含以下角色：</p>
 
