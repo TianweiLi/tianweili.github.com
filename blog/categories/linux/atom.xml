@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-11T22:22:47+08:00</updated>
+  <updated>2015-03-13T15:39:17+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -72,7 +72,7 @@
 <pre><code class="bash">sort -r test.dat -o test.dat
 </code></pre>
 
-<h3>-t与-o选项</h3>
+<h3>-t与-k选项</h3>
 
 <p>对于某些有固定格式的文件，比如：</p>
 
@@ -81,9 +81,9 @@ b   32
 c   3
 </code></pre>
 
-<p>如果想以第二列数值大小降序输出，则需要使用-t和-o参数了。其中-k指定分隔符，-k指定待排序的列。</p>
+<p>如果想以第二列数值大小降序输出，则需要使用-t和-k参数了。其中-k指定分隔符，-k指定待排序的列。</p>
 
-<pre><code class="bash">sort -nr -t'\t' -k2 test.bat -o test.bat
+<pre><code class="bash">sort -nr -t\t -k2 test.bat -o test.bat
 </code></pre>
 
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>

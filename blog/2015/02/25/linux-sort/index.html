@@ -201,7 +201,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>-t与-o选项</h3>
+<h3>-t与-k选项</h3>
 
 <p>对于某些有固定格式的文件，比如：</p>
 
@@ -210,10 +210,10 @@ b   32
 c   3
 </code></pre>
 
-<p>如果想以第二列数值大小降序输出，则需要使用-t和-o参数了。其中-k指定分隔符，-k指定待排序的列。</p>
+<p>如果想以第二列数值大小降序输出，则需要使用-t和-k参数了。其中-k指定分隔符，-k指定待排序的列。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -nr -t<span class="s1">&#39;\t&#39;</span> -k2 test.bat -o test.bat
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -nr -t<span class="se">\t</span> -k2 test.bat -o test.bat
 </span></code></pre></td></tr></table></div></figure>
 
 
