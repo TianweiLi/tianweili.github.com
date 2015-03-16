@@ -11,8 +11,9 @@ description: 单例模式的八种写法比较
 单例模式是最常用到的设计模式之一，熟悉设计模式的朋友对单例模式都不会陌生。一般介绍单例模式的书籍都会提到`饿汉式`和`懒汉式`这两种实现方式。但是除了这两种方式，本文还会介绍其他几种实现单例的方式，让我们来一起看看吧。
 
 <!--more-->
+原文链接：
 
-原文链接：<http://tianweili.github.io/blog/2015/03/02/singleton-pattern/>
+<http://tianweili.github.io/blog/2015/03/02/singleton-pattern/>
 
 ##简介
 

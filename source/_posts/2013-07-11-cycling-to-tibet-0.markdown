@@ -166,6 +166,10 @@ description: 今天是骑车去西藏第0天，对成都的印象。
 * [骑车去西藏—第0天—成都印象](http://tianweili.github.io/blog/2013/03/11/cycling-to-tibet-0/)
 * [骑车去西藏—第1天—出师不利](http://tianweili.github.io/blog/2013/07/12/cycling-to-tibet-1/)
 * [骑车去西藏—第2天—牛刀小试](http://tianweili.github.io/blog/2013/07/13/cycling-to-tibet-2/)
+* [骑车去西藏—第3天—爬上了二郎山，我就是二郎神](http://tianweili.github.io/blog/2013/07/14/cycling-to-tibet-3/)
+* [骑车去西藏—第4天—泸定-康定，坚定的信心](http://tianweili.github.io/blog/2013/07/15/cycling-to-tibet-4/)
+* [骑车去西藏—第5天—跑马溜溜的山上，情歌之城，康定](http://tianweili.github.io/blog/2013/07/16/cycling-to-tibet-5/)
+* [骑车去西藏—第6天—折多山，折磨人多的山](http://tianweili.github.io/blog/2013/07/17/cycling-to-tibet-6/)
 
 
 
