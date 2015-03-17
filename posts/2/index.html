@@ -9,7 +9,7 @@
   <meta name="author" content="李天炜 litianwei2013[AT]gmail.com">
 
   
-  <meta name="description" content="我们都知道面向对象有三大特性：封装、继承、多态。所以我们在实际开发过程中，子类在继承父类后，根据多态的特性，可能是图一时方便，经常任意重写父类的方法，那么这种方式会大大增加代码出问题的几率。比如下面场景：类C实现了某项功能F1。现在需要对功能F1作修改扩展，将功能F1扩展为F， &hellip;">
+  <meta name="description" content="类A直接依赖于类B，假如要将类A修改为依赖类C，则必须通过修改类A的代码来达成。这种场景下，类A一般是高层模块，负责复杂的业务逻辑。类B和C是底层模块，负责基本的原子操作。假如修改类A，将会给程序带来不必要的风险。而遵循依赖倒置原则的程序设计可以解决这一问题。 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -109,6 +109,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/07/dependence-inversion-principle/">设计模式六大原则 - 依赖倒置原则</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-07T22:45:14+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:45 pm</span></time>
+        
+		
+-		   | <a href="/blog/2015/02/07/dependence-inversion-principle/#comments">Comments</a>
+-       
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>类A直接依赖于类B，假如要将类A修改为依赖类C，则必须通过修改类A的代码来达成。这种场景下，类A一般是高层模块，负责复杂的业务逻辑。类B和C是底层模块，负责基本的原子操作。假如修改类A，将会给程序带来不必要的风险。而遵循依赖倒置原则的程序设计可以解决这一问题。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/02/07/dependence-inversion-principle/">阅读全文 &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -523,41 +560,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/16/cycling-to-tibet-5/">骑车去西藏—第5天—跑马溜溜的山上，情歌之城，康定</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-07-16T18:07:43+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>6:07 pm</span></time>
-        
-		
--		   | <a href="/blog/2013/07/16/cycling-to-tibet-5/#comments">Comments</a>
--       
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"></div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/16/cycling-to-tibet-5/">阅读全文 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; 较旧的文章</a>
@@ -573,7 +575,7 @@
     <section>
   <h1>文章分类</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/java/'>java (4)</a></li>
+    <li class='category'><a href='/blog/categories/java/'>java (5)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (2)</a></li>
 <li class='category'><a href='/blog/categories/qi-ta-ji-zhu/'>其他技术 (2)</a></li>
 <li class='category'><a href='/blog/categories/sheng-huo/'>生活 (8)</a></li>
@@ -583,6 +585,10 @@
 </section><section>
   <h1>最新文章</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/17/linux-nexus-maven-private-server/">Linux下使用nexus搭建maven私服</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/03/13/proxy-pattern/">代理模式</a>
@@ -598,10 +604,6 @@
     
       <li class="post">
         <a href="/blog/2015/03/08/simple-factory-pattern/">简单工厂模式</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/log4j/">Log4j的配置与使用详解</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-16T22:54:36+08:00</updated>
+  <updated>2015-03-17T18:05:59+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,254 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Linux下使用nexus搭建maven私服]]></title>
+    <link href="http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/"/>
+    <updated>2015-03-17T17:26:57+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server</id>
+    <content type="html"><![CDATA[<p>有个maven私服可以很方便地管理我们的jar包和发布构建到远程仓库，本文就介绍了如何在linux下一步步使用nexus搭建maven私服</p>
+
+<!--more-->
+
+
+<p>原文链接：</p>
+
+<p><a href="http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/">http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/</a></p>
+
+<h2>下载安装</h2>
+
+<p>最新nexus下载地址：<a href="http://www.sonatype.org/nexus/go">http://www.sonatype.org/nexus/go</a></p>
+
+<p>解压后会在同级目录中，出现两个文件夹：<code>nexus-oss-webapp-1.8.0</code>和<code>sonatype-work</code>，前者包含了nexus的运行环境和应用程序，后者包含了你自己的配置和数据。</p>
+
+<pre><code class="bash">$ mkdir nexus
+$ tar xzvf /home/jili/nexus-2.7.0-05-bundle.tar.gz
+$ ls
+nexus-2.7.0-05  sonatype-work
+</code></pre>
+
+<h2>启动nexus</h2>
+
+<pre><code class="bash">$ cd bin/
+$ ls
+jsw  nexus  nexus.bat
+$ ./nexus
+Usage: ./nexus { console | start | stop | restart | status | dump }
+$ ./nexus start
+Starting Nexus OSS...
+Started Nexus OSS.
+</code></pre>
+
+<p>查看控制台：</p>
+
+<pre><code class="bash">$ ./nexus console
+</code></pre>
+
+<p>显示未启动成功，报错如下：</p>
+
+<pre><code class="bash">$ ./nexus console
+Running Nexus OSS...
+wrapper  | --&gt; Wrapper Started as Console
+wrapper  | Launching a JVM...
+wrapper  | JVM exited while loading the application.
+jvm 1    | Exception in thread "main" java.lang.UnsupportedClassVersionError: org/sonatype/nexus/bootstrap/jsw/JswLauncher : Unsupported major.minor version 51.0
+jvm 1    |      at java.lang.ClassLoader.defineClass1(Native Method)
+jvm 1    |      at java.lang.ClassLoader.defineClassCond(ClassLoader.java:632)
+jvm 1    |      at java.lang.ClassLoader.defineClass(ClassLoader.java:616)
+jvm 1    |      at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:141)
+jvm 1    |      at java.net.URLClassLoader.defineClass(URLClassLoader.java:283)
+jvm 1    |      at java.net.URLClassLoader.access$000(URLClassLoader.java:58)
+jvm 1    |      at java.net.URLClassLoader$1.run(URLClassLoader.java:197)
+jvm 1    |      at java.security.AccessController.doPrivileged(Native Method)
+jvm 1    |      at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+jvm 1    |      at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+jvm 1    |      at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+jvm 1    |      at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+jvm 1    | Could not find the main class: org.sonatype.nexus.bootstrap.jsw.JswLauncher.  Program will exit.
+wrapper  | Reloading Wrapper configuration...
+wrapper  | Launching a JVM...
+wrapper  | JVM exited while loading the application.
+.
+.
+.
+jvm 5    | Exception in thread "main" java.lang.UnsupportedClassVersionError: org/sonatype/nexus/bootstrap/jsw/JswLauncher : Unsupported major.minor version 51.0
+jvm 5    |      at java.lang.ClassLoader.defineClass1(Native Method)
+jvm 5    |      at java.lang.ClassLoader.defineClassCond(ClassLoader.java:632)
+jvm 5    |      at java.lang.ClassLoader.defineClass(ClassLoader.java:616)
+jvm 5    |      at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:141)
+jvm 5    |      at java.net.URLClassLoader.defineClass(URLClassLoader.java:283)
+jvm 5    |      at java.net.URLClassLoader.access$000(URLClassLoader.java:58)
+jvm 5    |      at java.net.URLClassLoader$1.run(URLClassLoader.java:197)
+jvm 5    |      at java.security.AccessController.doPrivileged(Native Method)
+jvm 5    |      at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+jvm 5    |      at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+jvm 5    |      at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+jvm 5    |      at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+jvm 5    | Could not find the main class: org.sonatype.nexus.bootstrap.jsw.JswLauncher.  Program will exit.
+wrapper  | There were 5 failed launches in a row, each lasting less than 300 seconds.  Giving up.
+wrapper  |   There may be a configuration problem: please check the logs.
+wrapper  | &lt;-- Wrapper Stopped
+</code></pre>
+
+<p>原因：查找原因是JDK版本过低造成的，升级到最新的JDK7或者使用nexus-2.4-bundle.tar.gz版本JDK6会支持.</p>
+
+<p>Nexus所有版本下载地址：<a href="http://www.sonatype.org/nexus/archived">http://www.sonatype.org/nexus/archived</a></p>
+
+<p>下载Nexus2.4重来</p>
+
+<pre><code class="bash">$ ls
+nexus-2.4.0-09  sonatype-work
+$ cd nexus-2.4.0-09/bin/
+$ ls
+jsw  nexus  nexus.bat
+$ ./nexus
+Usage: ./nexus { console | start | stop | restart | status | dump }
+$ ./nexus start
+Starting Nexus OSS...
+Started Nexus OSS.
+$ ./nexus console
+Running Nexus OSS...
+Nexus OSS is already running.
+</code></pre>
+
+<p>控制台显示启动成功。</p>
+
+<p>查看nexus日志：</p>
+
+<pre><code class="bash">$ cd nexus-2.4.0-09/logs
+$ ls
+wrapper.log
+$ tail -f wrapper.log
+</code></pre>
+
+<h2>配置nexus</h2>
+
+<p>访问网址：<a href="http://yourhostname:8081/nexus">http://yourhostname:8081/nexus</a></p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-1.png"></p>
+
+<p>右上角以admin登陆，默认用户名/密码：admin/admin123。</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-2.png"></p>
+
+<p>3rd party、Snapshots、Releases这三个，分别用来保存第三方jar、项目组内部的快照、项目组内部的发布版.</p>
+
+<h2>手动添加第三方jar</h2>
+
+<p>将第三方的jar上传到nexus上面：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-3.png"></p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-4.png"></p>
+
+<p>点击Upload Artifact(s)按钮提交后即上传。</p>
+
+<p>查看上传的jar包如下：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-5.png"></p>
+
+<p>在项目中使用私服的jar包配置pom.xml如下：</p>
+
+<pre><code class="xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.vclk.mkt.crawler&lt;/groupId&gt;
+    &lt;artifactId&gt;MarketingCrawler&lt;/artifactId&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+    &lt;version&gt;0.3&lt;/version&gt;
+    &lt;name&gt;MarketingCrawler&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+    &lt;!-- 仓库地址 --&gt;
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;nexus&lt;/id&gt;
+            &lt;name&gt;Team Nexus Repository&lt;/name&gt;
+            &lt;url&gt;http://yourhostname:8081/nexus/content/groups/public&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+
+    &lt;!-- 插件地址 --&gt;
+    &lt;pluginRepositories&gt;
+        &lt;pluginRepository&gt;
+            &lt;id&gt;nexus&lt;/id&gt;
+            &lt;name&gt;Team Nexus Repository&lt;/name&gt;
+            &lt;url&gt;http://yourhostname:8081/nexus/content/groups/public&lt;/url&gt;
+        &lt;/pluginRepository&gt;
+    &lt;/pluginRepositories&gt;
+
+    &lt;!-- jar --&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;de.innosystec&lt;/groupId&gt;
+            &lt;artifactId&gt;java-unrar&lt;/artifactId&gt;
+            &lt;version&gt;0.5&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
+
+<p>Maven在项目根目录下执行mvn eclipse:eclipse命令时，所依赖的jar包都会从私服中下载到本地并关联上项目，私服中没有就会从网络上下载到私服，本地再从私服下载。</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-6.png"></p>
+
+<h2>自动发布构件到远程仓库</h2>
+
+<p>在工程的pom.xml中添加：</p>
+
+<pre><code class="xml">&lt;distributionManagement&gt;
+    &lt;repository&gt;
+        &lt;id&gt;nexus-releases&lt;/id&gt;
+        &lt;url&gt;http://yourhostname:8081/nexus/content/repositories/releases/&lt;/url&gt;
+    &lt;/repository&gt;
+    &lt;snapshotRepository&gt;
+        &lt;id&gt;nexus-snapshots&lt;/id&gt;
+        &lt;url&gt;http://yourhostname:8081/nexus/content/repositories/snapshots/&lt;/url&gt;
+    &lt;/snapshotRepository&gt;
+&lt;/distributionManagement&gt;
+</code></pre>
+
+<p>进入maven的安装目录apache-maven-3.1.1\conf目录下，向settings.xml配置文件中的<servers>语句块中添加如下所示：</p>
+
+<pre><code class="xml">&lt;servers&gt;
+    &lt;server&gt;
+        &lt;id&gt;nexus-releases&lt;/id&gt;
+        &lt;username&gt;admin&lt;/username&gt;
+        &lt;password&gt;admin123&lt;/password&gt;
+    &lt;/server&gt;
+    &lt;server&gt;
+        &lt;id&gt;nexus-snapshots&lt;/id&gt;
+        &lt;username&gt;admin&lt;/username&gt;
+        &lt;password&gt;admin123&lt;/password&gt;
+    &lt;/server&gt;
+&lt;/servers&gt;
+</code></pre>
+
+<p>进入windows命令行，在工程所在目录下执行</p>
+
+<pre><code class="bash">mvn deploy
+</code></pre>
+
+<p>所部署的包就自动上传到了nexus安装目录下的<code>/maven/nexus/sonatype-work/nexus/storage/releases/com/vclk/mkt/crawler/MarketingCrawler/0.3</code>目录</p>
+
+<h2>nexus仓库中各目录介绍</h2>
+
+<p>项目中的各种jar包和项目快照等都放在<code>/nexus/sonatype-work/nexus/storage/</code>目录下，在这个目录下包括以下各种目录和存放相应文件。</p>
+
+<p><code>/nexus/sonatype-work/nexus/storage/central</code> - 用于放置maven从中央仓库中下载下来的项目pom.xml中配置到的相关jar包；</p>
+
+<p><code>/nexus/sonatype-work/nexus/storage/thirdparty</code> - 用于放置自己手动上传的第三方jar包；</p>
+
+<p><code>/nexus/sonatype-work/nexus/storage/releases</code> - 用于放置项目deploy后的发布版。</p>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/">http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/</a></p>
+
+<p>转载请注明作者和文章出处，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Log4j的配置与使用详解]]></title>

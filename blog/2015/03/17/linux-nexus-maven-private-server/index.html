@@ -1,0 +1,679 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Linux下使用nexus搭建maven私服 - 李天炜</title>
+  <meta name="author" content="李天炜 litianwei2013[AT]gmail.com">
+
+  
+  <meta name="description" content="Linux下使用nexus搭建maven私服">
+  <meta name="keywords" content="nexusmaven私服java">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="baidu-site-verification" content="56FDlmWosN" />
+
+  
+  <link rel="canonical" href="http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="李天炜" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script>
+	function addBlankTargetForLinks () {
+	  $('a[href^="http"]').each(function(){
+		  $(this).attr('target', '_blank');
+	  });
+	}
+
+	$(document).bind('DOMNodeInserted', function(event) {
+	  addBlankTargetForLinks();
+	});
+</script>
+
+<script src="/javascripts/jquery-1.11.2.min.js" type="text/javascript"></script>
+<script src="/javascripts/generate-toc.js" type="text/javascript"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58552615-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <!--Google Analytics-->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58552615-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!--Baidu count-->
+  <script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?6b6008dd331408470ad77cbc9b30612a";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+  </script>
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">李天炜</a></h1>
+  
+    <h2>不积跬步无以至千里</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="tianweili.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+	<li><a href="/">首页</a></li>
+	<li><a href="/blog/archives">博文列表</a></li>
+	<li><a href="/aboutme/index.html">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Linux下使用nexus搭建maven私服</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-17T17:26:57+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:26 pm</span></time>
+        
+		
+-		   | <a href="#comments">Comments</a>
+-       
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>有个maven私服可以很方便地管理我们的jar包和发布构建到远程仓库，本文就介绍了如何在linux下一步步使用nexus搭建maven私服</p>
+
+<!--more-->
+
+
+<p>原文链接：</p>
+
+<p><a href="http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/">http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/</a></p>
+
+<h2>下载安装</h2>
+
+<p>最新nexus下载地址：<a href="http://www.sonatype.org/nexus/go">http://www.sonatype.org/nexus/go</a></p>
+
+<p>解压后会在同级目录中，出现两个文件夹：<code>nexus-oss-webapp-1.8.0</code>和<code>sonatype-work</code>，前者包含了nexus的运行环境和应用程序，后者包含了你自己的配置和数据。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir nexus
+</span><span class='line'><span class="nv">$ </span>tar xzvf /home/jili/nexus-2.7.0-05-bundle.tar.gz
+</span><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>nexus-2.7.0-05  sonatype-work
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>启动nexus</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>bin/
+</span><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>jsw  nexus  nexus.bat
+</span><span class='line'><span class="nv">$ </span>./nexus
+</span><span class='line'>Usage: ./nexus <span class="o">{</span> console <span class="p">|</span> start <span class="p">|</span> stop <span class="p">|</span> restart <span class="p">|</span> status <span class="p">|</span> dump <span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>./nexus start
+</span><span class='line'>Starting Nexus OSS...
+</span><span class='line'>Started Nexus OSS.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看控制台：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>./nexus console
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>显示未启动成功，报错如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>./nexus console
+</span><span class='line'>Running Nexus OSS...
+</span><span class='line'>wrapper  <span class="p">|</span> --&gt; Wrapper Started as Console
+</span><span class='line'>wrapper  <span class="p">|</span> Launching a JVM...
+</span><span class='line'>wrapper  <span class="p">|</span> JVM exited <span class="k">while</span> loading the application.
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span> Exception in thread <span class="s2">&quot;main&quot;</span> java.lang.UnsupportedClassVersionError: org/sonatype/nexus/bootstrap/jsw/JswLauncher : Unsupported major.minor version 51.0
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.lang.ClassLoader.defineClass1<span class="o">(</span>Native Method<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.lang.ClassLoader.defineClassCond<span class="o">(</span>ClassLoader.java:632<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.lang.ClassLoader.defineClass<span class="o">(</span>ClassLoader.java:616<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.security.SecureClassLoader.defineClass<span class="o">(</span>SecureClassLoader.java:141<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.net.URLClassLoader.defineClass<span class="o">(</span>URLClassLoader.java:283<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.net.URLClassLoader.access<span class="nv">$000</span><span class="o">(</span>URLClassLoader.java:58<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.net.URLClassLoader<span class="nv">$1</span>.run<span class="o">(</span>URLClassLoader.java:197<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.security.AccessController.doPrivileged<span class="o">(</span>Native Method<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.net.URLClassLoader.findClass<span class="o">(</span>URLClassLoader.java:190<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:307<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at sun.misc.Launcher<span class="nv">$AppClassLoader</span>.loadClass<span class="o">(</span>Launcher.java:301<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span>      at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:248<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">1</span>    <span class="p">|</span> Could not find the main class: org.sonatype.nexus.bootstrap.jsw.JswLauncher.  Program will exit.
+</span><span class='line'>wrapper  <span class="p">|</span> Reloading Wrapper configuration...
+</span><span class='line'>wrapper  <span class="p">|</span> Launching a JVM...
+</span><span class='line'>wrapper  <span class="p">|</span> JVM exited <span class="k">while</span> loading the application.
+</span><span class='line'>.
+</span><span class='line'>.
+</span><span class='line'>.
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span> Exception in thread <span class="s2">&quot;main&quot;</span> java.lang.UnsupportedClassVersionError: org/sonatype/nexus/bootstrap/jsw/JswLauncher : Unsupported major.minor version 51.0
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.lang.ClassLoader.defineClass1<span class="o">(</span>Native Method<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.lang.ClassLoader.defineClassCond<span class="o">(</span>ClassLoader.java:632<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.lang.ClassLoader.defineClass<span class="o">(</span>ClassLoader.java:616<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.security.SecureClassLoader.defineClass<span class="o">(</span>SecureClassLoader.java:141<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.net.URLClassLoader.defineClass<span class="o">(</span>URLClassLoader.java:283<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.net.URLClassLoader.access<span class="nv">$000</span><span class="o">(</span>URLClassLoader.java:58<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.net.URLClassLoader<span class="nv">$1</span>.run<span class="o">(</span>URLClassLoader.java:197<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.security.AccessController.doPrivileged<span class="o">(</span>Native Method<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.net.URLClassLoader.findClass<span class="o">(</span>URLClassLoader.java:190<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:307<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at sun.misc.Launcher<span class="nv">$AppClassLoader</span>.loadClass<span class="o">(</span>Launcher.java:301<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span>      at java.lang.ClassLoader.loadClass<span class="o">(</span>ClassLoader.java:248<span class="o">)</span>
+</span><span class='line'>jvm <span class="m">5</span>    <span class="p">|</span> Could not find the main class: org.sonatype.nexus.bootstrap.jsw.JswLauncher.  Program will exit.
+</span><span class='line'>wrapper  <span class="p">|</span> There were <span class="m">5</span> failed launches in a row, each lasting less than <span class="m">300</span> seconds.  Giving up.
+</span><span class='line'>wrapper  <span class="p">|</span>   There may be a configuration problem: please check the logs.
+</span><span class='line'>wrapper  <span class="p">|</span> &lt;-- Wrapper Stopped
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原因：查找原因是JDK版本过低造成的，升级到最新的JDK7或者使用nexus-2.4-bundle.tar.gz版本JDK6会支持.</p>
+
+<p>Nexus所有版本下载地址：<a href="http://www.sonatype.org/nexus/archived">http://www.sonatype.org/nexus/archived</a></p>
+
+<p>下载Nexus2.4重来</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>nexus-2.4.0-09  sonatype-work
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>nexus-2.4.0-09/bin/
+</span><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>jsw  nexus  nexus.bat
+</span><span class='line'><span class="nv">$ </span>./nexus
+</span><span class='line'>Usage: ./nexus <span class="o">{</span> console <span class="p">|</span> start <span class="p">|</span> stop <span class="p">|</span> restart <span class="p">|</span> status <span class="p">|</span> dump <span class="o">}</span>
+</span><span class='line'><span class="nv">$ </span>./nexus start
+</span><span class='line'>Starting Nexus OSS...
+</span><span class='line'>Started Nexus OSS.
+</span><span class='line'><span class="nv">$ </span>./nexus console
+</span><span class='line'>Running Nexus OSS...
+</span><span class='line'>Nexus OSS is already running.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>控制台显示启动成功。</p>
+
+<p>查看nexus日志：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>nexus-2.4.0-09/logs
+</span><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>wrapper.log
+</span><span class='line'><span class="nv">$ </span>tail -f wrapper.log
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>配置nexus</h2>
+
+<p>访问网址：<a href="http://yourhostname:8081/nexus">http://yourhostname:8081/nexus</a></p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-1.png"></p>
+
+<p>右上角以admin登陆，默认用户名/密码：admin/admin123。</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-2.png"></p>
+
+<p>3rd party、Snapshots、Releases这三个，分别用来保存第三方jar、项目组内部的快照、项目组内部的发布版.</p>
+
+<h2>手动添加第三方jar</h2>
+
+<p>将第三方的jar上传到nexus上面：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-3.png"></p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-4.png"></p>
+
+<p>点击Upload Artifact(s)按钮提交后即上传。</p>
+
+<p>查看上传的jar包如下：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-5.png"></p>
+
+<p>在项目中使用私服的jar包配置pom.xml如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'>  <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>com.vclk.mkt.crawler<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>MarketingCrawler<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;packaging&gt;</span>jar<span class="nt">&lt;/packaging&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>0.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;name&gt;</span>MarketingCrawler<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;url&gt;</span>http://maven.apache.org<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c">&lt;!-- 仓库地址 --&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;repositories&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;repository&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;id&gt;</span>nexus<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;name&gt;</span>Team Nexus Repository<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;url&gt;</span>http://yourhostname:8081/nexus/content/groups/public<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/repository&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/repositories&gt;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c">&lt;!-- 插件地址 --&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;pluginRepositories&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginRepository&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;id&gt;</span>nexus<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;name&gt;</span>Team Nexus Repository<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;url&gt;</span>http://yourhostname:8081/nexus/content/groups/public<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginRepository&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/pluginRepositories&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c">&lt;!-- jar --&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;groupId&gt;</span>de.innosystec<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;artifactId&gt;</span>java-unrar<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;version&gt;</span>0.5<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/dependencies&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maven在项目根目录下执行mvn eclipse:eclipse命令时，所依赖的jar包都会从私服中下载到本地并关联上项目，私服中没有就会从网络上下载到私服，本地再从私服下载。</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/java/nexus-maven-6.png"></p>
+
+<h2>自动发布构件到远程仓库</h2>
+
+<p>在工程的pom.xml中添加：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;distributionManagement&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;repository&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>nexus-releases<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;url&gt;</span>http://yourhostname:8081/nexus/content/repositories/releases/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/repository&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;snapshotRepository&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>nexus-snapshots<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;url&gt;</span>http://yourhostname:8081/nexus/content/repositories/snapshots/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/snapshotRepository&gt;</span>
+</span><span class='line'><span class="nt">&lt;/distributionManagement&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>进入maven的安装目录apache-maven-3.1.1\conf目录下，向settings.xml配置文件中的<servers>语句块中添加如下所示：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;servers&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;server&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>nexus-releases<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;username&gt;</span>admin<span class="nt">&lt;/username&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;password&gt;</span>admin123<span class="nt">&lt;/password&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/server&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;server&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>nexus-snapshots<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;username&gt;</span>admin<span class="nt">&lt;/username&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;password&gt;</span>admin123<span class="nt">&lt;/password&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/server&gt;</span>
+</span><span class='line'><span class="nt">&lt;/servers&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>进入windows命令行，在工程所在目录下执行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mvn deploy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>所部署的包就自动上传到了nexus安装目录下的<code>/maven/nexus/sonatype-work/nexus/storage/releases/com/vclk/mkt/crawler/MarketingCrawler/0.3</code>目录</p>
+
+<h2>nexus仓库中各目录介绍</h2>
+
+<p>项目中的各种jar包和项目快照等都放在<code>/nexus/sonatype-work/nexus/storage/</code>目录下，在这个目录下包括以下各种目录和存放相应文件。</p>
+
+<p><code>/nexus/sonatype-work/nexus/storage/central</code> - 用于放置maven从中央仓库中下载下来的项目pom.xml中配置到的相关jar包；</p>
+
+<p><code>/nexus/sonatype-work/nexus/storage/thirdparty</code> - 用于放置自己手动上传的第三方jar包；</p>
+
+<p><code>/nexus/sonatype-work/nexus/storage/releases</code> - 用于放置项目deploy后的发布版。</p>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/">http://tianweili.github.io/blog/2015/03/17/linux-nexus-maven-private-server/</a></p>
+
+<p>转载请注明作者和文章出处，谢谢。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">李天炜 litianwei2013[AT]gmail.com</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-03-17T17:26:57+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:26 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/03/13/proxy-pattern/" title="Previous Post: 代理模式">&laquo; 代理模式</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+	<section>
+		<h1>Comments</h1>
+		<div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="Linux下使用nexus搭建maven私服"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"tianweili"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+	</section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>文章分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/java/'>java (5)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (2)</a></li>
+<li class='category'><a href='/blog/categories/qi-ta-ji-zhu/'>其他技术 (2)</a></li>
+<li class='category'><a href='/blog/categories/sheng-huo/'>生活 (8)</a></li>
+<li class='category'><a href='/blog/categories/she-ji-mo-shi/'>设计模式 (9)</a></li>
+
+  </ul>
+</section><section>
+  <h1>最新文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/17/linux-nexus-maven-private-server/">Linux下使用nexus搭建maven私服</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/proxy-pattern/">代理模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/11/abstract-factory-pattern/">抽象工厂模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/09/factory-method-pattern/">工厂方法模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/08/simple-factory-pattern/">简单工厂模式</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/TianweiLi">@TianweiLi</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'TianweiLi',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+<section>
+	<h1>访客统计</h1>
+	<br/>
+	<a href="http://s07.flagcounter.com/more/2SH"><img src="http://s07.flagcounter.com/count/2SH/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0"></a>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - 李天炜 litianwei2013[AT]gmail.com
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow64.js"></script>
+</body>
+</html>
