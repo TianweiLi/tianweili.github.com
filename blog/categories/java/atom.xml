@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-17T18:05:59+08:00</updated>
+  <updated>2015-03-18T10:03:38+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -536,6 +536,39 @@ log4j.appender.im.password = password
 log4j.appender.im.recipient = corlin@cybercorlin.net
 log4j.appender.im.layout=org.apache.log4j.PatternLayout
 log4j.appender.im.layout.ConversionPattern =[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n
+</code></pre>
+
+<h2>设置仅输出指定类的日志</h2>
+
+<p>本人在使用HtmlUnit组件的时候，这个组件输出的各种日志刷屏得那叫一个酸爽。即便在使用它提供的一些API禁掉了一些日志输出，但还是会输出很多无用的日志信息。</p>
+
+<p>那么我们怎么能够限制只让指定的类才有资格输出日志呢？方法如下：</p>
+
+<p>首先你可以去掉log4j.rootLogger，使所有日志不在输出。</p>
+
+<p>然后再指定类输出。</p>
+
+<p>注：如果设置了日志输出log4j.rootLogger，并且后面设置了指定类输出，则对于指定类的输出配置会覆盖总的配置。举个栗子：总配置设置优先级为INFO，但是某个类具体设置为WARN，那么最后这个类输出优先级为WARN。</p>
+
+<pre><code class="java">#log4j.rootLogger=INFO, stdout, logfile
+log4j.logger.org.cyberneko.html.parsers=Fatal
+log4j.logger.org.apache.http=Fatal
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
+
+log4j.appender.logfile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.logfile.File=./your.log
+log4j.appender.logfile.DatePattern='.'yyyy-MM-dd
+log4j.appender.logfile.Append=true
+log4j.appender.logfile.layout=org.apache.log4j.PatternLayout
+log4j.appender.logfile.layout.ConversionPattern=%d [%t] %-5p %c %x -- %m%n
+
+#assign class out put log.
+log4j.logger.com.ltw.yourclass1=INFO,stdout,logfile
+log4j.logger.com.ltw.yourclass2=INFO,stdout,logfile
 </code></pre>
 
 <h2>使用Log4J监控系统日志邮件警报</h2>

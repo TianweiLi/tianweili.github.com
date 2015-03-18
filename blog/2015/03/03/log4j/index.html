@@ -508,6 +508,59 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>设置仅输出指定类的日志</h2>
+
+<p>本人在使用HtmlUnit组件的时候，这个组件输出的各种日志刷屏得那叫一个酸爽。即便在使用它提供的一些API禁掉了一些日志输出，但还是会输出很多无用的日志信息。</p>
+
+<p>那么我们怎么能够限制只让指定的类才有资格输出日志呢？方法如下：</p>
+
+<p>首先你可以去掉log4j.rootLogger，使所有日志不在输出。</p>
+
+<p>然后再指定类输出。</p>
+
+<p>注：如果设置了日志输出log4j.rootLogger，并且后面设置了指定类输出，则对于指定类的输出配置会覆盖总的配置。举个栗子：总配置设置优先级为INFO，但是某个类具体设置为WARN，那么最后这个类输出优先级为WARN。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="err">#</span><span class="n">log4j</span><span class="o">.</span><span class="na">rootLogger</span><span class="o">=</span><span class="n">INFO</span><span class="o">,</span> <span class="n">stdout</span><span class="o">,</span> <span class="n">logfile</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">org</span><span class="o">.</span><span class="na">cyberneko</span><span class="o">.</span><span class="na">html</span><span class="o">.</span><span class="na">parsers</span><span class="o">=</span><span class="n">Fatal</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">http</span><span class="o">=</span><span class="n">Fatal</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">stdout</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">ConsoleAppender</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">stdout</span><span class="o">.</span><span class="na">Target</span><span class="o">=</span><span class="n">System</span><span class="o">.</span><span class="na">out</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">stdout</span><span class="o">.</span><span class="na">layout</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">PatternLayout</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">stdout</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">ConversionPattern</span><span class="o">=%</span><span class="n">d</span><span class="o">{</span><span class="n">ABSOLUTE</span><span class="o">}</span> <span class="o">%</span><span class="mi">5</span><span class="n">p</span> <span class="o">%</span><span class="n">c</span><span class="o">{</span><span class="mi">1</span><span class="o">}:%</span><span class="n">L</span> <span class="o">-</span> <span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">n</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">logfile</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">DailyRollingFileAppender</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">logfile</span><span class="o">.</span><span class="na">File</span><span class="o">=./</span><span class="n">your</span><span class="o">.</span><span class="na">log</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">logfile</span><span class="o">.</span><span class="na">DatePattern</span><span class="o">=</span><span class="sc">&#39;.&#39;</span><span class="n">yyyy</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">dd</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">logfile</span><span class="o">.</span><span class="na">Append</span><span class="o">=</span><span class="kc">true</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">logfile</span><span class="o">.</span><span class="na">layout</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">PatternLayout</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">logfile</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">ConversionPattern</span><span class="o">=%</span><span class="n">d</span> <span class="o">[%</span><span class="n">t</span><span class="o">]</span> <span class="o">%-</span><span class="mi">5</span><span class="n">p</span> <span class="o">%</span><span class="n">c</span> <span class="o">%</span><span class="n">x</span> <span class="o">--</span> <span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">n</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">#</span><span class="n">assign</span> <span class="kd">class</span> <span class="nc">out</span> <span class="n">put</span> <span class="n">log</span><span class="o">.</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">com</span><span class="o">.</span><span class="na">ltw</span><span class="o">.</span><span class="na">yourclass1</span><span class="o">=</span><span class="n">INFO</span><span class="o">,</span><span class="n">stdout</span><span class="o">,</span><span class="n">logfile</span>
+</span><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">logger</span><span class="o">.</span><span class="na">com</span><span class="o">.</span><span class="na">ltw</span><span class="o">.</span><span class="na">yourclass2</span><span class="o">=</span><span class="n">INFO</span><span class="o">,</span><span class="n">stdout</span><span class="o">,</span><span class="n">logfile</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h2>使用Log4J监控系统日志邮件警报</h2>
 
 <p>在系统上线后，有时候遇到系统故障，这时候就可以登录服务器查看系统日志来排查问题。但是需要登录服务器，下载查找相关异常日志比较麻烦。而且没有监控的话，也无法实时了解到系统是否正常运行。那么有没有一种好办法将系统异常信息实时反馈给相关人员呢？</p>
@@ -561,20 +614,20 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='properties'><span class='line'> <span class="na">1 log4j.rootLogger</span><span class="o">=</span><span class="s">DEBUG, MAIL</span>
-</span><span class='line'> <span class="err">2</span>
-</span><span class='line'> <span class="na">3 log4j.appender.MAIL</span><span class="o">=</span><span class="s">org.apache.log4j.net.SMTPAppender</span>
-</span><span class='line'> <span class="na">4 log4j.appender.MAIL.Threshold</span><span class="o">=</span><span class="s">ERROR</span>
-</span><span class='line'> <span class="na">5 log4j.appender.MAIL.BufferSize</span><span class="o">=</span><span class="s">10</span>
-</span><span class='line'> <span class="na">6 log4j.appender.MAIL.From</span><span class="o">=</span><span class="s">123@qq.com</span>
-</span><span class='line'> <span class="na">7 log4j.appender.MAIL.SMTPHost</span><span class="o">=</span><span class="s">smtp.qq.com</span>
-</span><span class='line'> <span class="na">8 log4j.appender.MAIL.SMTPUsername</span><span class="o">=</span><span class="s">123</span>
-</span><span class='line'> <span class="na">9 log4j.appender.MAIL.SMTPPassword</span><span class="o">=</span><span class="s">***</span>
-</span><span class='line'><span class="na">10 log4j.appender.MAIL.SMTPDebug</span><span class="o">=</span><span class="s">false</span>
-</span><span class='line'><span class="na">11 log4j.appender.MAIL.Subject</span><span class="o">=</span><span class="s">Log4JErrorMessage</span>
-</span><span class='line'><span class="na">12 log4j.appender.MAIL.To</span><span class="o">=</span><span class="s">123@qq.com</span>
-</span><span class='line'><span class="na">13 log4j.appender.MAIL.layout</span><span class="o">=</span><span class="s">org.apache.log4j.PatternLayout</span>
-</span><span class='line'><span class="na">14 log4j.appender.MAIL.layout.ConversionPattern</span><span class="o">=</span><span class="s">%-d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c %x -- %m%n</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="mi">1</span> <span class="n">log4j</span><span class="o">.</span><span class="na">rootLogger</span><span class="o">=</span><span class="n">DEBUG</span><span class="o">,</span> <span class="n">MAIL</span>
+</span><span class='line'> <span class="mi">2</span>
+</span><span class='line'> <span class="mi">3</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">SMTPAppender</span>
+</span><span class='line'> <span class="mi">4</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">Threshold</span><span class="o">=</span><span class="n">ERROR</span>
+</span><span class='line'> <span class="mi">5</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">BufferSize</span><span class="o">=</span><span class="mi">10</span>
+</span><span class='line'> <span class="mi">6</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">From</span><span class="o">=</span><span class="mi">123</span><span class="nd">@qq.com</span>
+</span><span class='line'> <span class="mi">7</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">SMTPHost</span><span class="o">=</span><span class="n">smtp</span><span class="o">.</span><span class="na">qq</span><span class="o">.</span><span class="na">com</span>
+</span><span class='line'> <span class="mi">8</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">SMTPUsername</span><span class="o">=</span><span class="mi">123</span>
+</span><span class='line'> <span class="mi">9</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">SMTPPassword</span><span class="o">=***</span>
+</span><span class='line'><span class="mi">10</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">SMTPDebug</span><span class="o">=</span><span class="kc">false</span>
+</span><span class='line'><span class="mi">11</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">Subject</span><span class="o">=</span><span class="n">Log4JErrorMessage</span>
+</span><span class='line'><span class="mi">12</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">To</span><span class="o">=</span><span class="mi">123</span><span class="nd">@qq.com</span>
+</span><span class='line'><span class="mi">13</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">layout</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">PatternLayout</span>
+</span><span class='line'><span class="mi">14</span> <span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">ConversionPattern</span><span class="o">=%-</span><span class="n">d</span><span class="o">{</span><span class="n">yyyy</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">dd</span> <span class="nl">HH:mm:</span><span class="n">ss</span><span class="o">}</span> <span class="o">[%</span><span class="n">t</span><span class="o">]</span> <span class="o">%-</span><span class="mi">5</span><span class="n">p</span> <span class="o">%</span><span class="n">c</span> <span class="o">%</span><span class="n">x</span> <span class="o">--</span> <span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">n</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -597,14 +650,14 @@
 <p>如果需要抄送给某人，则添加如下配置：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">log4j.appender.MAIL.Bcc</span><span class="o">=</span><span class="s">xxx@xxx.xxx</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">Bcc</span><span class="o">=</span><span class="n">xxx</span><span class="nd">@xxx.xxx</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>想让邮件内容日志以HTML格式来输出，则配置：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">log4j.appender.MAIL.layout</span><span class="o">=</span><span class="s">org.apache.log4j.HTMLLayout</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">log4j</span><span class="o">.</span><span class="na">appender</span><span class="o">.</span><span class="na">MAIL</span><span class="o">.</span><span class="na">layout</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">HTMLLayout</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
