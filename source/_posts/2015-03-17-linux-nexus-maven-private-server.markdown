@@ -8,7 +8,7 @@ keywords: [nexus, maven, 私服, java]
 description: Linux下使用nexus搭建maven私服
 ---
 
-有个maven私服可以很方便地管理我们的jar包和发布构建到远程仓库，本文就介绍了如何在linux下一步步使用nexus搭建maven私服
+有个maven私服可以很方便地管理我们的jar包和发布构建到远程仓库，本文就介绍了如何在linux下一步步使用nexus搭建maven私服。
 
 <!--more-->
 原文链接：
@@ -96,7 +96,7 @@ wrapper  | <-- Wrapper Stopped
 
 ```
 
-原因：查找原因是JDK版本过低造成的，升级到最新的JDK7或者使用nexus-2.4-bundle.tar.gz版本JDK6会支持.
+原因：查找原因是JDK版本过低造成的，升级到最新的JDK7或者使用`nexus-2.4-bundle.tar.gz`版本JDK6会支持.
 
 Nexus所有版本下载地址：<http://www.sonatype.org/nexus/archived>
 
