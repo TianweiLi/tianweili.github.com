@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-18T10:03:38+08:00</updated>
+  <updated>2015-03-18T10:05:05+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -544,9 +544,11 @@ log4j.appender.im.layout.ConversionPattern =[framework] %d - %c -%-4r [%t] %-5p 
 
 <p>那么我们怎么能够限制只让指定的类才有资格输出日志呢？方法如下：</p>
 
-<p>首先你可以去掉log4j.rootLogger，使所有日志不在输出。</p>
+<ul>
+<li>首先你可以去掉log4j.rootLogger，使所有日志不在输出。</li>
+<li>然后再指定类输出。</li>
+</ul>
 
-<p>然后再指定类输出。</p>
 
 <p>注：如果设置了日志输出log4j.rootLogger，并且后面设置了指定类输出，则对于指定类的输出配置会覆盖总的配置。举个栗子：总配置设置优先级为INFO，但是某个类具体设置为WARN，那么最后这个类输出优先级为WARN。</p>
 
