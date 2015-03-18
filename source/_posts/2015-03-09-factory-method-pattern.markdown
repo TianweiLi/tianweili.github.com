@@ -128,6 +128,13 @@ public class Client {
 另外，在需要一个可扩展性强的系统设计中，可以考虑使用工厂方法模式。比如产品对象预期可能会经常造成增加或删减等，使用工厂方法模式来设计可以使系统更加灵活。
 
 ##应用实例
+
+###Java中的线程同步安全容器
+
+Java中的很多集合容器比如ArrayList等都不是线程安全的，在多线程并发情况下可能出现线程安全问题。
+
+我们可以使用`Collections.synchronizedList(new ArrayList())`获得一个线程安全的容器。这个就用到了工厂方法模式。
+
 ###Collection中的iterator方法
 
 `java.util.Collection`接口中的`iterator()`方法就是一个工厂方法。对于iterator方法来说Collection就是一个根抽象工厂，下面还有List等接口作为抽象工厂，再往下有ArrayList等具体工厂。
