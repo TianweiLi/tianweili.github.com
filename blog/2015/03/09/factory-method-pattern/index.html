@@ -297,6 +297,12 @@ ProductB Method ...
 
 <h2>应用实例</h2>
 
+<h3>Java中的线程同步安全容器</h3>
+
+<p>Java中的很多集合容器比如ArrayList等都不是线程安全的，在多线程并发情况下可能出现线程安全问题。</p>
+
+<p>我们可以使用<code>Collections.synchronizedList(new ArrayList())</code>获得一个线程安全的容器。这个就用到了工厂方法模式。</p>
+
 <h3>Collection中的iterator方法</h3>
 
 <p><code>java.util.Collection</code>接口中的<code>iterator()</code>方法就是一个工厂方法。对于iterator方法来说Collection就是一个根抽象工厂，下面还有List等接口作为抽象工厂，再往下有ArrayList等具体工厂。
