@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://tianweili.github.io/blog/2015/03/19/cycling-to-tibet-7/</loc>
+    <lastmod>2015-03-19T22:18:46+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://tianweili.github.io/blog/2015/03/18/linux-vi/</loc>
     <lastmod>2015-03-18T21:42:12+08:00</lastmod>
     <priority>0.8</priority>
@@ -137,19 +142,19 @@
   </url>
   <url>
     <loc>http://tianweili.github.io/blog/archives/</loc>
-    <lastmod>2015-03-18T22:41:01+08:00</lastmod>
+    <lastmod>2015-03-19T22:23:18+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://tianweili.github.io/</loc>
-    <lastmod>2015-03-18T22:41:01+08:00</lastmod>
+    <lastmod>2015-03-19T22:23:18+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://tianweili.github.io/aboutme/</loc>
-    <lastmod>2015-03-18T22:41:01+08:00</lastmod>
+    <lastmod>2015-03-19T22:23:18+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
