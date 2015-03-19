@@ -170,6 +170,7 @@ description: 今天是骑车去西藏第0天，对成都的印象。
 * [骑车去西藏—第4天—泸定-康定，坚定的信心](http://tianweili.github.io/blog/2013/07/15/cycling-to-tibet-4/)
 * [骑车去西藏—第5天—跑马溜溜的山上，情歌之城，康定](http://tianweili.github.io/blog/2013/07/16/cycling-to-tibet-5/)
 * [骑车去西藏—第6天—折多山，折磨人多的山](http://tianweili.github.io/blog/2013/07/17/cycling-to-tibet-6/)
+* [骑车去西藏—第7天—高尔寺山，待续](http://tianweili.github.io/blog/2013/07/18/cycling-to-tibet-7/)
 
 
 
