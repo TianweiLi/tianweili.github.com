@@ -258,6 +258,39 @@ log4j.appender.im.layout=org.apache.log4j.PatternLayout
 log4j.appender.im.layout.ConversionPattern =[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n
 ```
 
+##设置仅输出指定类的日志
+
+本人在使用HtmlUnit组件的时候，这个组件输出的各种日志刷屏得那叫一个酸爽。即便在使用它提供的一些API禁掉了一些日志输出，但还是会输出很多无用的日志信息。
+
+那么我们怎么能够限制只让指定的类才有资格输出日志呢？方法如下：
+
+* 首先你可以去掉log4j.rootLogger，使所有日志不在输出。
+* 然后再指定类输出。
+
+注：如果设置了日志输出log4j.rootLogger，并且后面设置了指定类输出，则对于指定类的输出配置会覆盖总的配置。举个栗子：总配置设置优先级为INFO，但是某个类具体设置为WARN，那么最后这个类输出优先级为WARN。
+
+```java
+#log4j.rootLogger=INFO, stdout, logfile
+log4j.logger.org.cyberneko.html.parsers=Fatal
+log4j.logger.org.apache.http=Fatal
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%n
+
+log4j.appender.logfile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.logfile.File=./your.log
+log4j.appender.logfile.DatePattern='.'yyyy-MM-dd
+log4j.appender.logfile.Append=true
+log4j.appender.logfile.layout=org.apache.log4j.PatternLayout
+log4j.appender.logfile.layout.ConversionPattern=%d [%t] %-5p %c %x -- %m%n
+
+#assign class out put log.
+log4j.logger.com.ltw.yourclass1=INFO,stdout,logfile
+log4j.logger.com.ltw.yourclass2=INFO,stdout,logfile
+```
+
 ##使用Log4J监控系统日志邮件警报
 
 在系统上线后，有时候遇到系统故障，这时候就可以登录服务器查看系统日志来排查问题。但是需要登录服务器，下载查找相关异常日志比较麻烦。而且没有监控的话，也无法实时了解到系统是否正常运行。那么有没有一种好办法将系统异常信息实时反馈给相关人员呢？

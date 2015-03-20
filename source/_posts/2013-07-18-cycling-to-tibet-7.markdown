@@ -1,12 +1,14 @@
 ---
 layout: post
 title: "骑车去西藏—第7天—高尔寺山，待续"
-date: 2015-03-19 22:18:46 +0800
+date: 2013-07-18 22:18:46 +0800
 comments: true
 categories: [生活]
 keywords: [骑车去西藏]
 description: 骑车去西藏—第7天—高尔寺山，待续
 ---
+
+<!--more-->
 
 未完待续。。。
 
