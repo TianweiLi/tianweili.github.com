@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-20T10:21:00+08:00</updated>
+  <updated>2015-03-24T17:13:02+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -3187,6 +3187,334 @@ c   3
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[设计模式六大原则 - 迪米特法则]]></title>
+    <link href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/"/>
+    <updated>2015-02-12T22:11:30+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/02/12/law-of-demeter</id>
+    <content type="html"><![CDATA[<p>迪米特法则有很多种说法，比如：一个类应该应该对其他类尽可能了解得最少；类只与直接的朋友通信等等。但是其最终目的只有一个，就是让类间解耦。</p>
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<h2>定义</h2>
+
+<p>迪米特法则：Law Of Demeter，LoD。</p>
+
+<p>也被称为最少知识原则，Least Knowledge Principle，LKP。</p>
+
+<p>就是说一个对象应该对其他对象保持最少的了解。正如最少知识原则这个定义一样，一个类应该对其耦合的其他类或所调用的类知道得最少。所耦合的类内部无论如何复杂，怎么实现的我都不需要知道，我只调用你public出来的这些方法，其他都不用知道。</p>
+
+<p>另外可以解释一下开头提到的只与直接的朋友通信，什么叫直接的朋友呢？我们继续看。</p>
+
+<h2>举个例子</h2>
+
+<p>光看定义可能无法完全理解它所表达的含义，以及在什么场景下才需要使用这个迪米特法则。现在我们就来举个“栗子”。</p>
+
+<p>现在市面上各种人脉书上很多都会提到“六度人脉”这个理论，这个理论说的是你与世界上任何一个人中间只隔了六个人。也就是说你想找任何一个人，无论这个人是政界要人，还是商界巨鳄，抑或是明星名人，你最多只通过六个人就可以联系到他（想想还有点小激动呢-_-#）。</p>
+
+<p>我们暂且不论这个理论是对是错，在现实生活中我们也经常遇到这样的情况。比如你想办一件事情，但是凭借你的能力是做不到的，而你周围的朋友也无法帮你办到。但是恰好你有一个朋友认识有另外一个朋友可以办得成此事，那么你只有拜托你这位朋友中间牵线搭桥，让他的朋友帮你办好此事。</p>
+
+<p>在这个例子中，我们就暂且定义你为A，你的朋友为B，你朋友的朋友为C好了。</p>
+
+<h2>反面教材</h2>
+
+<p>我们先来看看表达此种关系的UML类图：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/law-of-demeter1.png"></p>
+
+<p>实现代码如下：</p>
+
+<p>1.类A和类B是好朋友，能找到类B来帮忙：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">A</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">A</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">B</span> <span class="nf">getB</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">new</span> <span class="nf">B</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">work</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">B</span> <span class="n">b</span> <span class="o">=</span> <span class="n">getB</span><span class="o">(</span><span class="s">&quot;李四&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">C</span> <span class="n">c</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="na">getC</span><span class="o">(</span><span class="s">&quot;王五&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">c</span><span class="o">.</span><span class="na">work</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.类B和类C是好朋友，能知道类C来帮忙：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">B</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">B</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">C</span> <span class="nf">getC</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">new</span> <span class="nf">C</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.类C能够办成此事：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">C</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">C</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">work</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;把这件事做好了&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4.场景类</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">A</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">A</span><span class="o">(</span><span class="s">&quot;张三&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">a</span><span class="o">.</span><span class="na">work</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果如下：</p>
+
+<pre><code>王五把这件事做好了
+</code></pre>
+
+<p>上面的输出虽然是把事情成功办好了，但是仔细看业务逻辑明显是不对的。A和C又不是好朋友，为什么在类A中会出现类C呢？他们又互相不认识。</p>
+
+<p>看到这里很多人都会明白，这种场景在实际开发中是非常常见的一种情况。对象A需要调用对象B的方法，对象B有需要调用对象C的方法……就是常见的getXXX().getXXX().getXXX()……类似于这种代码。如果你发现你的代码中也有这样的代码，那就考虑下是不是违反迪米特法则，是不是要重构一下了。</p>
+
+<h2>正确例子</h2>
+
+<p>为了符合迪米特法则，也为了让业务逻辑能够说得通，我们把上面的例子稍微修改一下。</p>
+
+<p>UML类图如下：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/law-of-demeter2.png"></p>
+
+<p>代码如下：</p>
+
+<p>1.类A和类B是好朋友，能找到类B来帮忙：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">A</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">A</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">B</span> <span class="nf">getB</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">new</span> <span class="nf">B</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">work</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">B</span> <span class="n">b</span> <span class="o">=</span> <span class="n">getB</span><span class="o">(</span><span class="s">&quot;李四&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">b</span><span class="o">.</span><span class="na">work</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.类B和类C是好朋友，能知道类C来帮忙：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">B</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">B</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">C</span> <span class="nf">getC</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">new</span> <span class="nf">C</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">work</span><span class="o">(){</span>
+</span><span class='line'>      <span class="n">C</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getC</span><span class="o">(</span><span class="s">&quot;王五&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">c</span><span class="o">.</span><span class="na">work</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.类C能够办成此事：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">C</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">C</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">work</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;把这件事做好了&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4.场景类</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">A</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">A</span><span class="o">(</span><span class="s">&quot;张三&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">a</span><span class="o">.</span><span class="na">work</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行结果如下：</p>
+
+<pre><code>王五把这件事做好了
+</code></pre>
+
+<p>上面代码只是修改了下类A和B的work方法，使之符合了迪米特法则：</p>
+
+<ul>
+<li>类A只与最直接的朋友类B通信，不与类C通信；</li>
+<li>类A只调用类B提供的方法即可，不用关心类B内部是如何实现的（至于B是怎么调用的C，这些A都不用关心）。</li>
+</ul>
+
+
+<h2>总结</h2>
+
+<p>迪米特法则的目的是让类之间解耦，降低耦合度。只有这样，类的可复用性才能提高。</p>
+
+<p>但是迪米特法则也有弊端，它会产生大量的中转类或跳转类，导致系统的复杂度提高。</p>
+
+<p>所以我们不要太死板的遵守这个迪米特法则，在系统设计的时候，在弱耦合和结构清晰之间反复权衡。尽量保证系统结构清晰，又能做到低耦合。</p>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<p>转载请注明作者及出处，谢谢。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[设计模式六大原则 - 接口隔离原则]]></title>
     <link href="http://tianweili.github.io/blog/2015/02/10/interface-segregation-principle/"/>
     <updated>2015-02-10T23:01:20+08:00</updated>
@@ -5743,111 +6071,6 @@ rake setup_github_pages
 <p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
-
-<p>转载请注明作者和文章出处，谢谢。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[第一篇博文]]></title>
-    <link href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/"/>
-    <updated>2015-01-10T01:28:08+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/01/10/my-first-blog</id>
-    <content type="html"><![CDATA[<p>新的一年，又一个新的博客！</p>
-
-<p>IT干了几年，博客社区也换了几次。至今没有遇到特别中意的社区，<a href="http://www.cnblogs.com/hellojava/">最近一次用得比较久的博客就是博客园了</a>，在博客园写博客给我的感觉相对是比较好的，但是仍然不能让我满意。于是我动起了自己搭建博客的念头，多方搜索比较下选择使用<a href="http://octopress.org/">Octopress</a>+<a href="https://pages.github.com/">GitHub Pages</a>来搭建自己的个人博客。</p>
-
-<!--more-->
-
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/">http://tianweili.github.io/blog/2015/01/10/my-first-blog/</a></p>
-
-<h2>为什么不再使用博客园写博客</h2>
-
-<p><strong>1.博客园氛围以.NET技术社区为主</strong></p>
-
-<p>当然其他语言技术的博客也有，但几乎.NET要占去了一半甚至更多。这对于我一个做Java，做Python，做Perl……却唯独没做.NET的人来说略微有些显得“格格不入”——上面其他语言技术的博客太少了，尤其是高质量的更少！</p>
-
-<p>这样带来的后果就是与你“志同道合”能够互相讨论学习的人比较少，当然如果你主要是做.NET的那还是值得你考虑加入的。</p>
-
-<p><strong>2.能进行个性化定制的项目有点少</strong></p>
-
-<p>不过坦白来说，博客园至少是主流几个技术社区能够进行个性化定制最多的技术博客社区了，否则我也不会最后用这一个以.NET为主的技术社区。</p>
-
-<p>但是我仍然觉得还不够，而且有诸多限制，很多想要的功能加不上，很多不想要的功能硬是塞给你，又去除不掉。</p>
-
-<p><strong>3.在上面写博客有诸多不爽</strong></p>
-
-<p>首先是写博客比较麻烦，各种调样式，而我又是对排版格式等有点追求的人，（但是我不是处女座，:)。）所以最后导致我写一篇博客花在调样式上面的时间比较多，而且很不方便。</p>
-
-<p>其次是代码样式格式着色都不是很喜欢，虽然我自己用CSS改了一下，但仍然觉得很丑。</p>
-
-<p><strong>4.上面高质量的博客很少</strong></p>
-
-<p>感觉现在首页上质量较高的博客变得越来越少了，非.NET的更少，待下去也没什么意义。所以，我走了……</p>
-
-<p><strong>5.博客风格样式不好看</strong></p>
-
-<p>风格样式不好看，自己能修改的地方又不多。我本人是喜欢比较简洁一点的风格，写个博客嘛，不至于那么多花花绿绿的，所以我一进入一些特别花哨的博客就看得眼花缭乱，哈哈。</p>
-
-<p>So，只有自己建个博客来折腾咯。</p>
-
-<p>最后，不过我仍然很感谢<a href="http://www.cnblogs.com/hellojava/">在博客园的那一段时光</a>，在博客园写博客的那一段日子也让自己进不了不少。（虽然还有很多的博文都存放在草稿里没有发布出来，那就让它继续躺在草稿箱里吧，-_-）至少博客园的博客部分是我所见过几个主流社区里最好的，只是感觉还不太适合自己而已。</p>
-
-<h2>为什么选择Octopress来写博客</h2>
-
-<p>基本上博客园的诸多不爽在这里都得到了解决，-_-!</p>
-
-<p><strong>1.可以由自己随意定制</strong></p>
-
-<p>当然也少不了折腾，查资料，配置，各种排查错误等等等的，也耗费了不少的时间和精力，并且由于国外被墙的缘故，还要删掉很多请求来进行优化访问速度。但是仍然感觉很爽，学习新知识，排查解决BUG后的成就感也挺大的。</p>
-
-<p><strong>2.博客风格样式都比较喜欢</strong></p>
-
-<p>我一直比较喜欢简洁素朴一些的博客风格。既然是博客，就让人注意到文章的内容，而不是被吸引到博客的皮肤和各种特效上。而且自己搭建的博客风格可以随意修改定制。</p>
-
-<p>而且Octopress<a href="http://pygments.org/">使用Pygments来进行代码着色</a>，代码风格样式也是自己比较喜欢的，比如：</p>
-
-<figure class='code'><figcaption><span>Sample.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">ltw</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span><span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
-</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello world!&quot;</span><span class="o">);</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>并且Octopress搭建的博客无论是在PC端还是移动端，它的页面兼容性都比较好哦。</p>
-
-<p><strong>3.写博客比较爽</strong></p>
-
-<p>Octopress用的是Markdown来写博客，这正合自己的心意。用<a href="http://wowubuntu.com/markdown/">Markdown语法</a>写起来比较快，使用文本格式编写和存储，简洁轻便，还可以很方便得进行本地预览。</p>
-
-<p>并且文章的发布也很方便，<code>generate</code>后一条命令就<code>deploy</code>到GitHub上去了。</p>
-
-<p><strong>4.搭建过程比较折腾人</strong></p>
-
-<p>因为Octopress使用Ruby来写的，并且用到了Python的Pygments插件，还用到了Git来进行版本管理，使用GitHub Pages服务，博客和源代码提交到了GitHub来存储，图片又使用的七牛云存储，评论使用的多说评论系统，博客各方面的修改和个性化改动，还有被墙的缘故要进行访问优化等等。</p>
-
-<p>总之博客搭建过程中会遇到各种问题，滋味那叫一个酸爽。当然也有人一次成功，那即使运气了。不过遇到问题，解决问题也学到了不少东西。后面我会把一部分博客配置和遇到各种问题的解决方式写成博客记录和分享。</p>
-
-<h2>最后</h2>
-
-<p>新的一年，开通了新的博客！迎来了一个好的开端。接下来我就使用这个博客来记录和分享自己的学习和生活经历吧！</p>
-
-<hr />
-
-<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/10/my-first-blog/">http://tianweili.github.io/blog/2015/01/10/my-first-blog/</a></p>
 
 <p>转载请注明作者和文章出处，谢谢。</p>
 ]]></content>
