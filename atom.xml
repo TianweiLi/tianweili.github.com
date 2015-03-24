@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-24T17:13:02+08:00</updated>
+  <updated>2015-03-24T23:05:02+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,231 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[设计模式六大原则 - 开闭原则]]></title>
+    <link href="http://tianweili.github.io/blog/2015/03/24/open-close-principle/"/>
+    <updated>2015-03-24T22:03:39+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/03/24/open-close-principle</id>
+    <content type="html"><![CDATA[<p>开闭原则是设计模式六大原则中最重要也是最“虚”的一个原则。为什么说它最重要呢？因为前面五大原则的目的都是为了实现这个开闭原则，开闭原则相当于它们的主旨思想。为什么说它“虚”呢？因为开闭原则只是个指导思想，不像另外五大原则都有具体可行的指导方法。废话不多说，我们开始了解什么是开闭原则吧。</p>
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<h2>定义</h2>
+
+<p>Software entities like classes, modules and functions shoule be open for extension but closed for modifications.（一个软件实体如类，模块和函数应该对扩展开放，对修改关闭。）</p>
+
+<p>开闭原则的定义很短，就是对扩展开放，对修改关闭。但是为什么要遵守这一个原则呢？</p>
+
+<p>做过实际项目的筒子们应该都会深有体会，一个软件在其生命周期内都会发生很多变化，这几乎是不可避免的。无论是需求的变化、业务逻辑的变化、程序代码的变化等等，这些变化都有可能对整个软件的稳定性造成一定的威胁。</p>
+
+<p>而开闭原则就是应对这些变化的，它告诉我们应该通过扩展来实现变化，而不是通过修改已有的代码。</p>
+
+<h2>例子</h2>
+
+<p>我记得上中学的时候，每次考试出成绩的时候老师都会站在讲台上一遍发卷子一遍念出每位同学的分数，下面的学生们心理都暗自捏了一把汗。对于念出自己分数的同学，如果考得好，走上讲台领会卷子，自然心中倍感自豪。但是如果考得不好，一路上感觉都很惭愧啊，此时就很不希望老师当众把自己分数念出来。</p>
+
+<p>下面我们来看看这种场景下的UML类图：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/open-close-principle1.png"></p>
+
+<p>程序代码如下：</p>
+
+<p>学生类，每个学生都有姓名和成绩：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Student</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">grade</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Student</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">grade</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">grade</span> <span class="o">=</span> <span class="n">grade</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getGrade</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">grade</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>老师类，每个老师管理一群的学生：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Teacher</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;</span> <span class="n">students</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">students</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nf">Student</span><span class="o">(</span><span class="s">&quot;张三&quot;</span><span class="o">,</span> <span class="s">&quot;60&quot;</span><span class="o">));</span>
+</span><span class='line'>      <span class="n">students</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nf">Student</span><span class="o">(</span><span class="s">&quot;李四&quot;</span><span class="o">,</span> <span class="s">&quot;70&quot;</span><span class="o">));</span>
+</span><span class='line'>      <span class="n">students</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nf">Student</span><span class="o">(</span><span class="s">&quot;王五&quot;</span><span class="o">,</span> <span class="s">&quot;80&quot;</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>场景类：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Teacher</span><span class="o">();</span>
+</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">Student</span> <span class="n">student</span> <span class="o">:</span> <span class="n">teacher</span><span class="o">.</span><span class="na">students</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;姓名：&quot;</span> <span class="o">+</span> <span class="n">student</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; 成绩：&quot;</span> <span class="o">+</span> <span class="n">student</span><span class="o">.</span><span class="na">getGrade</span><span class="o">());</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>输出结果：</p>
+
+<pre><code>姓名：张三 成绩：60
+姓名：李四 成绩：70
+姓名：王五 成绩：80
+</code></pre>
+
+<p>最后王同学看到自己成绩不错，裂开嘴笑了。而张同学就惨了，差点不及格，在全班同学的哄笑中领走了试卷。</p>
+
+<h2>更改需求</h2>
+
+<p>因为这种当众念出学生成绩的行为可能为伤害到一些成绩不是那么好的同学的自尊心，所以临时决定要对这种念出分数的方式进行改革。把同学们的成绩按照级别来分，分别有优秀，良好，一般，及格，不及格这几种。这样可以照顾成绩不好的同学的自尊心。</p>
+
+<p>那么我们怎么根据这种需求来更改我们的软件呢？</p>
+
+<p>有人说直接修改Student类的getGrade方法不就行了嘛。可能有很多人在实际项目中都是这么做的，但是这就违背了开闭原则，开闭原则要求我们尽量不要修改已有的代码，尽量通过扩展来实现改变。</p>
+
+<p>因为我们举的例子比较简单，但是在实际复杂的项目中，首先理解已有的方法业务逻辑可能就不是一件容易的事情，更何况如果再有其他实体类需要调用你已有的方法，如果你修改了这个方法，所有调用这个方法的代码都得需要找到并修改，这是一件既困难又不安全的做法。</p>
+
+<p>再者说修改了getGrade方法，那么这下只能知道学生成绩处于哪一个层次了，老师也无法知道学生的具体分数了。</p>
+
+<p>那么我们应该怎么做呢？</p>
+
+<p>既然前门我们知道了开闭原则，我们就要用上。我们可以通过扩展已有的代码来实现改变，可以增加一个LevelStudent来继承Student，并扩展修改getGrade方法。</p>
+
+<p>修改后的UML类图如下所示：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/open-close-principle2.png"></p>
+
+<p>增加LevelStudent类代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LevelStudent</span> <span class="kd">extends</span> <span class="n">Student</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">LevelStudent</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">grade</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">grade</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nd">@Override</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getGrade</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">String</span> <span class="n">level</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">grade_</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">getGrade</span><span class="o">());</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">90</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;优秀&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">80</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;良好&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">80</span> <span class="o">&amp;&amp;</span> <span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">70</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;一般&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">70</span> <span class="o">&amp;&amp;</span> <span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">60</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;及格&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;不及格&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">level</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>总结</h2>
+
+<p>开闭原则是对扩展开放，对修改关闭。</p>
+
+<p>开闭原则的主旨是为了拥抱变化。</p>
+
+<p>在六大原则中，开闭原则只是一个思想，没有具体实际操作方法。其他五大原则都是为了实现这个开闭思想的一些方法和工具。</p>
+
+<p>想要遵守开闭原则，就需要一个设计合理的系统。可以说在做系统设计的时候就要考虑到未来的扩展和改变。</p>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<p>转载请注明作者及出处，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Linux中的vi命令]]></title>
@@ -6009,68 +6234,6 @@ flag_counter: true
 <p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/">http://tianweili.github.com/blog/2015/01/11/setup-octopress-blog/</a></p>
-
-<p>转载请注明作者和文章出处，谢谢。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[windows下搭建Octopress博客]]></title>
-    <link href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/"/>
-    <updated>2015-01-11T21:43:31+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
-
-<h2>将博客发布到GitHub</h2>
-
-<p>进入博客源代码所在目录。编辑markdown后</p>
-
-<ol>
-<li>执行<code>rake new_post['my first blog']</code>来生成一篇博文；</li>
-<li>执行<code>rake generate</code>生成博客网页；</li>
-<li>执行<code>rake preview</code>后在本地输入&lt;localhost:4000>来预览博客；</li>
-<li>执行<code>rake setup_github_pages</code>命令后，按照提示输入对应的GitHub的repository地址：<code>git@github.com:TianweiLi/tianweili.github.com.git</code>；（不执行这一步会可能会报<code>No such file or directory - _deploy</code>错误）</li>
-<li>执行<code>rake deploy</code>将博客站点发布到GitHub<code>master</code>分支上，这样就可以访问博客了（这一步就是把public目录下文件push到master分支上）；</li>
-<li>将修改后的octopress源码push到GitHub的<code>source</code>分支上：</li>
-</ol>
-
-
-<p>依次执行下面命令</p>
-
-<pre><code>git add .
-git commit -m 'build octopress blog'
-git push origin source
-</code></pre>
-
-<h2>换一台电脑写博客</h2>
-
-<p>如果需要在另一台电脑写博客并提交上去，那么可以采用下面步骤来实现。</p>
-
-<p>先要找到GitHub的repository url，然后clone source分支到本地：</p>
-
-<pre><code>git clone -b source git@github.com:TianweiLi/tianweili.github.com.git octopress
-</code></pre>
-
-<p>然后clone master分支到本地：</p>
-
-<pre><code>cd octopress
-git clone git@github.com:TianweiLi/tianweili.github.com.git _deploy
-</code></pre>
-
-<p>然后进行一些相关依赖的安装，依次执行下面命令：</p>
-
-<pre><code>gem install bundler
-bundle install
-rake install
-rake setup_github_pages
-</code></pre>
-
-<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/">http://tianweili.github.io/blog/2015/01/11/create-octopress-blog-in-windows/</a></p>
 
 <p>转载请注明作者和文章出处，谢谢。</p>
 ]]></content>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 设计模式 | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/she-ji-mo-shi/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-24T17:13:02+08:00</updated>
+  <updated>2015-03-24T23:05:02+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -12,6 +12,164 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[设计模式六大原则 - 开闭原则]]></title>
+    <link href="http://tianweili.github.io/blog/2015/03/24/open-close-principle/"/>
+    <updated>2015-03-24T22:03:39+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/03/24/open-close-principle</id>
+    <content type="html"><![CDATA[<p>开闭原则是设计模式六大原则中最重要也是最“虚”的一个原则。为什么说它最重要呢？因为前面五大原则的目的都是为了实现这个开闭原则，开闭原则相当于它们的主旨思想。为什么说它“虚”呢？因为开闭原则只是个指导思想，不像另外五大原则都有具体可行的指导方法。废话不多说，我们开始了解什么是开闭原则吧。</p>
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<h2>定义</h2>
+
+<p>Software entities like classes, modules and functions shoule be open for extension but closed for modifications.（一个软件实体如类，模块和函数应该对扩展开放，对修改关闭。）</p>
+
+<p>开闭原则的定义很短，就是对扩展开放，对修改关闭。但是为什么要遵守这一个原则呢？</p>
+
+<p>做过实际项目的筒子们应该都会深有体会，一个软件在其生命周期内都会发生很多变化，这几乎是不可避免的。无论是需求的变化、业务逻辑的变化、程序代码的变化等等，这些变化都有可能对整个软件的稳定性造成一定的威胁。</p>
+
+<p>而开闭原则就是应对这些变化的，它告诉我们应该通过扩展来实现变化，而不是通过修改已有的代码。</p>
+
+<h2>例子</h2>
+
+<p>我记得上中学的时候，每次考试出成绩的时候老师都会站在讲台上一遍发卷子一遍念出每位同学的分数，下面的学生们心理都暗自捏了一把汗。对于念出自己分数的同学，如果考得好，走上讲台领会卷子，自然心中倍感自豪。但是如果考得不好，一路上感觉都很惭愧啊，此时就很不希望老师当众把自己分数念出来。</p>
+
+<p>下面我们来看看这种场景下的UML类图：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/open-close-principle1.png"></p>
+
+<p>程序代码如下：</p>
+
+<p>学生类，每个学生都有姓名和成绩：</p>
+
+<pre><code class="java">public class Student {
+
+    private String name;
+    private String grade;
+
+    public Student(String name, String grade) {
+        this.name = name;
+        this.grade = grade;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+}
+</code></pre>
+
+<p>老师类，每个老师管理一群的学生：</p>
+
+<pre><code class="java">import java.util.ArrayList;
+import java.util.List;
+
+public class Teacher {
+
+    public final static List&lt;Student&gt; students = new ArrayList&lt;Student&gt;();
+
+    static {
+        students.add(new Student("张三", "60"));
+        students.add(new Student("李四", "70"));
+        students.add(new Student("王五", "80"));
+    }
+}
+</code></pre>
+
+<p>场景类：</p>
+
+<pre><code class="java">public class Client {
+    public static void main(String[] args) {
+        Teacher teacher = new Teacher();
+        for (Student student : teacher.students) {
+            System.out.println("姓名：" + student.getName() + " 成绩：" + student.getGrade());
+        }
+    }
+}
+</code></pre>
+
+<p>输出结果：</p>
+
+<pre><code>姓名：张三 成绩：60
+姓名：李四 成绩：70
+姓名：王五 成绩：80
+</code></pre>
+
+<p>最后王同学看到自己成绩不错，裂开嘴笑了。而张同学就惨了，差点不及格，在全班同学的哄笑中领走了试卷。</p>
+
+<h2>更改需求</h2>
+
+<p>因为这种当众念出学生成绩的行为可能为伤害到一些成绩不是那么好的同学的自尊心，所以临时决定要对这种念出分数的方式进行改革。把同学们的成绩按照级别来分，分别有优秀，良好，一般，及格，不及格这几种。这样可以照顾成绩不好的同学的自尊心。</p>
+
+<p>那么我们怎么根据这种需求来更改我们的软件呢？</p>
+
+<p>有人说直接修改Student类的getGrade方法不就行了嘛。可能有很多人在实际项目中都是这么做的，但是这就违背了开闭原则，开闭原则要求我们尽量不要修改已有的代码，尽量通过扩展来实现改变。</p>
+
+<p>因为我们举的例子比较简单，但是在实际复杂的项目中，首先理解已有的方法业务逻辑可能就不是一件容易的事情，更何况如果再有其他实体类需要调用你已有的方法，如果你修改了这个方法，所有调用这个方法的代码都得需要找到并修改，这是一件既困难又不安全的做法。</p>
+
+<p>再者说修改了getGrade方法，那么这下只能知道学生成绩处于哪一个层次了，老师也无法知道学生的具体分数了。</p>
+
+<p>那么我们应该怎么做呢？</p>
+
+<p>既然前门我们知道了开闭原则，我们就要用上。我们可以通过扩展已有的代码来实现改变，可以增加一个LevelStudent来继承Student，并扩展修改getGrade方法。</p>
+
+<p>修改后的UML类图如下所示：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/open-close-principle2.png"></p>
+
+<p>增加LevelStudent类代码：</p>
+
+<pre><code class="java">public class LevelStudent extends Student {
+
+    public LevelStudent(String name, String grade) {
+        super(name, grade);
+    }
+
+    @Override
+    public String getGrade() {
+        String level = null;
+        int grade_ = Integer.valueOf(super.getGrade());
+        if (grade_ &gt;= 90) {
+            level = "优秀";
+        } else if (grade_ &lt; 90 &amp;&amp; grade_ &gt;= 80) {
+            level = "良好";
+        } else if (grade_ &lt; 80 &amp;&amp; grade_ &gt;= 70) {
+            level = "一般";
+        } else if (grade_ &lt; 70 &amp;&amp; grade_ &gt;= 60) {
+            level = "及格";
+        } else if (grade_ &lt; 60) {
+            level = "不及格";
+        }
+        return level;
+    }
+}
+</code></pre>
+
+<h2>总结</h2>
+
+<p>开闭原则是对扩展开放，对修改关闭。</p>
+
+<p>开闭原则的主旨是为了拥抱变化。</p>
+
+<p>在六大原则中，开闭原则只是一个思想，没有具体实际操作方法。其他五大原则都是为了实现这个开闭思想的一些方法和工具。</p>
+
+<p>想要遵守开闭原则，就需要一个设计合理的系统。可以说在做系统设计的时候就要考虑到未来的扩展和改变。</p>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<p>转载请注明作者及出处，谢谢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[代理模式]]></title>
@@ -959,228 +1117,6 @@ ProductB function ...
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern/">http://tianweili.github.io/blog/2015/03/08/simple-factory-pattern/</a></p>
 
 <p>转载请注明作者和文章出处，谢谢。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[单例模式的八种写法比较]]></title>
-    <link href="http://tianweili.github.io/blog/2015/03/02/singleton-pattern/"/>
-    <updated>2015-03-02T19:08:39+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/03/02/singleton-pattern</id>
-    <content type="html"><![CDATA[<p>单例模式是最常用到的设计模式之一，熟悉设计模式的朋友对单例模式都不会陌生。一般介绍单例模式的书籍都会提到<code>饿汉式</code>和<code>懒汉式</code>这两种实现方式。但是除了这两种方式，本文还会介绍其他几种实现单例的方式，让我们来一起看看吧。</p>
-
-<!--more-->
-
-
-<p>原文链接：</p>
-
-<p><a href="http://tianweili.github.io/blog/2015/03/02/singleton-pattern/">http://tianweili.github.io/blog/2015/03/02/singleton-pattern/</a></p>
-
-<h2>简介</h2>
-
-<p>单例模式是一种常用的软件设计模式，其定义是单例对象的类只能允许一个实例存在。</p>
-
-<p>许多时候整个系统只需要拥有一个的全局对象，这样有利于我们协调系统整体的行为。比如在某个服务器程序中，该服务器的配置信息存放在一个文件中，这些配置数据由一个单例对象统一读取，然后服务进程中的其他对象再通过这个单例对象获取这些配置信息。这种方式简化了在复杂环境下的配置管理。</p>
-
-<h2>基本的实现思路</h2>
-
-<p>单例模式要求类能够有返回对象一个引用(永远是同一个)和一个获得该实例的方法（必须是静态方法，通常使用getInstance这个名称）。</p>
-
-<p>单例的实现主要是通过以下两个步骤：</p>
-
-<ol>
-<li>将该类的构造方法定义为私有方法，这样其他处的代码就无法通过调用该类的构造方法来实例化该类的对象，只有通过该类提供的静态方法来得到该类的唯一实例；</li>
-<li>在该类内提供一个静态方法，当我们调用这个方法时，如果类持有的引用不为空就返回这个引用，如果类保持的引用为空就创建该类的实例并将实例的引用赋予该类保持的引用。</li>
-</ol>
-
-
-<h2>注意事项</h2>
-
-<p>单例模式在多线程的应用场合下必须小心使用。如果当唯一实例尚未创建时，有两个线程同时调用创建方法，那么它们同时没有检测到唯一实例的存在，从而同时各自创建了一个实例，这样就有两个实例被构造出来，从而违反了单例模式中实例唯一的原则。 解决这个问题的办法是为指示类是否已经实例化的变量提供一个互斥锁(虽然这样会降低效率)。</p>
-
-<h2>单例模式的八种写法</h2>
-
-<h3>1、饿汉式（静态常量）[可用]</h3>
-
-<pre><code class="java">public class Singleton {
-
-    private final static Singleton INSTANCE = new Singleton();
-
-    private Singleton(){}
-
-    public static Singleton getInstance(){
-        return INSTANCE;
-    }
-}
-</code></pre>
-
-<p>优点：这种写法比较简单，就是在类装载的时候就完成实例化。避免了线程同步问题。</p>
-
-<p>缺点：在类装载的时候就完成实例化，没有达到Lazy Loading的效果。如果从始至终从未使用过这个实例，则会造成内存的浪费。</p>
-
-<h3>2、饿汉式（静态代码块）[可用]</h3>
-
-<pre><code class="java">public class Singleton {
-
-    private static Singleton instance;
-
-    static {
-        instance = new Singleton();
-    }
-
-    private Singleton() {}
-
-    public Singleton getInstance() {
-        return instance;
-    }
-}
-</code></pre>
-
-<p>这种方式和上面的方式其实类似，只不过将类实例化的过程放在了静态代码块中，也是在类装载的时候，就执行静态代码块中的代码，初始化类的实例。优缺点和上面是一样的。</p>
-
-<h3>3、懒汉式(线程不安全)[不可用]</h3>
-
-<pre><code class="java">public class Singleton {
-
-    private static Singleton singleton;
-
-    private Singleton() {}
-
-    public static Singleton getInstance() {
-        if (singleton == null) {
-            singleton = new Singleton();
-        }
-        return singleton;
-    }
-}
-</code></pre>
-
-<p>这种写法起到了Lazy Loading的效果，但是只能在单线程下使用。如果在多线程下，一个线程进入了if (singleton == null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式。</p>
-
-<h3>4、懒汉式(线程安全，同步方法)[不推荐用]</h3>
-
-<pre><code class="java">public class Singleton {
-
-    private static Singleton singleton;
-
-    private Singleton() {}
-
-    public static synchronized Singleton getInstance() {
-        if (singleton == null) {
-            singleton = new Singleton();
-        }
-        return singleton;
-    }
-}
-</code></pre>
-
-<p>解决上面第三种实现方式的线程不安全问题，做个线程同步就可以了，于是就对getInstance()方法进行了线程同步。</p>
-
-<p>缺点：效率太低了，每个线程在想获得类的实例时候，执行getInstance()方法都要进行同步。而其实这个方法只执行一次实例化代码就够了，后面的想获得该类实例，直接return就行了。方法进行同步效率太低要改进。</p>
-
-<h3>5、懒汉式(线程安全，同步代码块)[不可用]</h3>
-
-<pre><code class="java">public class Singleton {
-
-    private static Singleton singleton;
-
-    private Singleton() {}
-
-    public static Singleton getInstance() {
-        if (singleton == null) {
-            synchronized (Singleton.class) {
-                singleton = new Singleton();
-            }
-        }
-        return singleton;
-    }
-}
-</code></pre>
-
-<p>由于第四种实现方式同步效率太低，所以摒弃同步方法，改为同步产生实例化的的代码块。但是这种同步并不能起到线程同步的作用。跟第3种实现方式遇到的情形一致，假如一个线程进入了if (singleton == null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。</p>
-
-<h3>6、双重检查[推荐用]</h3>
-
-<pre><code class="java">public class Singleton {
-
-    private static volatile Singleton singleton;
-
-    private Singleton() {}
-
-    public static Singleton getInstance() {
-        if (singleton == null) {
-            synchronized (Singleton.class) {
-                if (singleton == null) {
-                    singleton = new Singleton();
-                }
-            }
-        }
-        return singleton;
-    }
-}
-</code></pre>
-
-<p>Double-Check概念对于多线程开发者来说不会陌生，如代码中所示，我们进行了两次if (singleton == null)检查，这样就可以保证线程安全了。这样，实例化代码只用执行一次，后面再次访问时，判断if (singleton == null)，直接return实例化对象。</p>
-
-<p>优点：线程安全；延迟加载；效率较高。</p>
-
-<h3>7、静态内部类[推荐用]</h3>
-
-<pre><code class="java">public class Singleton {
-
-    private Singleton() {}
-
-    private static class SingletonInstance {
-        private static final Singleton INSTANCE = new Singleton();
-    }
-
-    public static Singleton getInstance() {
-        return SingletonInstance.INSTANCE;
-    }
-}
-</code></pre>
-
-<p>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了类装载的机制来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</p>
-
-<p>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性，在类进行初始化时，别的线程是无法进入的。</p>
-
-<p>优点：避免了线程不安全，延迟加载，效率高。</p>
-
-<h3>8、枚举[推荐用]</h3>
-
-<pre><code class="java">public enum Singleton {
-    INSTANCE;
-    public void whateverMethod() {
-
-    }
-}
-</code></pre>
-
-<p>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。可能是因为枚举在JDK1.5中才添加，所以在实际项目开发中，很少见人这么写过。</p>
-
-<h2>优点</h2>
-
-<p>系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。</p>
-
-<h2>缺点</h2>
-
-<p>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new，可能会给其他开发人员造成困扰，特别是看不到源码的时候。</p>
-
-<h2>适用场合</h2>
-
-<ul>
-<li>需要频繁的进行创建和销毁的对象；</li>
-<li>创建对象时耗时过多或耗费资源过多，但又经常用到的对象；</li>
-<li>工具类对象；</li>
-<li>频繁访问数据库或文件的对象。</li>
-</ul>
-
-
-<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/02/singleton-pattern/">http://tianweili.github.io/blog/2015/03/02/singleton-pattern/</a></p>
-
-<p>转载请注明作者及出处，谢谢。</p>
 ]]></content>
   </entry>
   

@@ -1,0 +1,514 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>设计模式六大原则 - 开闭原则 - 李天炜</title>
+  <meta name="author" content="李天炜 litianwei2013[AT]gmail.com">
+
+  
+  <meta name="description" content="设计模式六大原则之开闭原则">
+  <meta name="keywords" content="java, 设计模式, 六大原则, 开闭原则">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="baidu-site-verification" content="56FDlmWosN" />
+
+  
+  <link rel="canonical" href="http://tianweili.github.io/blog/2015/03/24/open-close-principle">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="李天炜" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script>
+	function addBlankTargetForLinks () {
+	  $('a[href^="http"]').each(function(){
+		  $(this).attr('target', '_blank');
+	  });
+	}
+
+	$(document).bind('DOMNodeInserted', function(event) {
+	  addBlankTargetForLinks();
+	});
+</script>
+
+<script src="/javascripts/jquery-1.11.2.min.js" type="text/javascript"></script>
+<script src="/javascripts/generate-toc.js" type="text/javascript"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58552615-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <!--Google Analytics-->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58552615-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!--Baidu count-->
+  <script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?6b6008dd331408470ad77cbc9b30612a";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+  </script>
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">李天炜</a></h1>
+  
+    <h2>不积跬步无以至千里</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="tianweili.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+	<li><a href="/">首页</a></li>
+	<li><a href="/blog/archives">博文列表</a></li>
+	<li><a href="/aboutme/index.html">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">设计模式六大原则 - 开闭原则</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-24T22:03:39+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:03 pm</span></time>
+        
+		
+-		   | <a href="#comments">Comments</a>
+-       
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>开闭原则是设计模式六大原则中最重要也是最“虚”的一个原则。为什么说它最重要呢？因为前面五大原则的目的都是为了实现这个开闭原则，开闭原则相当于它们的主旨思想。为什么说它“虚”呢？因为开闭原则只是个指导思想，不像另外五大原则都有具体可行的指导方法。废话不多说，我们开始了解什么是开闭原则吧。</p>
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<h2>定义</h2>
+
+<p>Software entities like classes, modules and functions shoule be open for extension but closed for modifications.（一个软件实体如类，模块和函数应该对扩展开放，对修改关闭。）</p>
+
+<p>开闭原则的定义很短，就是对扩展开放，对修改关闭。但是为什么要遵守这一个原则呢？</p>
+
+<p>做过实际项目的筒子们应该都会深有体会，一个软件在其生命周期内都会发生很多变化，这几乎是不可避免的。无论是需求的变化、业务逻辑的变化、程序代码的变化等等，这些变化都有可能对整个软件的稳定性造成一定的威胁。</p>
+
+<p>而开闭原则就是应对这些变化的，它告诉我们应该通过扩展来实现变化，而不是通过修改已有的代码。</p>
+
+<h2>例子</h2>
+
+<p>我记得上中学的时候，每次考试出成绩的时候老师都会站在讲台上一遍发卷子一遍念出每位同学的分数，下面的学生们心理都暗自捏了一把汗。对于念出自己分数的同学，如果考得好，走上讲台领会卷子，自然心中倍感自豪。但是如果考得不好，一路上感觉都很惭愧啊，此时就很不希望老师当众把自己分数念出来。</p>
+
+<p>下面我们来看看这种场景下的UML类图：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/open-close-principle1.png"></p>
+
+<p>程序代码如下：</p>
+
+<p>学生类，每个学生都有姓名和成绩：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Student</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">grade</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Student</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">grade</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">grade</span> <span class="o">=</span> <span class="n">grade</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getGrade</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">grade</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>老师类，每个老师管理一群的学生：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Teacher</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;</span> <span class="n">students</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">students</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nf">Student</span><span class="o">(</span><span class="s">&quot;张三&quot;</span><span class="o">,</span> <span class="s">&quot;60&quot;</span><span class="o">));</span>
+</span><span class='line'>      <span class="n">students</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nf">Student</span><span class="o">(</span><span class="s">&quot;李四&quot;</span><span class="o">,</span> <span class="s">&quot;70&quot;</span><span class="o">));</span>
+</span><span class='line'>      <span class="n">students</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nf">Student</span><span class="o">(</span><span class="s">&quot;王五&quot;</span><span class="o">,</span> <span class="s">&quot;80&quot;</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>场景类：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Teacher</span><span class="o">();</span>
+</span><span class='line'>      <span class="k">for</span> <span class="o">(</span><span class="n">Student</span> <span class="n">student</span> <span class="o">:</span> <span class="n">teacher</span><span class="o">.</span><span class="na">students</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;姓名：&quot;</span> <span class="o">+</span> <span class="n">student</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; 成绩：&quot;</span> <span class="o">+</span> <span class="n">student</span><span class="o">.</span><span class="na">getGrade</span><span class="o">());</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>输出结果：</p>
+
+<pre><code>姓名：张三 成绩：60
+姓名：李四 成绩：70
+姓名：王五 成绩：80
+</code></pre>
+
+<p>最后王同学看到自己成绩不错，裂开嘴笑了。而张同学就惨了，差点不及格，在全班同学的哄笑中领走了试卷。</p>
+
+<h2>更改需求</h2>
+
+<p>因为这种当众念出学生成绩的行为可能为伤害到一些成绩不是那么好的同学的自尊心，所以临时决定要对这种念出分数的方式进行改革。把同学们的成绩按照级别来分，分别有优秀，良好，一般，及格，不及格这几种。这样可以照顾成绩不好的同学的自尊心。</p>
+
+<p>那么我们怎么根据这种需求来更改我们的软件呢？</p>
+
+<p>有人说直接修改Student类的getGrade方法不就行了嘛。可能有很多人在实际项目中都是这么做的，但是这就违背了开闭原则，开闭原则要求我们尽量不要修改已有的代码，尽量通过扩展来实现改变。</p>
+
+<p>因为我们举的例子比较简单，但是在实际复杂的项目中，首先理解已有的方法业务逻辑可能就不是一件容易的事情，更何况如果再有其他实体类需要调用你已有的方法，如果你修改了这个方法，所有调用这个方法的代码都得需要找到并修改，这是一件既困难又不安全的做法。</p>
+
+<p>再者说修改了getGrade方法，那么这下只能知道学生成绩处于哪一个层次了，老师也无法知道学生的具体分数了。</p>
+
+<p>那么我们应该怎么做呢？</p>
+
+<p>既然前门我们知道了开闭原则，我们就要用上。我们可以通过扩展已有的代码来实现改变，可以增加一个LevelStudent来继承Student，并扩展修改getGrade方法。</p>
+
+<p>修改后的UML类图如下所示：</p>
+
+<p><img src="http://7u2i08.com1.z0.glb.clouddn.com/design-pattern/open-close-principle2.png"></p>
+
+<p>增加LevelStudent类代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LevelStudent</span> <span class="kd">extends</span> <span class="n">Student</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">LevelStudent</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">grade</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">grade</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nd">@Override</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getGrade</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">String</span> <span class="n">level</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">grade_</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">getGrade</span><span class="o">());</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">90</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;优秀&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">80</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;良好&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">80</span> <span class="o">&amp;&amp;</span> <span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">70</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;一般&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">70</span> <span class="o">&amp;&amp;</span> <span class="n">grade_</span> <span class="o">&gt;=</span> <span class="mi">60</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;及格&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">grade_</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">level</span> <span class="o">=</span> <span class="s">&quot;不及格&quot;</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">level</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>总结</h2>
+
+<p>开闭原则是对扩展开放，对修改关闭。</p>
+
+<p>开闭原则的主旨是为了拥抱变化。</p>
+
+<p>在六大原则中，开闭原则只是一个思想，没有具体实际操作方法。其他五大原则都是为了实现这个开闭思想的一些方法和工具。</p>
+
+<p>想要遵守开闭原则，就需要一个设计合理的系统。可以说在做系统设计的时候就要考虑到未来的扩展和改变。</p>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/12/law-of-demeter/">http://tianweili.github.io/blog/2015/02/12/law-of-demeter/</a></p>
+
+<p>转载请注明作者及出处，谢谢。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">李天炜 litianwei2013[AT]gmail.com</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-03-24T22:03:39+08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:03 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/she-ji-mo-shi/'>设计模式</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/03/18/linux-vi/" title="Previous Post: Linux中的vi命令">&laquo; Linux中的vi命令</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+	<section>
+		<h1>Comments</h1>
+		<div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="设计模式六大原则 - 开闭原则"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"tianweili"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+	</section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>文章分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/java/'>java (5)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (3)</a></li>
+<li class='category'><a href='/blog/categories/qi-ta-ji-zhu/'>其他技术 (2)</a></li>
+<li class='category'><a href='/blog/categories/sheng-huo/'>生活 (9)</a></li>
+<li class='category'><a href='/blog/categories/she-ji-mo-shi/'>设计模式 (11)</a></li>
+
+  </ul>
+</section><section>
+  <h1>最新文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/24/open-close-principle/">设计模式六大原则 - 开闭原则</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/18/linux-vi/">Linux中的vi命令</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/17/linux-nexus-maven-private-server/">Linux下使用nexus搭建maven私服</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/13/proxy-pattern/">代理模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/11/abstract-factory-pattern/">抽象工厂模式</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/TianweiLi">@TianweiLi</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'TianweiLi',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+<section>
+	<h1>访客统计</h1>
+	<br/>
+	<a href="http://s07.flagcounter.com/more/2SH"><img src="http://s07.flagcounter.com/count/2SH/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0"></a>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - 李天炜 litianwei2013[AT]gmail.com
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript" src="http://arrow.scrolltotop.com/arrow64.js"></script>
+</body>
+</html>
