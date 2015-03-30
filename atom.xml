@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-24T23:09:46+08:00</updated>
+  <updated>2015-03-30T10:00:20+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -14,167 +14,241 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Linux中的vi命令]]></title>
-    <link href="http://tianweili.github.io/blog/2015/03/18/linux-vi/"/>
-    <updated>2015-03-18T21:42:12+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/03/18/linux-vi</id>
-    <content type="html"><![CDATA[<p>vi命令是Linux中编辑文件必不可少的命令。</p>
+    <title type="html"><![CDATA[Linux中的awk命令]]></title>
+    <link href="http://tianweili.github.io/blog/2015/03/20/linux-awk/"/>
+    <updated>2015-03-20T10:33:41+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/03/20/linux-awk</id>
+    <content type="html"><![CDATA[<p>本文主要介绍了Linux中的awk命令的一些知识以及如何使用awk编程。不同于grep的查找、sed的编辑等命令，awk命令在文本处理和生成报告等地方是经常用到的一个强大命令。</p>
 
 <!--more-->
 
 
-<p>原文链接：</p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/24/linux-awk/">http://tianweili.github.io/blog/2015/02/24/linux-awk/</a></p>
 
-<p><a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
+<h2>简介</h2>
 
-<p>本文中的命令基本是按照使用频率排列。</p>
+<p>awk命令主要用于文本分析。它的处理方式是读入文本，将每行记录以一定的分隔符（默认为空格）分割成不同的域，然后对不同的域进行各种处理与输出。</p>
 
-<h2>进入编辑文件</h2>
+<h2>命令格式</h2>
 
-<ul>
-<li>vi filename：打开或新建文件，并将光标置于第一行首</li>
-<li>vi +n filename：打开文件，并将光标置于第n行首</li>
-<li><p>vi + filename：打开文件，并将光标置于最后一行首</p></li>
-<li><p>vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处</p></li>
-<li>vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename</li>
-<li>vi filename1 &hellip;. filenamen：打开多个文件，依次进行编辑</li>
-</ul>
+<p>awk命令的一个基本格式如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;{pattern + action}&#39;</span> <span class="o">{</span>filenames<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>移动光标</h2>
+<p>无论awk命令简单还是复杂，基本的格式如上所示。其中引号为必须，引号内代表一个awk程序。大括号非必须，括起来用于根据特定的模式对一系列指令进行分组。pattern是在数据中查找内容，支持正则匹配。action对查找出来的记录执行相应的处理，比如打印和输出等。</p>
 
-<ul>
-<li>nG或ngg：光标移至第n行首</li>
-<li>0：（数字零）光标移至当前行首</li>
-<li>$：光标移至当前行尾</li>
-<li>n+：光标下移n行</li>
-<li><p>n-：光标上移n行</p></li>
-<li><p>h ：光标左移一个字符</p></li>
-<li>l ：光标右移一个字符</li>
-<li>space：光标右移一个字符</li>
-<li>Backspace：光标左移一个字符</li>
-<li>k或Ctrl+p：光标上移一行</li>
-<li>j或Ctrl+n ：光标下移一行</li>
-<li>Enter ：光标下移一行</li>
-<li>w或W ：光标右移一个字至字首</li>
-<li>b或B ：光标左移一个字至字首</li>
-<li>e或E ：光标右移一个字至字尾</li>
-<li>) ：光标移至句尾</li>
-<li>( ：光标移至句首</li>
-<li>}：光标移至段落开头</li>
-<li>{：光标移至段落结尾</li>
-<li>n$：光标移至第n行尾</li>
-<li>H ：光标移至屏幕顶行</li>
-<li>M ：光标移至屏幕中间行</li>
-<li>L ：光标移至屏幕最后行</li>
-</ul>
+<h2>awk三种调用方式</h2>
+
+<h3>命令行方式</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="o">[</span>-F <span class="s1">&#39;field-separator&#39;</span><span class="o">]</span> <span class="s1">&#39;commands&#39;</span> input-file<span class="o">(</span>s<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>屏幕翻滚</h2>
+<p>其中的<code>-F</code>指令是可选的，后面跟着指定的域分隔符，比如tab键等（默认是空格）。后面的<code>commands</code>是真正的awk命令。<code>input-file(s)</code>代表输入的一个或多个文件</p>
 
-<ul>
-<li>Ctrl+u：向文件首翻半屏</li>
-<li>Ctrl+d：向文件尾翻半屏</li>
-<li>Ctrl+f：向文件尾翻一屏</li>
-<li>Ctrl＋b；向文件首翻一屏</li>
-<li>nz：将第n行滚至屏幕顶部，不指定n时将当前行滚至屏幕顶部</li>
-</ul>
+<p>命令行调用方式是最经常使用的一种方式，也是本文所讲的重点。</p>
 
+<h3>shell脚本方式</h3>
 
-<h2>插入文本</h2>
+<p>把平时所写的shell脚本的首行<code>#!/bin/sh</code>换成<code>#!/bin/awk</code>。把所有的awk命令插入脚本中，通过调用脚本来执行awk命令。</p>
 
-<ul>
-<li>i ：在光标前</li>
-<li>a：光标后</li>
-<li>I ：在当前行首</li>
-<li>A：在当前行尾</li>
-<li>o：在当前行之下新开一行</li>
-<li><p>O：在当前行之上新开一行</p></li>
-<li><p>r：替换当前字符</p></li>
-<li>R：替换当前字符及其后的字符，直至按ESC键</li>
-<li>s：从当前光标位置处开始，以输入的文本替代指定数目的字符</li>
-<li>S：删除指定数目的行，并以所输入文本代替之</li>
-<li>ncw或nCW：修改指定数目的字</li>
-<li>nCC：修改指定数目的行</li>
-</ul>
+<h3>插入文件调用</h3>
+
+<p>把所有的awk命令插入单独的文件中，然后通过以下命令调用awk：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk -f awk-script-file input-file<span class="o">(</span>s<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>删除命令</h2>
+<p>其中<code>-f</code>指定了要调用的包含awk命令的文件。</p>
 
-<ul>
-<li>dd：删除当前行</li>
-<li>ndd：删除当前行及其后n-1行</li>
-<li>do：删至行首</li>
-<li><p>d$：删至行尾</p></li>
-<li><p>ndw或ndW：删除光标处开始及其后的n-1个字</p></li>
-<li>x或X：删除一个字符，x删除光标后的，而X删除光标前的</li>
-<li>Ctrl+u：删除输入方式下所输入的文本</li>
-</ul>
+<h2>awk应用示例</h2>
 
+<h3>打印指定字段</h3>
 
-<h2>搜索及替换</h2>
+<p>打印当前目录下所有的文件名和文件大小列表，以tab键分割：</p>
 
-<ul>
-<li>/pattern：从光标开始处向文件尾搜索pattern</li>
-<li>?pattern：从光标开始处向文件首搜索pattern</li>
-<li>n：在同一方向重复上一次搜索命令</li>
-<li>N：在反方向上重复上一次搜索命令</li>
-<li>：s/p1/p2/g：将当前行中所有p1均用p2替代</li>
-<li>：n1,n2s/p1/p2/g：将第n1至n2行中所有p1均用p2替代</li>
-<li>：g/p1/s//p2/g：将文件中所有p1均用p2替换</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;{print $5&quot;\t&quot;$9}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>选项设置</h2>
+<p>$0变量是指当前一行记录，$1是指第一个域数据，$2指第二个域数据……以此类推。</p>
 
-<ul>
-<li>all：列出所有选项设置情况</li>
-<li>term：设置终端类型</li>
-<li>ignorance：在搜索中忽略大小写</li>
-<li>list：显示制表位(Ctrl+I)和行尾标志（$)</li>
-<li>number：显示行号</li>
-<li>report：显示由面向行的命令修改过的数目</li>
-<li>terse：显示简短的警告信息</li>
-<li>warn：在转到别的文件时若没保存当前文件则显示NO write信息</li>
-<li>nomagic：允许在搜索模式中，使用前面不带“\”的特殊字符</li>
-<li>nowrapscan：禁止vi在搜索到达文件两端时，又从另一端开始</li>
-<li>mesg：允许vi显示其他用户用write写到自己终端上的信息</li>
-</ul>
+<h3>print与printf</h3>
+
+<p>awk提供了print与printf两种打印输出的函数。</p>
+
+<p>print的参数可以是变量、数值和字符串。参数用逗号分割，字符串必须用双引号引用。</p>
+
+<p>printf与C语言中的printf函数类似，可以用来格式化字符串。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk -F <span class="s1">&#39;:&#39;</span> <span class="s1">&#39;{printf(&quot;filename:%10s,linenumber:%s,columns:%s,linecontent:%s\n&quot;,FILENAME,NR,NF,$0)}&#39;</span> /etc/passwd
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>最后行方式</h2>
+<h3>根据指定分隔符切割域</h3>
 
-<ul>
-<li>：x：保存当前文件并退出</li>
-<li>：w ：保存当前文件</li>
-<li>：q：退出vi</li>
-<li><p>：q!：不保存文件并退出vi</p></li>
-<li><p>：n1,n2 co n3：将n1行到n2行之间的内容拷贝到第n3行下</p></li>
-<li>：n1,n2 m n3：将n1行到n2行之间的内容移至到第n3行下</li>
-<li>：n1,n2 d ：将n1行到n2行之间的内容删除</li>
-<li>：e filename：打开文件filename进行编辑</li>
-<li>：!command：执行shell命令command</li>
-<li>：n1,n2 w!command：将文件中n1行至n2行的内容作为command的输入并执行之，若不指定n1，n2，则表示将整个文件内容作为command的输入</li>
-<li>：r!command：将命令command的输出结果放到当前行</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ll <span class="p">|</span> awk -F <span class="s1">&#39;\t&#39;</span> <span class="s1">&#39;print $9&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>寄存器操作</h2>
+<h3>BEGIN&hellip;END</h3>
 
-<ul>
-<li>&ldquo;?nyy：将当前行及其下n行的内容保存到寄存器？中，其中?为一个字母，n为一个数字</li>
-<li>&ldquo;?nyw：将当前行及其下n个字保存到寄存器？中，其中?为一个字母，n为一个数字</li>
-<li>&ldquo;?nyl：将当前行及其下n个字符保存到寄存器？中，其中?为一个字母，n为一个数字</li>
-<li>&ldquo;?p：取出寄存器？中的内容并将其放到光标位置处。这里？可以是一个字母，也可以是一个数字</li>
-<li>ndd：将当前行及其下共n行文本删除，并将所删内容放到1号删除寄存器中</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;BEGIN {print &quot;size\tfilename&quot;}  {print $5&quot;\t&quot;$9} END {print &quot;---end---&quot;}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>BEGIN...END</code>语句的执行流程是，awk命令读入数据，然后从BEGIN语句开始，依次读取每一行记录，并打印相应的域，当所有记录都处理后再执行END语句后的程序。也就是说<code>BEGIN...END</code>语句块中的内容在读取数据过程中会反复执行，直到数据读取完成。</p>
+
+<h3>pattern正则匹配</h3>
+
+<p>下面的例子表示打印当前目录下，所有以.bat后缀结尾的文件名列表：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk -F: <span class="s1">&#39;/\.dat$/{print $9}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>awk内置变量</h2>
+
+<p>awk有许多内置变量用来设置环境变量信息，这些变量都可以被改变。常用的内置变量和作用如下所示：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ARGC               命令行参数个数
+</span><span class='line'>ARGV               命令行参数排列
+</span><span class='line'>ENVIRON            支持队列中系统环境变量的使用
+</span><span class='line'>FILENAME           awk浏览的文件名
+</span><span class='line'>FNR                浏览文件的记录数
+</span><span class='line'>FS                 设置输入域分隔符，等价于命令行-F选项
+</span><span class='line'>NF                 浏览记录的域的个数
+</span><span class='line'>NR                 已读的记录数
+</span><span class='line'>OFS                输出域分隔符
+</span><span class='line'>ORS                输出记录分隔符
+</span><span class='line'>RS                 指定用来切片的分隔符
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>awk中的内置变量都是很有用处的，可以直接使用。比如上面讲过的指定分隔符操作就可以用FS变量来代替：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ll <span class="p">|</span> awk <span class="s1">&#39;{FS=&quot;\t&quot;;} {print $9}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面会有很多实用awk内置变量的例子。</p>
+
+<h2>awk编程</h2>
+
+<h3>定义变量和运算</h3>
+
+<p>awk可以自定义变量，并参与运算。</p>
+
+<p>比如统计当前目录下列出的文件总大小，以M为单位显示出来：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk <span class="s1">&#39;BEGIN {size=0;} {size+=$5;} END {print &quot;size is &quot;, size}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意此统计没有把文件夹下的所有文件算在内。</p>
+
+<p>自定义的变量有时候可以不用作初始化操作，不过正规起见，还是建议作初始化操作为好。</p>
+
+<h3>条件语句</h3>
+
+<p>awk中的条件语句跟C语言类似，声明方式如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
+</span><span class='line'>  statement1<span class="p">;</span>
+</span><span class='line'>  statement2<span class="p">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
+</span><span class='line'>  statement1<span class="p">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>  statement2<span class="p">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span><span class="o">(</span>expression1<span class="o">){</span>
+</span><span class='line'>  statement1<span class="p">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span>expression2<span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  statement2<span class="p">;</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>  statement3<span class="p">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>看下面例子，将第三列为12，第六列为0的行打印输出：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{if($3==12 &amp;&amp; $6==0) print $0} END&#39;</span> incoming_daily_20150223.dat
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>循环语句</h3>
+
+<p>awk中的循环语句同样与C语言中的类似，支持while、do/while、for、break、continue关键字。</p>
+
+<p>看下面的例子，输出每行的行号和第一列的数据：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;;} {data[NR] = $1} END {for(i=1; i&lt;=NR; i++) print i&quot;\t&quot;data[i]}&#39;</span> incoming_daily_20150223.dat
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>数组</h3>
+
+<p>看下面例子，统计第六列每一个值出现的次数：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{count[$6]++} END {for(x in count) print x,count[x]}&#39;</span> incoming_daily_20150223.dat
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/24/linux-awk/">http://tianweili.github.io/blog/2015/02/24/linux-awk/</a></p>
 
-<p>转载请注明作者和文章出处，谢谢。</p>
+<p>转载请注明作者及出处，谢谢。</p>
 ]]></content>
   </entry>
   
@@ -2948,241 +3022,167 @@ c   3
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Linux中的awk命令]]></title>
-    <link href="http://tianweili.github.io/blog/2015/02/24/linux-awk/"/>
-    <updated>2015-02-24T10:33:41+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/02/24/linux-awk</id>
-    <content type="html"><![CDATA[<p>本文主要介绍了Linux中的awk命令的一些知识以及如何使用awk编程。不同于grep的查找、sed的编辑等命令，awk命令在文本处理和生成报告等地方是经常用到的一个强大命令。</p>
+    <title type="html"><![CDATA[Linux中的vi命令]]></title>
+    <link href="http://tianweili.github.io/blog/2015/02/24/linux-vi/"/>
+    <updated>2015-02-24T21:42:12+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/02/24/linux-vi</id>
+    <content type="html"><![CDATA[<p>vi命令是Linux中编辑文件必不可少的命令。</p>
 
 <!--more-->
 
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/24/linux-awk/">http://tianweili.github.io/blog/2015/02/24/linux-awk/</a></p>
+<p>原文链接：</p>
+
+<p><a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
+
+<p>本文中的命令基本是按照使用频率排列。</p>
+
+<h2>进入编辑文件</h2>
+
+<ul>
+<li>vi filename：打开或新建文件，并将光标置于第一行首</li>
+<li>vi +n filename：打开文件，并将光标置于第n行首</li>
+<li><p>vi + filename：打开文件，并将光标置于最后一行首</p></li>
+<li><p>vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处</p></li>
+<li>vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename</li>
+<li>vi filename1 &hellip;. filenamen：打开多个文件，依次进行编辑</li>
+</ul>
+
+
+<h2>移动光标</h2>
+
+<ul>
+<li>nG或ngg：光标移至第n行首</li>
+<li>0：（数字零）光标移至当前行首</li>
+<li>$：光标移至当前行尾</li>
+<li>n+：光标下移n行</li>
+<li><p>n-：光标上移n行</p></li>
+<li><p>h ：光标左移一个字符</p></li>
+<li>l ：光标右移一个字符</li>
+<li>space：光标右移一个字符</li>
+<li>Backspace：光标左移一个字符</li>
+<li>k或Ctrl+p：光标上移一行</li>
+<li>j或Ctrl+n ：光标下移一行</li>
+<li>Enter ：光标下移一行</li>
+<li>w或W ：光标右移一个字至字首</li>
+<li>b或B ：光标左移一个字至字首</li>
+<li>e或E ：光标右移一个字至字尾</li>
+<li>) ：光标移至句尾</li>
+<li>( ：光标移至句首</li>
+<li>}：光标移至段落开头</li>
+<li>{：光标移至段落结尾</li>
+<li>n$：光标移至第n行尾</li>
+<li>H ：光标移至屏幕顶行</li>
+<li>M ：光标移至屏幕中间行</li>
+<li>L ：光标移至屏幕最后行</li>
+</ul>
+
+
+<h2>屏幕翻滚</h2>
+
+<ul>
+<li>Ctrl+u：向文件首翻半屏</li>
+<li>Ctrl+d：向文件尾翻半屏</li>
+<li>Ctrl+f：向文件尾翻一屏</li>
+<li>Ctrl＋b；向文件首翻一屏</li>
+<li>nz：将第n行滚至屏幕顶部，不指定n时将当前行滚至屏幕顶部</li>
+</ul>
+
+
+<h2>插入文本</h2>
+
+<ul>
+<li>i ：在光标前</li>
+<li>a：光标后</li>
+<li>I ：在当前行首</li>
+<li>A：在当前行尾</li>
+<li>o：在当前行之下新开一行</li>
+<li><p>O：在当前行之上新开一行</p></li>
+<li><p>r：替换当前字符</p></li>
+<li>R：替换当前字符及其后的字符，直至按ESC键</li>
+<li>s：从当前光标位置处开始，以输入的文本替代指定数目的字符</li>
+<li>S：删除指定数目的行，并以所输入文本代替之</li>
+<li>ncw或nCW：修改指定数目的字</li>
+<li>nCC：修改指定数目的行</li>
+</ul>
+
+
+<h2>删除命令</h2>
+
+<ul>
+<li>dd：删除当前行</li>
+<li>ndd：删除当前行及其后n-1行</li>
+<li>do：删至行首</li>
+<li><p>d$：删至行尾</p></li>
+<li><p>ndw或ndW：删除光标处开始及其后的n-1个字</p></li>
+<li>x或X：删除一个字符，x删除光标后的，而X删除光标前的</li>
+<li>Ctrl+u：删除输入方式下所输入的文本</li>
+</ul>
+
+
+<h2>搜索及替换</h2>
+
+<ul>
+<li>/pattern：从光标开始处向文件尾搜索pattern</li>
+<li>?pattern：从光标开始处向文件首搜索pattern</li>
+<li>n：在同一方向重复上一次搜索命令</li>
+<li>N：在反方向上重复上一次搜索命令</li>
+<li>：s/p1/p2/g：将当前行中所有p1均用p2替代</li>
+<li>：n1,n2s/p1/p2/g：将第n1至n2行中所有p1均用p2替代</li>
+<li>：g/p1/s//p2/g：将文件中所有p1均用p2替换</li>
+</ul>
+
 
-<h2>简介</h2>
-
-<p>awk命令主要用于文本分析。它的处理方式是读入文本，将每行记录以一定的分隔符（默认为空格）分割成不同的域，然后对不同的域进行各种处理与输出。</p>
-
-<h2>命令格式</h2>
-
-<p>awk命令的一个基本格式如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;{pattern + action}&#39;</span> <span class="o">{</span>filenames<span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>无论awk命令简单还是复杂，基本的格式如上所示。其中引号为必须，引号内代表一个awk程序。大括号非必须，括起来用于根据特定的模式对一系列指令进行分组。pattern是在数据中查找内容，支持正则匹配。action对查找出来的记录执行相应的处理，比如打印和输出等。</p>
-
-<h2>awk三种调用方式</h2>
-
-<h3>命令行方式</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="o">[</span>-F <span class="s1">&#39;field-separator&#39;</span><span class="o">]</span> <span class="s1">&#39;commands&#39;</span> input-file<span class="o">(</span>s<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中的<code>-F</code>指令是可选的，后面跟着指定的域分隔符，比如tab键等（默认是空格）。后面的<code>commands</code>是真正的awk命令。<code>input-file(s)</code>代表输入的一个或多个文件</p>
-
-<p>命令行调用方式是最经常使用的一种方式，也是本文所讲的重点。</p>
-
-<h3>shell脚本方式</h3>
-
-<p>把平时所写的shell脚本的首行<code>#!/bin/sh</code>换成<code>#!/bin/awk</code>。把所有的awk命令插入脚本中，通过调用脚本来执行awk命令。</p>
-
-<h3>插入文件调用</h3>
-
-<p>把所有的awk命令插入单独的文件中，然后通过以下命令调用awk：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk -f awk-script-file input-file<span class="o">(</span>s<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中<code>-f</code>指定了要调用的包含awk命令的文件。</p>
-
-<h2>awk应用示例</h2>
-
-<h3>打印指定字段</h3>
-
-<p>打印当前目录下所有的文件名和文件大小列表，以tab键分割：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;{print $5&quot;\t&quot;$9}&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>$0变量是指当前一行记录，$1是指第一个域数据，$2指第二个域数据……以此类推。</p>
-
-<h3>print与printf</h3>
-
-<p>awk提供了print与printf两种打印输出的函数。</p>
-
-<p>print的参数可以是变量、数值和字符串。参数用逗号分割，字符串必须用双引号引用。</p>
-
-<p>printf与C语言中的printf函数类似，可以用来格式化字符串。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk -F <span class="s1">&#39;:&#39;</span> <span class="s1">&#39;{printf(&quot;filename:%10s,linenumber:%s,columns:%s,linecontent:%s\n&quot;,FILENAME,NR,NF,$0)}&#39;</span> /etc/passwd
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>根据指定分隔符切割域</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ll <span class="p">|</span> awk -F <span class="s1">&#39;\t&#39;</span> <span class="s1">&#39;print $9&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>BEGIN&hellip;END</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -lh <span class="p">|</span> awk <span class="s1">&#39;BEGIN {print &quot;size\tfilename&quot;}  {print $5&quot;\t&quot;$9} END {print &quot;---end---&quot;}&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>BEGIN...END</code>语句的执行流程是，awk命令读入数据，然后从BEGIN语句开始，依次读取每一行记录，并打印相应的域，当所有记录都处理后再执行END语句后的程序。也就是说<code>BEGIN...END</code>语句块中的内容在读取数据过程中会反复执行，直到数据读取完成。</p>
-
-<h3>pattern正则匹配</h3>
-
-<p>下面的例子表示打印当前目录下，所有以.bat后缀结尾的文件名列表：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk -F: <span class="s1">&#39;/\.dat$/{print $9}&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>awk内置变量</h2>
-
-<p>awk有许多内置变量用来设置环境变量信息，这些变量都可以被改变。常用的内置变量和作用如下所示：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ARGC               命令行参数个数
-</span><span class='line'>ARGV               命令行参数排列
-</span><span class='line'>ENVIRON            支持队列中系统环境变量的使用
-</span><span class='line'>FILENAME           awk浏览的文件名
-</span><span class='line'>FNR                浏览文件的记录数
-</span><span class='line'>FS                 设置输入域分隔符，等价于命令行-F选项
-</span><span class='line'>NF                 浏览记录的域的个数
-</span><span class='line'>NR                 已读的记录数
-</span><span class='line'>OFS                输出域分隔符
-</span><span class='line'>ORS                输出记录分隔符
-</span><span class='line'>RS                 指定用来切片的分隔符
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>awk中的内置变量都是很有用处的，可以直接使用。比如上面讲过的指定分隔符操作就可以用FS变量来代替：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ll <span class="p">|</span> awk <span class="s1">&#39;{FS=&quot;\t&quot;;} {print $9}&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>下面会有很多实用awk内置变量的例子。</p>
-
-<h2>awk编程</h2>
-
-<h3>定义变量和运算</h3>
-
-<p>awk可以自定义变量，并参与运算。</p>
-
-<p>比如统计当前目录下列出的文件总大小，以M为单位显示出来：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls -l <span class="p">|</span> awk <span class="s1">&#39;BEGIN {size=0;} {size+=$5;} END {print &quot;size is &quot;, size}&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意此统计没有把文件夹下的所有文件算在内。</p>
-
-<p>自定义的变量有时候可以不用作初始化操作，不过正规起见，还是建议作初始化操作为好。</p>
-
-<h3>条件语句</h3>
-
-<p>awk中的条件语句跟C语言类似，声明方式如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
-</span><span class='line'>  statement1<span class="p">;</span>
-</span><span class='line'>  statement2<span class="p">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="o">(</span>expression<span class="o">){</span>
-</span><span class='line'>  statement1<span class="p">;</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>  statement2<span class="p">;</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span><span class="o">(</span>expression1<span class="o">){</span>
-</span><span class='line'>  statement1<span class="p">;</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span>expression2<span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>  statement2<span class="p">;</span>
-</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>  statement3<span class="p">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>看下面例子，将第三列为12，第六列为0的行打印输出：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{if($3==12 &amp;&amp; $6==0) print $0} END&#39;</span> incoming_daily_20150223.dat
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>循环语句</h3>
-
-<p>awk中的循环语句同样与C语言中的类似，支持while、do/while、for、break、continue关键字。</p>
-
-<p>看下面的例子，输出每行的行号和第一列的数据：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;;} {data[NR] = $1} END {for(i=1; i&lt;=NR; i++) print i&quot;\t&quot;data[i]}&#39;</span> incoming_daily_20150223.dat
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>数组</h3>
-
-<p>看下面例子，统计第六列每一个值出现的次数：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>awk <span class="s1">&#39;BEGIN {FS=&quot;\t&quot;}{count[$6]++} END {for(x in count) print x,count[x]}&#39;</span> incoming_daily_20150223.dat
-</span></code></pre></td></tr></table></div></figure>
+<h2>选项设置</h2>
+
+<ul>
+<li>all：列出所有选项设置情况</li>
+<li>term：设置终端类型</li>
+<li>ignorance：在搜索中忽略大小写</li>
+<li>list：显示制表位(Ctrl+I)和行尾标志（$)</li>
+<li>number：显示行号</li>
+<li>report：显示由面向行的命令修改过的数目</li>
+<li>terse：显示简短的警告信息</li>
+<li>warn：在转到别的文件时若没保存当前文件则显示NO write信息</li>
+<li>nomagic：允许在搜索模式中，使用前面不带“\”的特殊字符</li>
+<li>nowrapscan：禁止vi在搜索到达文件两端时，又从另一端开始</li>
+<li>mesg：允许vi显示其他用户用write写到自己终端上的信息</li>
+</ul>
+
+
+<h2>最后行方式</h2>
+
+<ul>
+<li>：x：保存当前文件并退出</li>
+<li>：w ：保存当前文件</li>
+<li>：q：退出vi</li>
+<li><p>：q!：不保存文件并退出vi</p></li>
+<li><p>：n1,n2 co n3：将n1行到n2行之间的内容拷贝到第n3行下</p></li>
+<li>：n1,n2 m n3：将n1行到n2行之间的内容移至到第n3行下</li>
+<li>：n1,n2 d ：将n1行到n2行之间的内容删除</li>
+<li>：e filename：打开文件filename进行编辑</li>
+<li>：!command：执行shell命令command</li>
+<li>：n1,n2 w!command：将文件中n1行至n2行的内容作为command的输入并执行之，若不指定n1，n2，则表示将整个文件内容作为command的输入</li>
+<li>：r!command：将命令command的输出结果放到当前行</li>
+</ul>
+
+
+<h2>寄存器操作</h2>
+
+<ul>
+<li>&ldquo;?nyy：将当前行及其下n行的内容保存到寄存器？中，其中?为一个字母，n为一个数字</li>
+<li>&ldquo;?nyw：将当前行及其下n个字保存到寄存器？中，其中?为一个字母，n为一个数字</li>
+<li>&ldquo;?nyl：将当前行及其下n个字符保存到寄存器？中，其中?为一个字母，n为一个数字</li>
+<li>&ldquo;?p：取出寄存器？中的内容并将其放到光标位置处。这里？可以是一个字母，也可以是一个数字</li>
+<li>ndd：将当前行及其下共n行文本删除，并将所删内容放到1号删除寄存器中</li>
+</ul>
 
 
 <p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/24/linux-awk/">http://tianweili.github.io/blog/2015/02/24/linux-awk/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
 
-<p>转载请注明作者及出处，谢谢。</p>
+<p>转载请注明作者和文章出处，谢谢。</p>
 ]]></content>
   </entry>
   
