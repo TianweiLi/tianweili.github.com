@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-30T10:00:20+08:00</updated>
+  <updated>2015-03-30T10:09:44+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -2923,35 +2923,555 @@ ProductB Method ...
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Linux中的sort命令]]></title>
-    <link href="http://tianweili.github.io/blog/2015/02/25/linux-sort/"/>
-    <updated>2015-02-25T23:44:09+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/02/25/linux-sort</id>
-    <content type="html"><![CDATA[<p>sort命令是根据不同的数据类型以行为单位对数据进行排序。</p>
+    <title type="html"><![CDATA[Java中的Filter 过滤器]]></title>
+    <link href="http://tianweili.github.io/blog/2015/02/25/java-filter/"/>
+    <updated>2015-02-25T17:07:51+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/02/25/java-filter</id>
+    <content type="html"><![CDATA[<p>本文主要详细介绍了Filter的以下几个方面内容：</p>
+
+<ul>
+<li>Filter概念介绍</li>
+<li>Filter的用途</li>
+<li>如何借助Filter实现拦截功能</li>
+<li>Filter的开发步骤和配置详解</li>
+<li>Filter链</li>
+<li>Filter的生命周期</li>
+<li>Filter的使用案例
+
+<ul>
+<li>使用Filter验证用户登录安全控制</li>
+<li>防止中文乱码过滤器</li>
+<li>Spring+Hibernate的OpenSessionInViewFilter控制session的开关</li>
+<li>Struts2的web.xml配置</li>
+</ul>
+</li>
+</ul>
+
 
 <!--more-->
 
 
-<p>原文链接：</p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">http://tianweili.github.io/blog/2015/01/26/java-filter/</a></p>
 
-<p><a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
+<h2>Filter简介</h2>
 
-<h2>简介</h2>
+<p>Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。</p>
 
-<p>sort命令是根据不同的数据类型以行为单位对数据进行排序。</p>
+<p>它主要用于对用户请求进行预处理，也可以对HttpServletResponse 进行后处理。使用Filter 的完整流程：Filter 对用户请求进行预处理，接着将请求交给Servlet 进行处理并生成响应，最后Filter 再对服务器响应进行后处理。</p>
 
-<p>sort的默认比较规则是从首字符向后，按照ASCII码值进行比较，将结果按照升序输出。</p>
+<h2>Filter功能</h2>
 
-<h2>用法</h2>
+<ul>
+<li>在HttpServletRequest 到达 Servlet 之前，拦截客户的 HttpServletRequest 。根据需要检查 HttpServletRequest ，也可以修改HttpServletRequest 头和数据。</li>
+<li>在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。根据需要检查 HttpServletResponse ，也可以修改HttpServletResponse头和数据。</li>
+</ul>
 
-<p>sort命令的基本格式如下：</p>
+
+<h2>如何借助Filter实现拦截功能</h2>
+
+<p>Filter接口中有一个doFilter方法，当开发人员编写好Filter，并配置对哪个web资源进行拦截后，WEB服务器每次在调用web资源的service方法之前，都会先调用一下filter的doFilter方法，因此，在该方法内编写代码可达到如下目的：</p>
+
+<ul>
+<li>调用目标资源之前，让一段代码执行。</li>
+<li>是否调用目标资源（即是否让用户访问web资源）。</li>
+</ul>
+
+
+<p>web服务器在调用doFilter方法时，会传递一个filterChain对象进来，<strong>filterChain对象是filter接口中最重要的一个对象</strong>，它也提供了一个doFilter方法，开发人员可以根据需求决定是否调用此方法，调用该方法，则web服务器就会调用web资源的service方法，即web资源就会被访问，否则web资源不会被访问。</p>
+
+<h2>Filter开发两步走</h2>
+
+<ol>
+<li>编写java类实现Filter接口，并实现其doFilter方法。</li>
+<li>在 web.xml 文件中使用<filter>和<filter-mapping>元素对编写的filter类进行注册，并设置它所能拦截的资源。</li>
+</ol>
+
+
+<p>web.xml配置各节点介绍：</p>
+
+<ul>
+<li><code>&lt;filter&gt;</code>指定一个过滤器。
+
+<ul>
+<li><code>&lt;filter-name&gt;</code>用于为过滤器指定一个名字，该元素的内容不能为空。</li>
+<li><code>&lt;filter-class&gt;</code>元素用于指定过滤器的完整的限定类名。</li>
+<li><code>&lt;init-param&gt;</code>元素用于为过滤器指定初始化参数，它的子元素<code>&lt;param-name&gt;</code>指定参数的名字，<code>&lt;param-value&gt;</code>指定参数的值。</li>
+<li>在过滤器中，可以使用<code>FilterConfig</code>接口对象来访问初始化参数。</li>
+</ul>
+</li>
+<li><code>&lt;filter-mapping&gt;</code>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径
+
+<ul>
+<li><code>&lt;filter-name&gt;</code>子元素用于设置filter的注册名称。该值必须是在<code>&lt;filter&gt;</code>元素中声明过的过滤器的名字</li>
+<li><code>&lt;url-pattern&gt;</code>设置 filter 所拦截的请求路径(过滤器关联的URL样式)</li>
+</ul>
+</li>
+<li><code>&lt;servlet-name&gt;</code>指定过滤器所拦截的Servlet名称。</li>
+<li><code>&lt;dispatcher&gt;</code>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是<code>REQUEST</code>,<code>INCLUDE</code>,<code>FORWARD</code>和<code>ERROR</code>之一，默认<code>REQUEST</code>。用户可以设置多个<code>&lt;dispatcher&gt;</code>子元素用来指定 Filter 对资源的多种调用方式进行拦截。</li>
+<li><code>&lt;dispatcher&gt;</code>子元素可以设置的值及其意义
+
+<ul>
+<li><code>REQUEST</code>：当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。</li>
+<li><code>INCLUDE</code>：如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。</li>
+<li><code>FORWARD</code>：如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。</li>
+<li><code>ERROR</code>：如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Filter链</h2>
+
+<p>在一个web应用中，可以开发编写多个Filter，这些Filter组合起来称之为一个Filter链。</p>
+
+<p><strong>web服务器根据Filter在web.xml文件中的注册顺序，决定先调用哪个Filter</strong>，当第一个Filter的doFilter方法被调用时，web服务器会创建一个代表Filter链的FilterChain对象传递给该方法。在doFilter方法中，开发人员如果调用了FilterChain对象的doFilter方法，则web服务器会检查FilterChain对象中是否还有filter，如果有，则调用第2个filter，如果没有，则调用目标资源。</p>
+
+<h2>Filter的生命周期</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort <span class="o">[</span>-bcfMnrtk<span class="o">]</span> <span class="o">[</span><span class="nb">source</span>-file<span class="o">]</span> <span class="o">[</span>-o output-file<span class="o">]</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">FilterConfig</span> <span class="n">filterConfig</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">;</span><span class="c1">//初始化</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>sort命令可使用的参数有：</p>
+<p>和我们编写的Servlet程序一样，Filter的创建和销毁由WEB服务器负责。 web 应用程序启动时，web 服务器将创建Filter 的实例对象，并调用其init方法，读取web.xml配置，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作（<strong>filter对象只会创建一次，init方法也只会执行一次</strong>）。开发人员通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="n">ServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">ServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="n">FilterChain</span> <span class="n">chain</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ServletException</span><span class="o">;</span><span class="c1">//拦截请求</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个方法完成实际的过滤操作。当客户请求访问与过滤器关联的URL的时候，Servlet过滤器将先执行doFilter方法。FilterChain参数用于访问后续过滤器。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">();</span><span class="c1">//销毁</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Filter对象创建后会驻留在内存，当web应用移除或服务器停止时才销毁。在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。</p>
+
+<h2>FilterConfig接口</h2>
+
+<p>用户在配置filter时，可以使用<init-param>为filter配置一些初始化参数，当web容器实例化Filter对象，调用其init方法时，会把封装了filter初始化参数的filterConfig对象传递进来。因此开发人员在编写filter时，通过filterConfig对象的方法，就可获得以下内容：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="nf">getFilterName</span><span class="o">();</span><span class="c1">//得到filter的名称。 </span>
+</span><span class='line'><span class="n">String</span> <span class="nf">getInitParameter</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">);</span><span class="c1">//返回在部署描述中指定名称的初始化参数的值。如果不存在返回null. </span>
+</span><span class='line'><span class="n">Enumeration</span> <span class="nf">getInitParameterNames</span><span class="o">();</span><span class="c1">//返回过滤器的所有初始化参数的名字的枚举集合。 </span>
+</span><span class='line'><span class="kd">public</span> <span class="n">ServletContext</span> <span class="nf">getServletContext</span><span class="o">();</span><span class="c1">//返回Servlet上下文对象的引用。</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Filter使用案例</h2>
+
+<h3>使用Filter验证用户登录安全控制</h3>
+
+<p>前段时间参与维护一个项目，用户退出系统后，再去地址栏访问历史，根据url，仍然能够进入系统响应页面。我去检查一下发现对请求未进行过滤验证用户登录。添加一个filter搞定问题！</p>
+
+<p>先在web.xml配置</p>
+
+<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>SessionFilter<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>com.action.login.SessionFilter<span class="nt">&lt;/filter-class&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>logonStrings<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 对登录页面不进行过滤 --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>/project/index.jsp;login.do<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>includeStrings<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 只对指定过滤参数后缀进行过滤 --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>.do;.jsp<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>redirectPath<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 未通过跳转到登录界面 --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>/index.jsp<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>disabletestfilter<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- Y:过滤无效 --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>N<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>SessionFilter<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接着编写FilterServlet：</p>
+
+<figure class='code'><figcaption><span>FilterServlet.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">action</span><span class="o">.</span><span class="na">login</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.Filter</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.FilterChain</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.FilterConfig</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletRequest</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletResponse</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponseWrapper</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> *    判断用户是否登录,未登录则退出系统</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SessionFilter</span> <span class="kd">implements</span> <span class="n">Filter</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">FilterConfig</span> <span class="n">config</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">config</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isContains</span><span class="o">(</span><span class="n">String</span> <span class="n">container</span><span class="o">,</span> <span class="n">String</span><span class="o">[]</span> <span class="n">regx</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">boolean</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">regx</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">container</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="n">regx</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="n">ServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">ServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="n">FilterChain</span> <span class="n">chain</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ServletException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">HttpServletRequest</span> <span class="n">hrequest</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpServletRequest</span><span class="o">)</span><span class="n">request</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">HttpServletResponseWrapper</span> <span class="n">wrapper</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpServletResponseWrapper</span><span class="o">((</span><span class="n">HttpServletResponse</span><span class="o">)</span> <span class="n">response</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">String</span> <span class="n">logonStrings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;logonStrings&quot;</span><span class="o">);</span>        <span class="c1">// 登录登陆页面</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">includeStrings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;includeStrings&quot;</span><span class="o">);</span>    <span class="c1">// 过滤资源后缀参数</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">redirectPath</span> <span class="o">=</span> <span class="n">hrequest</span><span class="o">.</span><span class="na">getContextPath</span><span class="o">()</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;redirectPath&quot;</span><span class="o">);</span><span class="c1">// 没有登陆转向页面</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">disabletestfilter</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;disabletestfilter&quot;</span><span class="o">);</span><span class="c1">// 过滤器是否有效</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">disabletestfilter</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;Y&quot;</span><span class="o">))</span> <span class="o">{</span>    <span class="c1">// 过滤无效</span>
+</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">String</span><span class="o">[]</span> <span class="n">logonList</span> <span class="o">=</span> <span class="n">logonStrings</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;;&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">String</span><span class="o">[]</span> <span class="n">includeList</span> <span class="o">=</span> <span class="n">includeStrings</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;;&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">isContains</span><span class="o">(</span><span class="n">hrequest</span><span class="o">.</span><span class="na">getRequestURI</span><span class="o">(),</span> <span class="n">includeList</span><span class="o">))</span> <span class="o">{</span><span class="c1">// 只对指定过滤参数后缀进行过滤</span>
+</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">isContains</span><span class="o">(</span><span class="n">hrequest</span><span class="o">.</span><span class="na">getRequestURI</span><span class="o">(),</span> <span class="n">logonList</span><span class="o">))</span> <span class="o">{</span><span class="c1">// 对登录页面不进行过滤</span>
+</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">String</span> <span class="n">user</span> <span class="o">=</span> <span class="o">(</span> <span class="n">String</span> <span class="o">)</span> <span class="n">hrequest</span><span class="o">.</span><span class="na">getSession</span><span class="o">().</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;useronly&quot;</span><span class="o">);</span><span class="c1">//判断用户是否登录</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">user</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">wrapper</span><span class="o">.</span><span class="na">sendRedirect</span><span class="o">(</span><span class="n">redirectPath</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">FilterConfig</span> <span class="n">filterConfig</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">config</span> <span class="o">=</span> <span class="n">filterConfig</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样既可完成对用户所有请求，均要经过这个Filter进行验证用户登录。</p>
+
+<h3>防止中文乱码过滤器</h3>
+
+<p>项目使用spring框架时。当前台JSP页面和JAVA代码中使用了不同的字符集进行编码的时候就会出现表单提交的数据或者上传/下载中文名称文件出现乱码的问题，那就可以使用这个过滤器。</p>
+
+<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>encoding<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="nt">&lt;/filter-class&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>encoding<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!--用来指定一个具体的字符集--&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>UTF-8<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>forceEncoding<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!--true：无论request是否指定了字符集，都是用encoding；false：如果request已指定一个字符集，则不使用encoding--&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>false<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>encoding<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Spring+Hibernate的OpenSessionInViewFilter控制session的开关</h3>
+
+<p>当hibernate+spring配合使用的时候，如果设置了lazy=true（延迟加载）,那么在读取数据的时候，当读取了父数据后，hibernate 会自动关闭session，这样，当要使用与之关联数据、子数据的时候，系统会抛出lazyinit的错误，这时就需要使用spring提供的OpenSessionInViewFilter过滤器。</p>
+
+<p>OpenSessionInViewFilter主要是保持Session状态直到request将全部页面发送到客户端，直到请求结束后才关闭session，这样就可以解决延迟加载带来的问题。</p>
+
+<p>注意：OpenSessionInViewFilter配置要写在struts2的配置前面。因为tomcat容器在加载过滤器的时候是按照顺序加载的，如果配置文件先写的是struts2的过滤器配置，然后才是OpenSessionInViewFilter过滤器配置，所以加载的顺序导致，action在获得数据的时候session并没有被spring管理。</p>
+
+<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;filter&gt;</span><span class="c">&lt;!-- lazy loading enabled in spring --&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>OpenSessionInViewFilter<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter<span class="nt">&lt;/filter-class&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>sessionFactoryBeanName<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 可缺省。默认是从spring容器中找id为sessionFactory的bean，如果id不为sessionFactory，则需要配置如下，此处SessionFactory为spring容器中的bean。 --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>sessionFactory<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>singleSession<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- singleSession默认为true,若设为false则等于没用OpenSessionInView --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>true<span class="nt">&lt;/param-value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>OpenSessionInViewFilter<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>*.do<span class="nt">&lt;/url-pattern&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Struts2的web.xml配置</h3>
+
+<p>项目中使用Struts2同样需要在web.xml配置过滤器，用来截取请求，转到Struts2的Action进行处理。</p>
+
+<p>注意：如果在2.1.3以前的Struts2版本，过滤器使用org.apache.struts2.dispatcher.FilterDispatcher。否则使用org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter。从Struts2.1.3开始，将废弃ActionContextCleanUp过滤器，而在StrutsPrepareAndExecuteFilter过滤器中包含相应的功能。</p>
+
+<p>三个初始化参数配置：</p>
+
+<ul>
+<li>config参数：指定要加载的配置文件。逗号分割。</li>
+<li>actionPackages参数：指定Action类所在的包空间。逗号分割。</li>
+<li>configProviders参数：自定义配置文件提供者，需要实现ConfigurationProvider接口类。逗号分割。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="c">&lt;!-- struts 2.x filter --&gt;</span>
+</span><span class='line'><span class="nt">&lt;filter&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>struts2<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter<span class="nt">&lt;/filter-class&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>struts2<span class="nt">&lt;/filter-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>*.do<span class="nt">&lt;/url-pattern&gt;</span>
+</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">http://tianweili.github.io/blog/2015/01/26/java-filter/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java中的Listener 监听器]]></title>
+    <link href="http://tianweili.github.io/blog/2015/02/24/java-listener/"/>
+    <updated>2015-02-24T15:36:14+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/02/24/java-listener</id>
+    <content type="html"><![CDATA[<p>本文介绍了Listener以下几个方面的内容：</p>
+
+<ul>
+<li>Listener的定义与作用</li>
+<li>Listener的分类与使用
+
+<ul>
+<li>ServletContext监听</li>
+<li>Session监听</li>
+<li>Request监听</li>
+</ul>
+</li>
+<li>Listener的应用实例
+
+<ul>
+<li>利用HttpSessionListener统计最多在线用户人数</li>
+<li>Spring使用ContextLoaderListener加载ApplicationContext配置信息</li>
+<li>Spring使用Log4jConfigListener配置Log4j日志</li>
+<li>Spring使用IntrospectorCleanupListener清理缓存</li>
+</ul>
+</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
+
+<p><a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">之前写了一篇关于Filter的文章</a>，现在再来一篇Listener的，Filter和Listener在项目中是经常用到的，巧妙的使用可以达到事半功倍的效果。故把两者的用法总结一下。</p>
+
+<h2>Listener的定义与作用</h2>
+
+<p>监听器Listener就是在application,session,request三个对象创建、销毁或者往其中添加修改删除属性时自动执行代码的功能组件。</p>
+
+<p>Listener是Servlet的监听器，可以监听客户端的请求，服务端的操作等。</p>
+
+<h2>Listener的分类与使用</h2>
+
+<p>主要有以下三类：</p>
+
+<h3>1、ServletContext监听</h3>
+
+<p>ServletContextListener：用于对Servlet整个上下文进行监听（创建、销毁）。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//上下文初始化</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">contextInitialized</span><span class="o">(</span><span class="n">ServletContextEvent</span> <span class="n">sce</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//上下文销毁</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">contextDestroyed</span><span class="o">(</span><span class="n">ServletContextEvent</span> <span class="n">sce</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//ServletContextEvent事件：取得一个ServletContext（application）对象</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">ServletContext</span> <span class="nf">getServletContext</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ServletContextAttributeListener：对Servlet上下文属性的监听（增删改属性）。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2964,225 +3484,308 @@ ProductB Method ...
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>-b   忽略每行前面的所有空格字符，从第一个可见字符开始比较。
-</span><span class='line'>-c   检查文件是否已经排好序，如果乱序则输出第一个乱序行的相关信息，最后返回1
-</span><span class='line'>-C   检查文件是否已经排好序，如果乱序，则不输出内容，仅返回1
-</span><span class='line'>-f   排序时忽略大小写字母。
-</span><span class='line'>-M   将前面3个字母依照月份的缩写进行排序，比如JAN小于FEB。
-</span><span class='line'>-n   依照数值的大小排序。
-</span><span class='line'>-o   将排序后的结果存入指定的文件
-</span><span class='line'>-r   降序输出
-</span><span class='line'>-t   &lt;分隔字符&gt;   指定排序时所用的栏位分隔字符
-</span><span class='line'>-u   在输出行中去除重复行
-</span><span class='line'>-k   选择以哪个区间进行排序。
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//增加属性</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeAdded</span><span class="o">(</span><span class="n">ServletContextAttributeEvent</span> <span class="n">scab</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//属性删除</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRemoved</span><span class="o">(</span><span class="n">ServletContextAttributeEvent</span> <span class="n">scab</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//属性替换（第二次设置同一属性）</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRepalced</span><span class="o">(</span><span class="n">ServletContextAttributeEvent</span> <span class="n">scab</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//ServletContextAttributeEvent事件：能取得设置属性的名称与内容</span>
+</span><span class='line'><span class="c1">//得到属性名称</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span>
+</span><span class='line'><span class="c1">//取得属性的值</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">();</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>下面将会对这些参数进行介绍，其中简单的参数就不再赘述了。</p>
+<h3>2、Session监听</h3>
 
-<h2>参数</h2>
+<p>Session属于http协议下的内容，接口位于javax.servlet.http.*包下。</p>
 
-<h3>-o选项</h3>
-
-<p>sort是把排序后结果输出到标准输出，所以需要使用重定向将结果写入指定的文件，比如<code>sort file &gt; newfile</code>。</p>
-
-<p>但是重定向的方式在遇到这种需求就无能为力了——把结果输出到原文件中。</p>
-
-<p>如果还是使用重定向的方式，则会把原文件给清空。</p>
-
-<p>而使用<code>-o</code>参数则可以完美解决这个问题：</p>
+<p>HttpSessionListener接口：对Session的整体状态的监听。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -r test.dat -o test.dat
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//session创建</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionCreated</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">se</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//session销毁</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionDestroyed</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">se</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//HttpSessionEvent事件：</span>
+</span><span class='line'><span class="c1">//取得当前操作的session</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">HttpSession</span> <span class="nf">getSession</span><span class="o">();</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>-t与-k选项</h3>
-
-<p>对于某些有固定格式的文件，比如：</p>
-
-<pre><code>a   12
-b   32
-c   3
-</code></pre>
-
-<p>如果想以第二列数值大小降序输出，则需要使用-t和-k参数了。其中-k指定分隔符，-k指定待排序的列。</p>
+<p>HttpSessionAttributeListener接口：对session的属性监听。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -nr -t<span class="se">\t</span> -k2 test.bat -o test.bat
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeAdded</span><span class="o">(</span><span class="n">HttpSessionBindingEvent</span> <span class="n">se</span><span class="o">);</span><span class="c1">//增加属性</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRemoved</span><span class="o">(</span><span class="n">HttpSessionBindingEvent</span> <span class="n">se</span><span class="o">);</span><span class="c1">//删除属性</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeReplaced</span><span class="o">(</span><span class="n">HttpSessionBindingEvent</span> <span class="n">se</span><span class="o">);</span><span class="c1">//替换属性</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//HttpSessionBindingEvent事件：</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span><span class="c1">//取得属性的名称</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">();</span><span class="c1">//取得属性的值</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">HttpSession</span> <span class="nf">getSession</span><span class="o">();</span><span class="c1">//取得当前的session</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
+<p>session的销毁有两种情况：</p>
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
+<p>1.session超时，web.xml配置：</p>
 
-<p>转载请注明作者及出处，谢谢。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Linux中的vi命令]]></title>
-    <link href="http://tianweili.github.io/blog/2015/02/24/linux-vi/"/>
-    <updated>2015-02-24T21:42:12+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/02/24/linux-vi</id>
-    <content type="html"><![CDATA[<p>vi命令是Linux中编辑文件必不可少的命令。</p>
-
-<!--more-->
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;session-config&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;session-timeout&gt;</span>120<span class="nt">&lt;/session-timeout&gt;</span><span class="c">&lt;!--session120分钟后超时销毁--&gt;</span>
+</span><span class='line'><span class="nt">&lt;/session-config&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>原文链接：</p>
+<p>2.手工使session失效</p>
 
-<p><a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//使session失效方法。session.invalidate();</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">invalidate</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>本文中的命令基本是按照使用频率排列。</p>
 
-<h2>进入编辑文件</h2>
+<h3>3、Request监听</h3>
+
+<p>ServletRequestListener：用于对Request请求进行监听（创建、销毁）。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">requestInitialized</span><span class="o">(</span><span class="n">ServletRequestEvent</span> <span class="n">sre</span><span class="o">);</span><span class="c1">//request初始化</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">requestDestroyed</span><span class="o">(</span><span class="n">ServletRequestEvent</span> <span class="n">sre</span><span class="o">);</span><span class="c1">//request销毁</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//ServletRequestEvent事件：</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">ServletRequest</span> <span class="nf">getServletRequest</span><span class="o">();</span><span class="c1">//取得一个ServletRequest对象</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">ServletContext</span> <span class="nf">getServletContext</span><span class="o">();</span><span class="c1">//取得一个ServletContext（application）对象</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ServletRequestAttributeListener：对Request属性的监听（增删改属性）。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeAdded</span><span class="o">(</span><span class="n">ServletRequestAttributeEvent</span> <span class="n">srae</span><span class="o">);</span><span class="c1">//增加属性</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRemoved</span><span class="o">(</span><span class="n">ServletRequestAttributeEvent</span> <span class="n">srae</span><span class="o">);</span><span class="c1">//属性删除</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeReplaced</span><span class="o">(</span><span class="n">ServletRequestAttributeEvent</span> <span class="n">srae</span><span class="o">);</span><span class="c1">//属性替换（第二次设置同一属性）</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//ServletRequestAttributeEvent事件：能取得设置属性的名称与内容</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span><span class="c1">//得到属性名称</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">();</span><span class="c1">//取得属性的值</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4、在web.xml中配置</h3>
+
+<p>Listener配置信息必须在Filter和Servlet配置之前，Listener的初始化（ServletContentListener初始化）比Servlet和Filter都优先，而销毁比Servlet和Filter都慢。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;listener&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>com.listener.class<span class="nt">&lt;/listener-class&gt;</span>
+</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Listener应用实例</h2>
+
+<h3>1、利用HttpSessionListener统计最多在线用户人数</h3>
+
+<figure class='code'><figcaption><span>HttpSessionListenerImpl.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.text.DateFormat</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletContext</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpSessionEvent</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpSessionListener</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HttpSessionListenerImpl</span> <span class="kd">implements</span> <span class="n">HttpSessionListener</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionCreated</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ServletContext</span> <span class="n">app</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getSession</span><span class="o">().</span><span class="na">getServletContext</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">app</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">count</span><span class="o">++;</span>
+</span><span class='line'>        <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">maxOnLineCount</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">app</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;maxOnLineCount&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="n">maxOnLineCount</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">//记录最多人数是多少</span>
+</span><span class='line'>            <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;maxOnLineCount&quot;</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">DateFormat</span> <span class="n">df</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd HH:mm:ss&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="c1">//记录在那个时刻达到上限</span>
+</span><span class='line'>            <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;date&quot;</span><span class="o">,</span> <span class="n">df</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="k">new</span> <span class="nf">Date</span><span class="o">()));</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="c1">//session注销、超时时候调用，停止tomcat不会调用</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionDestroyed</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ServletContext</span> <span class="n">app</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getSession</span><span class="o">().</span><span class="na">getServletContext</span><span class="o">();</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">app</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">count</span><span class="o">--;</span>
+</span><span class='line'>        <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2、Spring使用ContextLoaderListener加载ApplicationContext配置信息</h3>
+
+<p>ContextLoaderListener的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。因为它实现了ServletContextListener这个接口，在web.xml配置这个监听器，启动容器时，就会默认执行它实现的方法。</p>
+
+<p>ContextLoaderListener如何查找ApplicationContext.xml的配置位置以及配置多个xml：如果在web.xml中不写任何参数配置信息，默认的路径是&#8221;/WEB-INF/applicationContext.xml&#8221;，在WEB-INF目录下创建的xml文件的名称必须是applicationContext.xml（在MyEclipse中把xml文件放置在src目录下）。如果是要自定义文件名可以在web.xml里加入contextConfigLocation这个context参数。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;context-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>classpath:spring/applicationContext-*.xml<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!-- 采用的是通配符方式，查找WEB-INF/spring目录下xml文件。如有多个xml文件，以“,”分隔。 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
+</span><span class='line'><span class="nt">&lt;listener&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
+</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3、Spring使用Log4jConfigListener配置Log4j日志</h3>
+
+<p>Spring使用Log4jConfigListener的好处：</p>
 
 <ul>
-<li>vi filename：打开或新建文件，并将光标置于第一行首</li>
-<li>vi +n filename：打开文件，并将光标置于第n行首</li>
-<li><p>vi + filename：打开文件，并将光标置于最后一行首</p></li>
-<li><p>vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处</p></li>
-<li>vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename</li>
-<li>vi filename1 &hellip;. filenamen：打开多个文件，依次进行编辑</li>
+<li>动态的改变记录级别和策略，不需要重启Web应用。</li>
+<li>把log文件定在 /WEB-INF/logs/ 而不需要写绝对路径。因为系统把web目录的路径压入一个叫webapp.root的系统变量。这样写log文件路径时不用写绝对路径了。</li>
+<li>可以把log4j.properties和其他properties一起放在/WEB-INF/ ，而不是Class-Path。</li>
+<li>设置log4jRefreshInterval时间，开一条watchdog线程每隔段时间扫描一下配置文件的变化。</li>
 </ul>
 
 
-<h2>移动光标</h2>
-
-<ul>
-<li>nG或ngg：光标移至第n行首</li>
-<li>0：（数字零）光标移至当前行首</li>
-<li>$：光标移至当前行尾</li>
-<li>n+：光标下移n行</li>
-<li><p>n-：光标上移n行</p></li>
-<li><p>h ：光标左移一个字符</p></li>
-<li>l ：光标右移一个字符</li>
-<li>space：光标右移一个字符</li>
-<li>Backspace：光标左移一个字符</li>
-<li>k或Ctrl+p：光标上移一行</li>
-<li>j或Ctrl+n ：光标下移一行</li>
-<li>Enter ：光标下移一行</li>
-<li>w或W ：光标右移一个字至字首</li>
-<li>b或B ：光标左移一个字至字首</li>
-<li>e或E ：光标右移一个字至字尾</li>
-<li>) ：光标移至句尾</li>
-<li>( ：光标移至句首</li>
-<li>}：光标移至段落开头</li>
-<li>{：光标移至段落结尾</li>
-<li>n$：光标移至第n行尾</li>
-<li>H ：光标移至屏幕顶行</li>
-<li>M ：光标移至屏幕中间行</li>
-<li>L ：光标移至屏幕最后行</li>
-</ul>
-
-
-<h2>屏幕翻滚</h2>
-
-<ul>
-<li>Ctrl+u：向文件首翻半屏</li>
-<li>Ctrl+d：向文件尾翻半屏</li>
-<li>Ctrl+f：向文件尾翻一屏</li>
-<li>Ctrl＋b；向文件首翻一屏</li>
-<li>nz：将第n行滚至屏幕顶部，不指定n时将当前行滚至屏幕顶部</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;context-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>webAppRootKey<span class="nt">&lt;/param-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>project.root<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!-- 用于定位log文件输出位置在web应用根目录下，log4j配置文件中写输出位置：log4j.appender.FILE.File=${project.root}/logs/project.log --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
+</span><span class='line'><span class="nt">&lt;context-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>log4jConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>classpath:log4j.properties<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!-- 载入log4j配置文件 --&gt;</span>
+</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
+</span><span class='line'><span class="nt">&lt;context-param&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>log4jRefreshInterval<span class="nt">&lt;/param-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>60000<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!--Spring刷新Log4j配置文件的间隔60秒,单位为millisecond--&gt;</span>
+</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
+</span><span class='line'><span class="nt">&lt;listener&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.util.Log4jConfigListener<span class="nt">&lt;/listener-class&gt;</span>
+</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>插入文本</h2>
+<h3>4、Spring使用IntrospectorCleanupListener清理缓存</h3>
 
-<ul>
-<li>i ：在光标前</li>
-<li>a：光标后</li>
-<li>I ：在当前行首</li>
-<li>A：在当前行尾</li>
-<li>o：在当前行之下新开一行</li>
-<li><p>O：在当前行之上新开一行</p></li>
-<li><p>r：替换当前字符</p></li>
-<li>R：替换当前字符及其后的字符，直至按ESC键</li>
-<li>s：从当前光标位置处开始，以输入的文本替代指定数目的字符</li>
-<li>S：删除指定数目的行，并以所输入文本代替之</li>
-<li>ncw或nCW：修改指定数目的字</li>
-<li>nCC：修改指定数目的行</li>
-</ul>
+<p>这个监听器的作用是在web应用关闭时刷新JDK的JavaBeans的Introspector缓存，以确保Web应用程序的类加载器以及其加载的类正确的释放资源。</p>
 
+<p>如果JavaBeans的Introspector已被用来分析应用程序类，系统级的Introspector缓存将持有这些类的一个硬引用。因此，这些类和Web应用程序的类加载器在Web应用程序关闭时将不会被垃圾收集器回收！而IntrospectorCleanupListener则会对其进行适当的清理，已使其能够被垃圾收集器回收。</p>
 
-<h2>删除命令</h2>
+<p>唯一能够清理Introspector的方法是刷新整个Introspector缓存，没有其他办法来确切指定应用程序所引用的类。这将删除所有其他应用程序在服务器的缓存的Introspector结果。</p>
 
-<ul>
-<li>dd：删除当前行</li>
-<li>ndd：删除当前行及其后n-1行</li>
-<li>do：删至行首</li>
-<li><p>d$：删至行尾</p></li>
-<li><p>ndw或ndW：删除光标处开始及其后的n-1个字</p></li>
-<li>x或X：删除一个字符，x删除光标后的，而X删除光标前的</li>
-<li>Ctrl+u：删除输入方式下所输入的文本</li>
-</ul>
+<p>在使用Spring内部的bean机制时，不需要使用此监听器，因为Spring自己的introspection results cache将会立即刷新被分析过的JavaBeans Introspector cache，而仅仅会在应用程序自己的ClassLoader里面持有一个cache。虽然Spring本身不产生泄漏，注意，即使在Spring框架的类本身驻留在一个“共同”类加载器（如系统的ClassLoader）的情况下，也仍然应该使用使用IntrospectorCleanupListener。在这种情况下，这个IntrospectorCleanupListener将会妥善清理Spring的introspection cache。</p>
 
+<p>应用程序类，几乎不需要直接使用JavaBeans Introspector，所以，通常都不是Introspector resource造成内存泄露。相反，许多库和框架，不清理Introspector，例如： Struts和Quartz。</p>
 
-<h2>搜索及替换</h2>
+<p>需要注意的是一个简单Introspector泄漏将会导致整个Web应用程序的类加载器不会被回收！这样做的结果，将会是在web应用程序关闭时，该应用程序所有的静态类资源（比如：单实例对象）都没有得到释放。而导致内存泄露的根本原因其实并不是这些未被回收的类！</p>
 
-<ul>
-<li>/pattern：从光标开始处向文件尾搜索pattern</li>
-<li>?pattern：从光标开始处向文件首搜索pattern</li>
-<li>n：在同一方向重复上一次搜索命令</li>
-<li>N：在反方向上重复上一次搜索命令</li>
-<li>：s/p1/p2/g：将当前行中所有p1均用p2替代</li>
-<li>：n1,n2s/p1/p2/g：将第n1至n2行中所有p1均用p2替代</li>
-<li>：g/p1/s//p2/g：将文件中所有p1均用p2替换</li>
-</ul>
+<p>注意：IntrospectorCleanupListener应该注册为web.xml中的第一个Listener，在任何其他Listener之前注册，比如在Spring&rsquo;s ContextLoaderListener注册之前，才能确保IntrospectorCleanupListener在Web应用的生命周期适当时机生效。</p>
 
-
-<h2>选项设置</h2>
-
-<ul>
-<li>all：列出所有选项设置情况</li>
-<li>term：设置终端类型</li>
-<li>ignorance：在搜索中忽略大小写</li>
-<li>list：显示制表位(Ctrl+I)和行尾标志（$)</li>
-<li>number：显示行号</li>
-<li>report：显示由面向行的命令修改过的数目</li>
-<li>terse：显示简短的警告信息</li>
-<li>warn：在转到别的文件时若没保存当前文件则显示NO write信息</li>
-<li>nomagic：允许在搜索模式中，使用前面不带“\”的特殊字符</li>
-<li>nowrapscan：禁止vi在搜索到达文件两端时，又从另一端开始</li>
-<li>mesg：允许vi显示其他用户用write写到自己终端上的信息</li>
-</ul>
-
-
-<h2>最后行方式</h2>
-
-<ul>
-<li>：x：保存当前文件并退出</li>
-<li>：w ：保存当前文件</li>
-<li>：q：退出vi</li>
-<li><p>：q!：不保存文件并退出vi</p></li>
-<li><p>：n1,n2 co n3：将n1行到n2行之间的内容拷贝到第n3行下</p></li>
-<li>：n1,n2 m n3：将n1行到n2行之间的内容移至到第n3行下</li>
-<li>：n1,n2 d ：将n1行到n2行之间的内容删除</li>
-<li>：e filename：打开文件filename进行编辑</li>
-<li>：!command：执行shell命令command</li>
-<li>：n1,n2 w!command：将文件中n1行至n2行的内容作为command的输入并执行之，若不指定n1，n2，则表示将整个文件内容作为command的输入</li>
-<li>：r!command：将命令command的输出结果放到当前行</li>
-</ul>
-
-
-<h2>寄存器操作</h2>
-
-<ul>
-<li>&ldquo;?nyy：将当前行及其下n行的内容保存到寄存器？中，其中?为一个字母，n为一个数字</li>
-<li>&ldquo;?nyw：将当前行及其下n个字保存到寄存器？中，其中?为一个字母，n为一个数字</li>
-<li>&ldquo;?nyl：将当前行及其下n个字符保存到寄存器？中，其中?为一个字母，n为一个数字</li>
-<li>&ldquo;?p：取出寄存器？中的内容并将其放到光标位置处。这里？可以是一个字母，也可以是一个数字</li>
-<li>ndd：将当前行及其下共n行文本删除，并将所删内容放到1号删除寄存器中</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;listener&gt;</span><span class="c">&lt;!-- memory clean --&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.util.IntrospectorCleanupListener<span class="nt">&lt;/listener-class&gt;</span>
+</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
-
-<p>转载请注明作者和文章出处，谢谢。</p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
 ]]></content>
   </entry>
   
@@ -5077,71 +5680,35 @@ Jim eat banana
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Java中的Listener 监听器]]></title>
-    <link href="http://tianweili.github.io/blog/2015/01/27/java-listener/"/>
-    <updated>2015-01-27T15:36:14+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/01/27/java-listener</id>
-    <content type="html"><![CDATA[<p>本文介绍了Listener以下几个方面的内容：</p>
-
-<ul>
-<li>Listener的定义与作用</li>
-<li>Listener的分类与使用
-
-<ul>
-<li>ServletContext监听</li>
-<li>Session监听</li>
-<li>Request监听</li>
-</ul>
-</li>
-<li>Listener的应用实例
-
-<ul>
-<li>利用HttpSessionListener统计最多在线用户人数</li>
-<li>Spring使用ContextLoaderListener加载ApplicationContext配置信息</li>
-<li>Spring使用Log4jConfigListener配置Log4j日志</li>
-<li>Spring使用IntrospectorCleanupListener清理缓存</li>
-</ul>
-</li>
-</ul>
-
+    <title type="html"><![CDATA[Linux中的sort命令]]></title>
+    <link href="http://tianweili.github.io/blog/2015/01/19/linux-sort/"/>
+    <updated>2015-01-19T23:44:09+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/01/19/linux-sort</id>
+    <content type="html"><![CDATA[<p>sort命令是根据不同的数据类型以行为单位对数据进行排序。</p>
 
 <!--more-->
 
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
+<p>原文链接：</p>
 
-<p><a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">之前写了一篇关于Filter的文章</a>，现在再来一篇Listener的，Filter和Listener在项目中是经常用到的，巧妙的使用可以达到事半功倍的效果。故把两者的用法总结一下。</p>
+<p><a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
 
-<h2>Listener的定义与作用</h2>
+<h2>简介</h2>
 
-<p>监听器Listener就是在application,session,request三个对象创建、销毁或者往其中添加修改删除属性时自动执行代码的功能组件。</p>
+<p>sort命令是根据不同的数据类型以行为单位对数据进行排序。</p>
 
-<p>Listener是Servlet的监听器，可以监听客户端的请求，服务端的操作等。</p>
+<p>sort的默认比较规则是从首字符向后，按照ASCII码值进行比较，将结果按照升序输出。</p>
 
-<h2>Listener的分类与使用</h2>
+<h2>用法</h2>
 
-<p>主要有以下三类：</p>
-
-<h3>1、ServletContext监听</h3>
-
-<p>ServletContextListener：用于对Servlet整个上下文进行监听（创建、销毁）。</p>
+<p>sort命令的基本格式如下：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//上下文初始化</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">contextInitialized</span><span class="o">(</span><span class="n">ServletContextEvent</span> <span class="n">sce</span><span class="o">);</span>
-</span><span class='line'><span class="c1">//上下文销毁</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">contextDestroyed</span><span class="o">(</span><span class="n">ServletContextEvent</span> <span class="n">sce</span><span class="o">);</span>
-</span><span class='line'><span class="c1">//ServletContextEvent事件：取得一个ServletContext（application）对象</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">ServletContext</span> <span class="nf">getServletContext</span><span class="o">();</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort <span class="o">[</span>-bcfMnrtk<span class="o">]</span> <span class="o">[</span><span class="nb">source</span>-file<span class="o">]</span> <span class="o">[</span>-o output-file<span class="o">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>ServletContextAttributeListener：对Servlet上下文属性的监听（增删改属性）。</p>
+<p>sort命令可使用的参数有：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -5154,792 +5721,225 @@ Jim eat banana
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//增加属性</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeAdded</span><span class="o">(</span><span class="n">ServletContextAttributeEvent</span> <span class="n">scab</span><span class="o">);</span>
-</span><span class='line'><span class="c1">//属性删除</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRemoved</span><span class="o">(</span><span class="n">ServletContextAttributeEvent</span> <span class="n">scab</span><span class="o">);</span>
-</span><span class='line'><span class="c1">//属性替换（第二次设置同一属性）</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRepalced</span><span class="o">(</span><span class="n">ServletContextAttributeEvent</span> <span class="n">scab</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//ServletContextAttributeEvent事件：能取得设置属性的名称与内容</span>
-</span><span class='line'><span class="c1">//得到属性名称</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span>
-</span><span class='line'><span class="c1">//取得属性的值</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">();</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>-b   忽略每行前面的所有空格字符，从第一个可见字符开始比较。
+</span><span class='line'>-c   检查文件是否已经排好序，如果乱序则输出第一个乱序行的相关信息，最后返回1
+</span><span class='line'>-C   检查文件是否已经排好序，如果乱序，则不输出内容，仅返回1
+</span><span class='line'>-f   排序时忽略大小写字母。
+</span><span class='line'>-M   将前面3个字母依照月份的缩写进行排序，比如JAN小于FEB。
+</span><span class='line'>-n   依照数值的大小排序。
+</span><span class='line'>-o   将排序后的结果存入指定的文件
+</span><span class='line'>-r   降序输出
+</span><span class='line'>-t   &lt;分隔字符&gt;   指定排序时所用的栏位分隔字符
+</span><span class='line'>-u   在输出行中去除重复行
+</span><span class='line'>-k   选择以哪个区间进行排序。
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>2、Session监听</h3>
+<p>下面将会对这些参数进行介绍，其中简单的参数就不再赘述了。</p>
 
-<p>Session属于http协议下的内容，接口位于javax.servlet.http.*包下。</p>
+<h2>参数</h2>
 
-<p>HttpSessionListener接口：对Session的整体状态的监听。</p>
+<h3>-o选项</h3>
+
+<p>sort是把排序后结果输出到标准输出，所以需要使用重定向将结果写入指定的文件，比如<code>sort file &gt; newfile</code>。</p>
+
+<p>但是重定向的方式在遇到这种需求就无能为力了——把结果输出到原文件中。</p>
+
+<p>如果还是使用重定向的方式，则会把原文件给清空。</p>
+
+<p>而使用<code>-o</code>参数则可以完美解决这个问题：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//session创建</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionCreated</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">se</span><span class="o">);</span>
-</span><span class='line'><span class="c1">//session销毁</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionDestroyed</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">se</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//HttpSessionEvent事件：</span>
-</span><span class='line'><span class="c1">//取得当前操作的session</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">HttpSession</span> <span class="nf">getSession</span><span class="o">();</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -r test.dat -o test.dat
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>HttpSessionAttributeListener接口：对session的属性监听。</p>
+<h3>-t与-k选项</h3>
+
+<p>对于某些有固定格式的文件，比如：</p>
+
+<pre><code>a   12
+b   32
+c   3
+</code></pre>
+
+<p>如果想以第二列数值大小降序输出，则需要使用-t和-k参数了。其中-k指定分隔符，-k指定待排序的列。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeAdded</span><span class="o">(</span><span class="n">HttpSessionBindingEvent</span> <span class="n">se</span><span class="o">);</span><span class="c1">//增加属性</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRemoved</span><span class="o">(</span><span class="n">HttpSessionBindingEvent</span> <span class="n">se</span><span class="o">);</span><span class="c1">//删除属性</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeReplaced</span><span class="o">(</span><span class="n">HttpSessionBindingEvent</span> <span class="n">se</span><span class="o">);</span><span class="c1">//替换属性</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//HttpSessionBindingEvent事件：</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span><span class="c1">//取得属性的名称</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">();</span><span class="c1">//取得属性的值</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">HttpSession</span> <span class="nf">getSession</span><span class="o">();</span><span class="c1">//取得当前的session</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sort -nr -t<span class="se">\t</span> -k2 test.bat -o test.bat
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>session的销毁有两种情况：</p>
+<p>作者：<a href="http://tianweili.github.com/">李天炜</a></p>
 
-<p>1.session超时，web.xml配置：</p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/02/25/linux-sort/">http://tianweili.github.io/blog/2015/02/25/linux-sort/</a></p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;session-config&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;session-timeout&gt;</span>120<span class="nt">&lt;/session-timeout&gt;</span><span class="c">&lt;!--session120分钟后超时销毁--&gt;</span>
-</span><span class='line'><span class="nt">&lt;/session-config&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2.手工使session失效</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//使session失效方法。session.invalidate();</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">invalidate</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>3、Request监听</h3>
-
-<p>ServletRequestListener：用于对Request请求进行监听（创建、销毁）。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">requestInitialized</span><span class="o">(</span><span class="n">ServletRequestEvent</span> <span class="n">sre</span><span class="o">);</span><span class="c1">//request初始化</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">requestDestroyed</span><span class="o">(</span><span class="n">ServletRequestEvent</span> <span class="n">sre</span><span class="o">);</span><span class="c1">//request销毁</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//ServletRequestEvent事件：</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">ServletRequest</span> <span class="nf">getServletRequest</span><span class="o">();</span><span class="c1">//取得一个ServletRequest对象</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">ServletContext</span> <span class="nf">getServletContext</span><span class="o">();</span><span class="c1">//取得一个ServletContext（application）对象</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ServletRequestAttributeListener：对Request属性的监听（增删改属性）。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeAdded</span><span class="o">(</span><span class="n">ServletRequestAttributeEvent</span> <span class="n">srae</span><span class="o">);</span><span class="c1">//增加属性</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeRemoved</span><span class="o">(</span><span class="n">ServletRequestAttributeEvent</span> <span class="n">srae</span><span class="o">);</span><span class="c1">//属性删除</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">attributeReplaced</span><span class="o">(</span><span class="n">ServletRequestAttributeEvent</span> <span class="n">srae</span><span class="o">);</span><span class="c1">//属性替换（第二次设置同一属性）</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">//ServletRequestAttributeEvent事件：能取得设置属性的名称与内容</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">();</span><span class="c1">//得到属性名称</span>
-</span><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">();</span><span class="c1">//取得属性的值</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>4、在web.xml中配置</h3>
-
-<p>Listener配置信息必须在Filter和Servlet配置之前，Listener的初始化（ServletContentListener初始化）比Servlet和Filter都优先，而销毁比Servlet和Filter都慢。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;listener&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>com.listener.class<span class="nt">&lt;/listener-class&gt;</span>
-</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Listener应用实例</h2>
-
-<h3>1、利用HttpSessionListener统计最多在线用户人数</h3>
-
-<figure class='code'><figcaption><span>HttpSessionListenerImpl.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.text.DateFormat</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletContext</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpSessionEvent</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpSessionListener</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HttpSessionListenerImpl</span> <span class="kd">implements</span> <span class="n">HttpSessionListener</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionCreated</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">ServletContext</span> <span class="n">app</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getSession</span><span class="o">().</span><span class="na">getServletContext</span><span class="o">();</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">app</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">count</span><span class="o">++;</span>
-</span><span class='line'>        <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">maxOnLineCount</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">app</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;maxOnLineCount&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="n">maxOnLineCount</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="c1">//记录最多人数是多少</span>
-</span><span class='line'>            <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;maxOnLineCount&quot;</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">DateFormat</span> <span class="n">df</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SimpleDateFormat</span><span class="o">(</span><span class="s">&quot;yyyy-MM-dd HH:mm:ss&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="c1">//记录在那个时刻达到上限</span>
-</span><span class='line'>            <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;date&quot;</span><span class="o">,</span> <span class="n">df</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="k">new</span> <span class="nf">Date</span><span class="o">()));</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="c1">//session注销、超时时候调用，停止tomcat不会调用</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sessionDestroyed</span><span class="o">(</span><span class="n">HttpSessionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">ServletContext</span> <span class="n">app</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getSession</span><span class="o">().</span><span class="na">getServletContext</span><span class="o">();</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">app</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">count</span><span class="o">--;</span>
-</span><span class='line'>        <span class="n">app</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">&quot;onLineCount&quot;</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>2、Spring使用ContextLoaderListener加载ApplicationContext配置信息</h3>
-
-<p>ContextLoaderListener的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。因为它实现了ServletContextListener这个接口，在web.xml配置这个监听器，启动容器时，就会默认执行它实现的方法。</p>
-
-<p>ContextLoaderListener如何查找ApplicationContext.xml的配置位置以及配置多个xml：如果在web.xml中不写任何参数配置信息，默认的路径是&#8221;/WEB-INF/applicationContext.xml&#8221;，在WEB-INF目录下创建的xml文件的名称必须是applicationContext.xml（在MyEclipse中把xml文件放置在src目录下）。如果是要自定义文件名可以在web.xml里加入contextConfigLocation这个context参数。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;context-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>classpath:spring/applicationContext-*.xml<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!-- 采用的是通配符方式，查找WEB-INF/spring目录下xml文件。如有多个xml文件，以“,”分隔。 --&gt;</span>
-</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;listener&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
-</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>3、Spring使用Log4jConfigListener配置Log4j日志</h3>
-
-<p>Spring使用Log4jConfigListener的好处：</p>
-
-<ul>
-<li>动态的改变记录级别和策略，不需要重启Web应用。</li>
-<li>把log文件定在 /WEB-INF/logs/ 而不需要写绝对路径。因为系统把web目录的路径压入一个叫webapp.root的系统变量。这样写log文件路径时不用写绝对路径了。</li>
-<li>可以把log4j.properties和其他properties一起放在/WEB-INF/ ，而不是Class-Path。</li>
-<li>设置log4jRefreshInterval时间，开一条watchdog线程每隔段时间扫描一下配置文件的变化。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;context-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>webAppRootKey<span class="nt">&lt;/param-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>project.root<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!-- 用于定位log文件输出位置在web应用根目录下，log4j配置文件中写输出位置：log4j.appender.FILE.File=${project.root}/logs/project.log --&gt;</span>
-</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;context-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>log4jConfigLocation<span class="nt">&lt;/param-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>classpath:log4j.properties<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!-- 载入log4j配置文件 --&gt;</span>
-</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;context-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-name&gt;</span>log4jRefreshInterval<span class="nt">&lt;/param-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;param-value&gt;</span>60000<span class="nt">&lt;/param-value&gt;</span><span class="c">&lt;!--Spring刷新Log4j配置文件的间隔60秒,单位为millisecond--&gt;</span>
-</span><span class='line'><span class="nt">&lt;/context-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;listener&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.util.Log4jConfigListener<span class="nt">&lt;/listener-class&gt;</span>
-</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>4、Spring使用IntrospectorCleanupListener清理缓存</h3>
-
-<p>这个监听器的作用是在web应用关闭时刷新JDK的JavaBeans的Introspector缓存，以确保Web应用程序的类加载器以及其加载的类正确的释放资源。</p>
-
-<p>如果JavaBeans的Introspector已被用来分析应用程序类，系统级的Introspector缓存将持有这些类的一个硬引用。因此，这些类和Web应用程序的类加载器在Web应用程序关闭时将不会被垃圾收集器回收！而IntrospectorCleanupListener则会对其进行适当的清理，已使其能够被垃圾收集器回收。</p>
-
-<p>唯一能够清理Introspector的方法是刷新整个Introspector缓存，没有其他办法来确切指定应用程序所引用的类。这将删除所有其他应用程序在服务器的缓存的Introspector结果。</p>
-
-<p>在使用Spring内部的bean机制时，不需要使用此监听器，因为Spring自己的introspection results cache将会立即刷新被分析过的JavaBeans Introspector cache，而仅仅会在应用程序自己的ClassLoader里面持有一个cache。虽然Spring本身不产生泄漏，注意，即使在Spring框架的类本身驻留在一个“共同”类加载器（如系统的ClassLoader）的情况下，也仍然应该使用使用IntrospectorCleanupListener。在这种情况下，这个IntrospectorCleanupListener将会妥善清理Spring的introspection cache。</p>
-
-<p>应用程序类，几乎不需要直接使用JavaBeans Introspector，所以，通常都不是Introspector resource造成内存泄露。相反，许多库和框架，不清理Introspector，例如： Struts和Quartz。</p>
-
-<p>需要注意的是一个简单Introspector泄漏将会导致整个Web应用程序的类加载器不会被回收！这样做的结果，将会是在web应用程序关闭时，该应用程序所有的静态类资源（比如：单实例对象）都没有得到释放。而导致内存泄露的根本原因其实并不是这些未被回收的类！</p>
-
-<p>注意：IntrospectorCleanupListener应该注册为web.xml中的第一个Listener，在任何其他Listener之前注册，比如在Spring&rsquo;s ContextLoaderListener注册之前，才能确保IntrospectorCleanupListener在Web应用的生命周期适当时机生效。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;listener&gt;</span><span class="c">&lt;!-- memory clean --&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.util.IntrospectorCleanupListener<span class="nt">&lt;/listener-class&gt;</span>
-</span><span class='line'><span class="nt">&lt;/listener&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
+<p>转载请注明作者及出处，谢谢。</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Java中的Filter 过滤器]]></title>
-    <link href="http://tianweili.github.io/blog/2015/01/26/java-filter/"/>
-    <updated>2015-01-26T17:07:51+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/01/26/java-filter</id>
-    <content type="html"><![CDATA[<p>本文主要详细介绍了Filter的以下几个方面内容：</p>
-
-<ul>
-<li>Filter概念介绍</li>
-<li>Filter的用途</li>
-<li>如何借助Filter实现拦截功能</li>
-<li>Filter的开发步骤和配置详解</li>
-<li>Filter链</li>
-<li>Filter的生命周期</li>
-<li>Filter的使用案例
-
-<ul>
-<li>使用Filter验证用户登录安全控制</li>
-<li>防止中文乱码过滤器</li>
-<li>Spring+Hibernate的OpenSessionInViewFilter控制session的开关</li>
-<li>Struts2的web.xml配置</li>
-</ul>
-</li>
-</ul>
-
+    <title type="html"><![CDATA[Linux中的vi命令]]></title>
+    <link href="http://tianweili.github.io/blog/2015/01/15/linux-vi/"/>
+    <updated>2015-01-15T21:42:12+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/01/15/linux-vi</id>
+    <content type="html"><![CDATA[<p>vi命令是Linux中编辑文件必不可少的命令。</p>
 
 <!--more-->
 
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">http://tianweili.github.io/blog/2015/01/26/java-filter/</a></p>
+<p>原文链接：</p>
 
-<h2>Filter简介</h2>
+<p><a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
 
-<p>Filter也称之为过滤器，它是Servlet技术中最实用的技术，WEB开发人员通过Filter技术，对web服务器管理的所有web资源：例如Jsp, Servlet, 静态图片文件或静态 html 文件等进行拦截，从而实现一些特殊的功能。例如实现URL级别的权限访问控制、过滤敏感词汇、压缩响应信息等一些高级功能。</p>
+<p>本文中的命令基本是按照使用频率排列。</p>
 
-<p>它主要用于对用户请求进行预处理，也可以对HttpServletResponse 进行后处理。使用Filter 的完整流程：Filter 对用户请求进行预处理，接着将请求交给Servlet 进行处理并生成响应，最后Filter 再对服务器响应进行后处理。</p>
-
-<h2>Filter功能</h2>
+<h2>进入编辑文件</h2>
 
 <ul>
-<li>在HttpServletRequest 到达 Servlet 之前，拦截客户的 HttpServletRequest 。根据需要检查 HttpServletRequest ，也可以修改HttpServletRequest 头和数据。</li>
-<li>在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。根据需要检查 HttpServletResponse ，也可以修改HttpServletResponse头和数据。</li>
+<li>vi filename：打开或新建文件，并将光标置于第一行首</li>
+<li>vi +n filename：打开文件，并将光标置于第n行首</li>
+<li><p>vi + filename：打开文件，并将光标置于最后一行首</p></li>
+<li><p>vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处</p></li>
+<li>vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename</li>
+<li>vi filename1 &hellip;. filenamen：打开多个文件，依次进行编辑</li>
 </ul>
 
 
-<h2>如何借助Filter实现拦截功能</h2>
-
-<p>Filter接口中有一个doFilter方法，当开发人员编写好Filter，并配置对哪个web资源进行拦截后，WEB服务器每次在调用web资源的service方法之前，都会先调用一下filter的doFilter方法，因此，在该方法内编写代码可达到如下目的：</p>
+<h2>移动光标</h2>
 
 <ul>
-<li>调用目标资源之前，让一段代码执行。</li>
-<li>是否调用目标资源（即是否让用户访问web资源）。</li>
+<li>nG或ngg：光标移至第n行首</li>
+<li>0：（数字零）光标移至当前行首</li>
+<li>$：光标移至当前行尾</li>
+<li>n+：光标下移n行</li>
+<li><p>n-：光标上移n行</p></li>
+<li><p>h ：光标左移一个字符</p></li>
+<li>l ：光标右移一个字符</li>
+<li>space：光标右移一个字符</li>
+<li>Backspace：光标左移一个字符</li>
+<li>k或Ctrl+p：光标上移一行</li>
+<li>j或Ctrl+n ：光标下移一行</li>
+<li>Enter ：光标下移一行</li>
+<li>w或W ：光标右移一个字至字首</li>
+<li>b或B ：光标左移一个字至字首</li>
+<li>e或E ：光标右移一个字至字尾</li>
+<li>) ：光标移至句尾</li>
+<li>( ：光标移至句首</li>
+<li>}：光标移至段落开头</li>
+<li>{：光标移至段落结尾</li>
+<li>n$：光标移至第n行尾</li>
+<li>H ：光标移至屏幕顶行</li>
+<li>M ：光标移至屏幕中间行</li>
+<li>L ：光标移至屏幕最后行</li>
 </ul>
 
 
-<p>web服务器在调用doFilter方法时，会传递一个filterChain对象进来，<strong>filterChain对象是filter接口中最重要的一个对象</strong>，它也提供了一个doFilter方法，开发人员可以根据需求决定是否调用此方法，调用该方法，则web服务器就会调用web资源的service方法，即web资源就会被访问，否则web资源不会被访问。</p>
-
-<h2>Filter开发两步走</h2>
-
-<ol>
-<li>编写java类实现Filter接口，并实现其doFilter方法。</li>
-<li>在 web.xml 文件中使用<filter>和<filter-mapping>元素对编写的filter类进行注册，并设置它所能拦截的资源。</li>
-</ol>
-
-
-<p>web.xml配置各节点介绍：</p>
+<h2>屏幕翻滚</h2>
 
 <ul>
-<li><code>&lt;filter&gt;</code>指定一个过滤器。
-
-<ul>
-<li><code>&lt;filter-name&gt;</code>用于为过滤器指定一个名字，该元素的内容不能为空。</li>
-<li><code>&lt;filter-class&gt;</code>元素用于指定过滤器的完整的限定类名。</li>
-<li><code>&lt;init-param&gt;</code>元素用于为过滤器指定初始化参数，它的子元素<code>&lt;param-name&gt;</code>指定参数的名字，<code>&lt;param-value&gt;</code>指定参数的值。</li>
-<li>在过滤器中，可以使用<code>FilterConfig</code>接口对象来访问初始化参数。</li>
-</ul>
-</li>
-<li><code>&lt;filter-mapping&gt;</code>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径
-
-<ul>
-<li><code>&lt;filter-name&gt;</code>子元素用于设置filter的注册名称。该值必须是在<code>&lt;filter&gt;</code>元素中声明过的过滤器的名字</li>
-<li><code>&lt;url-pattern&gt;</code>设置 filter 所拦截的请求路径(过滤器关联的URL样式)</li>
-</ul>
-</li>
-<li><code>&lt;servlet-name&gt;</code>指定过滤器所拦截的Servlet名称。</li>
-<li><code>&lt;dispatcher&gt;</code>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是<code>REQUEST</code>,<code>INCLUDE</code>,<code>FORWARD</code>和<code>ERROR</code>之一，默认<code>REQUEST</code>。用户可以设置多个<code>&lt;dispatcher&gt;</code>子元素用来指定 Filter 对资源的多种调用方式进行拦截。</li>
-<li><code>&lt;dispatcher&gt;</code>子元素可以设置的值及其意义
-
-<ul>
-<li><code>REQUEST</code>：当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。</li>
-<li><code>INCLUDE</code>：如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。</li>
-<li><code>FORWARD</code>：如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。</li>
-<li><code>ERROR</code>：如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。</li>
-</ul>
-</li>
+<li>Ctrl+u：向文件首翻半屏</li>
+<li>Ctrl+d：向文件尾翻半屏</li>
+<li>Ctrl+f：向文件尾翻一屏</li>
+<li>Ctrl＋b；向文件首翻一屏</li>
+<li>nz：将第n行滚至屏幕顶部，不指定n时将当前行滚至屏幕顶部</li>
 </ul>
 
 
-<h2>Filter链</h2>
-
-<p>在一个web应用中，可以开发编写多个Filter，这些Filter组合起来称之为一个Filter链。</p>
-
-<p><strong>web服务器根据Filter在web.xml文件中的注册顺序，决定先调用哪个Filter</strong>，当第一个Filter的doFilter方法被调用时，web服务器会创建一个代表Filter链的FilterChain对象传递给该方法。在doFilter方法中，开发人员如果调用了FilterChain对象的doFilter方法，则web服务器会检查FilterChain对象中是否还有filter，如果有，则调用第2个filter，如果没有，则调用目标资源。</p>
-
-<h2>Filter的生命周期</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">FilterConfig</span> <span class="n">filterConfig</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">;</span><span class="c1">//初始化</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>和我们编写的Servlet程序一样，Filter的创建和销毁由WEB服务器负责。 web 应用程序启动时，web 服务器将创建Filter 的实例对象，并调用其init方法，读取web.xml配置，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作（<strong>filter对象只会创建一次，init方法也只会执行一次</strong>）。开发人员通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="n">ServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">ServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="n">FilterChain</span> <span class="n">chain</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ServletException</span><span class="o">;</span><span class="c1">//拦截请求</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个方法完成实际的过滤操作。当客户请求访问与过滤器关联的URL的时候，Servlet过滤器将先执行doFilter方法。FilterChain参数用于访问后续过滤器。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">();</span><span class="c1">//销毁</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Filter对象创建后会驻留在内存，当web应用移除或服务器停止时才销毁。在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。</p>
-
-<h2>FilterConfig接口</h2>
-
-<p>用户在配置filter时，可以使用<init-param>为filter配置一些初始化参数，当web容器实例化Filter对象，调用其init方法时，会把封装了filter初始化参数的filterConfig对象传递进来。因此开发人员在编写filter时，通过filterConfig对象的方法，就可获得以下内容：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">String</span> <span class="nf">getFilterName</span><span class="o">();</span><span class="c1">//得到filter的名称。 </span>
-</span><span class='line'><span class="n">String</span> <span class="nf">getInitParameter</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">);</span><span class="c1">//返回在部署描述中指定名称的初始化参数的值。如果不存在返回null. </span>
-</span><span class='line'><span class="n">Enumeration</span> <span class="nf">getInitParameterNames</span><span class="o">();</span><span class="c1">//返回过滤器的所有初始化参数的名字的枚举集合。 </span>
-</span><span class='line'><span class="kd">public</span> <span class="n">ServletContext</span> <span class="nf">getServletContext</span><span class="o">();</span><span class="c1">//返回Servlet上下文对象的引用。</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Filter使用案例</h2>
-
-<h3>使用Filter验证用户登录安全控制</h3>
-
-<p>前段时间参与维护一个项目，用户退出系统后，再去地址栏访问历史，根据url，仍然能够进入系统响应页面。我去检查一下发现对请求未进行过滤验证用户登录。添加一个filter搞定问题！</p>
-
-<p>先在web.xml配置</p>
-
-<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="nt">&lt;filter&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>SessionFilter<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>com.action.login.SessionFilter<span class="nt">&lt;/filter-class&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>logonStrings<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 对登录页面不进行过滤 --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>/project/index.jsp;login.do<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>includeStrings<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 只对指定过滤参数后缀进行过滤 --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>.do;.jsp<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>redirectPath<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 未通过跳转到登录界面 --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>/index.jsp<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>disabletestfilter<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- Y:过滤无效 --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>N<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
-</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>SessionFilter<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>接着编写FilterServlet：</p>
-
-<figure class='code'><figcaption><span>FilterServlet.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">action</span><span class="o">.</span><span class="na">login</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.Filter</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.FilterChain</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.FilterConfig</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletException</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletRequest</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletResponse</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponseWrapper</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> *    判断用户是否登录,未登录则退出系统</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SessionFilter</span> <span class="kd">implements</span> <span class="n">Filter</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">FilterConfig</span> <span class="n">config</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">config</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isContains</span><span class="o">(</span><span class="n">String</span> <span class="n">container</span><span class="o">,</span> <span class="n">String</span><span class="o">[]</span> <span class="n">regx</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">boolean</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">regx</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">container</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="n">regx</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="n">ServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="n">ServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="n">FilterChain</span> <span class="n">chain</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ServletException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">HttpServletRequest</span> <span class="n">hrequest</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpServletRequest</span><span class="o">)</span><span class="n">request</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">HttpServletResponseWrapper</span> <span class="n">wrapper</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpServletResponseWrapper</span><span class="o">((</span><span class="n">HttpServletResponse</span><span class="o">)</span> <span class="n">response</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">String</span> <span class="n">logonStrings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;logonStrings&quot;</span><span class="o">);</span>        <span class="c1">// 登录登陆页面</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">includeStrings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;includeStrings&quot;</span><span class="o">);</span>    <span class="c1">// 过滤资源后缀参数</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">redirectPath</span> <span class="o">=</span> <span class="n">hrequest</span><span class="o">.</span><span class="na">getContextPath</span><span class="o">()</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;redirectPath&quot;</span><span class="o">);</span><span class="c1">// 没有登陆转向页面</span>
-</span><span class='line'>        <span class="n">String</span> <span class="n">disabletestfilter</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">&quot;disabletestfilter&quot;</span><span class="o">);</span><span class="c1">// 过滤器是否有效</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">disabletestfilter</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;Y&quot;</span><span class="o">))</span> <span class="o">{</span>    <span class="c1">// 过滤无效</span>
-</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="n">String</span><span class="o">[]</span> <span class="n">logonList</span> <span class="o">=</span> <span class="n">logonStrings</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;;&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">String</span><span class="o">[]</span> <span class="n">includeList</span> <span class="o">=</span> <span class="n">includeStrings</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;;&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">isContains</span><span class="o">(</span><span class="n">hrequest</span><span class="o">.</span><span class="na">getRequestURI</span><span class="o">(),</span> <span class="n">includeList</span><span class="o">))</span> <span class="o">{</span><span class="c1">// 只对指定过滤参数后缀进行过滤</span>
-</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">isContains</span><span class="o">(</span><span class="n">hrequest</span><span class="o">.</span><span class="na">getRequestURI</span><span class="o">(),</span> <span class="n">logonList</span><span class="o">))</span> <span class="o">{</span><span class="c1">// 对登录页面不进行过滤</span>
-</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">String</span> <span class="n">user</span> <span class="o">=</span> <span class="o">(</span> <span class="n">String</span> <span class="o">)</span> <span class="n">hrequest</span><span class="o">.</span><span class="na">getSession</span><span class="o">().</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">&quot;useronly&quot;</span><span class="o">);</span><span class="c1">//判断用户是否登录</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">user</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">wrapper</span><span class="o">.</span><span class="na">sendRedirect</span><span class="o">(</span><span class="n">redirectPath</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">FilterConfig</span> <span class="n">filterConfig</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">config</span> <span class="o">=</span> <span class="n">filterConfig</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这样既可完成对用户所有请求，均要经过这个Filter进行验证用户登录。</p>
-
-<h3>防止中文乱码过滤器</h3>
-
-<p>项目使用spring框架时。当前台JSP页面和JAVA代码中使用了不同的字符集进行编码的时候就会出现表单提交的数据或者上传/下载中文名称文件出现乱码的问题，那就可以使用这个过滤器。</p>
-
-<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="nt">&lt;filter&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>encoding<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="nt">&lt;/filter-class&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>encoding<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!--用来指定一个具体的字符集--&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>UTF-8<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>forceEncoding<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!--true：无论request是否指定了字符集，都是用encoding；false：如果request已指定一个字符集，则不使用encoding--&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>false<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
-</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>encoding<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Spring+Hibernate的OpenSessionInViewFilter控制session的开关</h3>
-
-<p>当hibernate+spring配合使用的时候，如果设置了lazy=true（延迟加载）,那么在读取数据的时候，当读取了父数据后，hibernate 会自动关闭session，这样，当要使用与之关联数据、子数据的时候，系统会抛出lazyinit的错误，这时就需要使用spring提供的OpenSessionInViewFilter过滤器。</p>
-
-<p>OpenSessionInViewFilter主要是保持Session状态直到request将全部页面发送到客户端，直到请求结束后才关闭session，这样就可以解决延迟加载带来的问题。</p>
-
-<p>注意：OpenSessionInViewFilter配置要写在struts2的配置前面。因为tomcat容器在加载过滤器的时候是按照顺序加载的，如果配置文件先写的是struts2的过滤器配置，然后才是OpenSessionInViewFilter过滤器配置，所以加载的顺序导致，action在获得数据的时候session并没有被spring管理。</p>
-
-<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;filter&gt;</span><span class="c">&lt;!-- lazy loading enabled in spring --&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>OpenSessionInViewFilter<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter<span class="nt">&lt;/filter-class&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>sessionFactoryBeanName<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- 可缺省。默认是从spring容器中找id为sessionFactory的bean，如果id不为sessionFactory，则需要配置如下，此处SessionFactory为spring容器中的bean。 --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>sessionFactory<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;init-param&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-name&gt;</span>singleSession<span class="nt">&lt;/param-name&gt;</span><span class="c">&lt;!-- singleSession默认为true,若设为false则等于没用OpenSessionInView --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;param-value&gt;</span>true<span class="nt">&lt;/param-value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/init-param&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
-</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>OpenSessionInViewFilter<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>*.do<span class="nt">&lt;/url-pattern&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Struts2的web.xml配置</h3>
-
-<p>项目中使用Struts2同样需要在web.xml配置过滤器，用来截取请求，转到Struts2的Action进行处理。</p>
-
-<p>注意：如果在2.1.3以前的Struts2版本，过滤器使用org.apache.struts2.dispatcher.FilterDispatcher。否则使用org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter。从Struts2.1.3开始，将废弃ActionContextCleanUp过滤器，而在StrutsPrepareAndExecuteFilter过滤器中包含相应的功能。</p>
-
-<p>三个初始化参数配置：</p>
+<h2>插入文本</h2>
 
 <ul>
-<li>config参数：指定要加载的配置文件。逗号分割。</li>
-<li>actionPackages参数：指定Action类所在的包空间。逗号分割。</li>
-<li>configProviders参数：自定义配置文件提供者，需要实现ConfigurationProvider接口类。逗号分割。</li>
+<li>i ：在光标前</li>
+<li>a：光标后</li>
+<li>I ：在当前行首</li>
+<li>A：在当前行尾</li>
+<li>o：在当前行之下新开一行</li>
+<li><p>O：在当前行之上新开一行</p></li>
+<li><p>r：替换当前字符</p></li>
+<li>R：替换当前字符及其后的字符，直至按ESC键</li>
+<li>s：从当前光标位置处开始，以输入的文本替代指定数目的字符</li>
+<li>S：删除指定数目的行，并以所输入文本代替之</li>
+<li>ncw或nCW：修改指定数目的字</li>
+<li>nCC：修改指定数目的行</li>
 </ul>
 
 
-<figure class='code'><figcaption><span>web.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="c">&lt;!-- struts 2.x filter --&gt;</span>
-</span><span class='line'><span class="nt">&lt;filter&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>struts2<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-class&gt;</span>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter<span class="nt">&lt;/filter-class&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter&gt;</span>
-</span><span class='line'><span class="nt">&lt;filter-mapping&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter-name&gt;</span>struts2<span class="nt">&lt;/filter-name&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;url-pattern&gt;</span>*.do<span class="nt">&lt;/url-pattern&gt;</span>
-</span><span class='line'><span class="nt">&lt;/filter-mapping&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
+<h2>删除命令</h2>
+
+<ul>
+<li>dd：删除当前行</li>
+<li>ndd：删除当前行及其后n-1行</li>
+<li>do：删至行首</li>
+<li><p>d$：删至行尾</p></li>
+<li><p>ndw或ndW：删除光标处开始及其后的n-1个字</p></li>
+<li>x或X：删除一个字符，x删除光标后的，而X删除光标前的</li>
+<li>Ctrl+u：删除输入方式下所输入的文本</li>
+</ul>
+
+
+<h2>搜索及替换</h2>
+
+<ul>
+<li>/pattern：从光标开始处向文件尾搜索pattern</li>
+<li>?pattern：从光标开始处向文件首搜索pattern</li>
+<li>n：在同一方向重复上一次搜索命令</li>
+<li>N：在反方向上重复上一次搜索命令</li>
+<li>：s/p1/p2/g：将当前行中所有p1均用p2替代</li>
+<li>：n1,n2s/p1/p2/g：将第n1至n2行中所有p1均用p2替代</li>
+<li>：g/p1/s//p2/g：将文件中所有p1均用p2替换</li>
+</ul>
+
+
+<h2>选项设置</h2>
+
+<ul>
+<li>all：列出所有选项设置情况</li>
+<li>term：设置终端类型</li>
+<li>ignorance：在搜索中忽略大小写</li>
+<li>list：显示制表位(Ctrl+I)和行尾标志（$)</li>
+<li>number：显示行号</li>
+<li>report：显示由面向行的命令修改过的数目</li>
+<li>terse：显示简短的警告信息</li>
+<li>warn：在转到别的文件时若没保存当前文件则显示NO write信息</li>
+<li>nomagic：允许在搜索模式中，使用前面不带“\”的特殊字符</li>
+<li>nowrapscan：禁止vi在搜索到达文件两端时，又从另一端开始</li>
+<li>mesg：允许vi显示其他用户用write写到自己终端上的信息</li>
+</ul>
+
+
+<h2>最后行方式</h2>
+
+<ul>
+<li>：x：保存当前文件并退出</li>
+<li>：w ：保存当前文件</li>
+<li>：q：退出vi</li>
+<li><p>：q!：不保存文件并退出vi</p></li>
+<li><p>：n1,n2 co n3：将n1行到n2行之间的内容拷贝到第n3行下</p></li>
+<li>：n1,n2 m n3：将n1行到n2行之间的内容移至到第n3行下</li>
+<li>：n1,n2 d ：将n1行到n2行之间的内容删除</li>
+<li>：e filename：打开文件filename进行编辑</li>
+<li>：!command：执行shell命令command</li>
+<li>：n1,n2 w!command：将文件中n1行至n2行的内容作为command的输入并执行之，若不指定n1，n2，则表示将整个文件内容作为command的输入</li>
+<li>：r!command：将命令command的输出结果放到当前行</li>
+</ul>
+
+
+<h2>寄存器操作</h2>
+
+<ul>
+<li>&ldquo;?nyy：将当前行及其下n行的内容保存到寄存器？中，其中?为一个字母，n为一个数字</li>
+<li>&ldquo;?nyw：将当前行及其下n个字保存到寄存器？中，其中?为一个字母，n为一个数字</li>
+<li>&ldquo;?nyl：将当前行及其下n个字符保存到寄存器？中，其中?为一个字母，n为一个数字</li>
+<li>&ldquo;?p：取出寄存器？中的内容并将其放到光标位置处。这里？可以是一个字母，也可以是一个数字</li>
+<li>ndd：将当前行及其下共n行文本删除，并将所删内容放到1号删除寄存器中</li>
+</ul>
 
 
 <p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">http://tianweili.github.io/blog/2015/01/26/java-filter/</a></p>
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/03/18/linux-vi/">http://tianweili.github.io/blog/2015/03/18/linux-vi/</a></p>
+
+<p>转载请注明作者和文章出处，谢谢。</p>
 ]]></content>
   </entry>
   
