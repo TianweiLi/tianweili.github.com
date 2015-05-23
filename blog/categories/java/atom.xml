@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-03-30T10:21:40+08:00</updated>
+  <updated>2015-05-23T10:03:46+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -667,10 +667,548 @@ log4j.logger.com.ltw.yourclass2=INFO,stdout,logfile
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[使用JXL组件操作Excel和导出文件]]></title>
+    <link href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/"/>
+    <updated>2015-01-29T16:29:57+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel</id>
+    <content type="html"><![CDATA[<p>这段时间参与的项目要求做几张Excel报表，由于项目框架使用了jxl组件，所以把jxl组件的详细用法归纳总结一下。本文主要讲述了以下内容：</p>
+
+<ul>
+<li>JXL及相关工具简介</li>
+<li>如何安装JXL</li>
+<li>JXL的基本操作
+
+<ul>
+<li>创建文件</li>
+<li>单元格操作
+
+<ul>
+<li>合并单元格</li>
+<li>行高和列宽</li>
+</ul>
+</li>
+<li>数据格式化
+
+<ul>
+<li>字符串格式化</li>
+<li>对齐方式</li>
+</ul>
+</li>
+<li>读取文件</li>
+<li>修改文件</li>
+</ul>
+</li>
+<li>导出文件实例</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
+
+<h2>简介</h2>
+
+<p>jxl是一个韩国人写的java操作excel的工具, 在开源世界中，有两套比较有影响的API可供使用，一个是POI，一个是jExcelAPI。其中jExcelAPI功能相对POI比较弱一点。但jExcelAPI对中文支持非常好，API是纯Java的，并不依赖Windows系统，即使运行在Linux下，它同样能够正确的处理Excel文件。另外需要说明的是，这套API对图形和图表的支持很有限，而且仅仅识别PNG格式。</p>
+
+<h2>搭建环境</h2>
+
+<p>网上下载jxl.jar包，然后导入工程项目lib中，即可使用。</p>
+
+<h2>基本操作</h2>
+
+<h3>1、创建文件</h3>
+
+<p>以下实例是生成一个名为“test.xls”的Excel文件，其中第一个工作表被命名为“第一页”。编译执行后，会产生一个Excel文件。</p>
+
+<pre><code class="java CreateExcel.java">// 生成Excel的类 
+import java.io.File;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+
+public class CreateExcel {
+    public static void main(String args[]) {
+        try {
+            // 打开文件
+            WritableWorkbook book = Workbook.createWorkbook(new File("c:/test.xls"));
+            // 生成名为“第一页”的工作表，参数0表示这是第一页
+            WritableSheet sheet = book.createSheet(" 第一页 ", 0);
+            // 在Label对象的构造子中指名单元格位置是第一列第一行(0,0)
+            // 以及单元格内容为test
+            Label label = new Label(0, 0, " test ");
+            // 将定义好的单元格添加到工作表中
+            sheet.addCell(label);
+
+            // 生成一个保存数字的单元格，必须使用Number的完整包路径，否则有语法歧义。
+            //单元格位置是第二列，第一行，值为123.456
+            jxl.write.Number number = new jxl.write.Number(1, 0, 123.456);
+            sheet.addCell(number);
+
+            // 写入数据并关闭文件
+            book.write();
+            book.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+</code></pre>
+
+<h3>2、单元格操作</h3>
+
+<p>Excel中很重要的一部分是对单元格的操作，比如行高、列宽、单元格合并等，所幸jExcelAPI提供了这些支持。这些操作相对比较简单，下面只介绍一下相关的API。</p>
+
+<h4>合并单元格</h4>
+
+<p>合并既可以是横向的，也可以是纵向的。合并后的单元格不能再次进行合并，否则会触发异常。</p>
+
+<pre><code class="java">// 方法作用是从(m,n)到(p,q)的单元格全部合并
+WritableSheet.mergeCells( int m, int n, int p, int q);
+
+// 合并第1列第1行到第3列第4行的所有单元格
+sheet.mergeCells(0, 0, 2, 3);
+
+// 先合并单元格，再添加内容。并且定义的列行方位在合并的单元格第一个列行方位，否则添加不上内容，如下所示：
+Label label = new Label(0, 0, " 测试 ");
+sheet.addCell(label);
+</code></pre>
+
+<h4>行高和列宽</h4>
+
+<pre><code class="java">// 作用是指定第i+1行的高度
+WritableSheet.setRowView( int i, int height);
+
+// 将第一行的高度设为200
+sheet.setRowView(0, 200);
+
+// 作用是指定第i+1列的宽度
+WritableSheet.setColumnView( int i, int width);
+
+// 将第一列的宽度设为30
+sheet.setColumnView(0, 30);
+</code></pre>
+
+<h3>3、数据格式化</h3>
+
+<h4>字串格式化</h4>
+
+<p>字符串的格式化涉及到的是字体、粗细、字号等元素，这些功能主要由WritableFont和WritableCellFormat类来负责。</p>
+
+<p>WritableFont有非常丰富的构造子方法，供不同情况下使用，jExcelAPI的java-doc中有详细列表，这里不再列出。</p>
+
+<p>WritableCellFormat类非常重要，通过它可以指定单元格的各种属性，后面的单元格格式化中会有更多描述。</p>
+
+<pre><code class="java">//字体样式：宋体；11号；粗体
+WritableFont font1 = new WritableFont(WritableFont.createFont("宋体"), 11, WritableFont.BOLD);
+WritableCellFormat format1 = new  WritableCellFormat(font1);
+Label label = new  Label( 0 , 0 , "test", format1);
+</code></pre>
+
+<h4>对齐方式</h4>
+
+<p>在WritableCellFormat类中，还有一个很重要的方法是指定数据的对齐方式，比如针对我们上面的实例，可以指定：</p>
+
+<pre><code class="java">// 把水平对齐方式指定为居中 
+format1.setAlignment(jxl.format.Alignment.CENTRE);
+// 把垂直对齐方式指定为居中 
+format1.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+</code></pre>
+
+<h3>4、读取文件</h3>
+
+<pre><code class="java ReadExcel.java">// 读取Excel的类 
+import java.io.File;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+
+public class ReadExcel {
+    public static void main(String args[]) {
+        try {
+            Workbook book = Workbook.getWorkbook(new File("c:/test.xls"));
+            // 获得第一个工作表对象
+            Sheet sheet = book.getSheet(0);
+            // 得到第一列第一行的单元格
+            Cell cell = sheet.getCell(0, 0);
+            String contents = cell.getContents();//得到单元格内容
+            System.out.println(contents);
+            book.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+</code></pre>
+
+<p>程序的输出结果是：test。</p>
+
+<p>Cell接口的方法还可以获取单元格行、列位置，单元格是否隐藏等属性。具体的参考jxl的API。</p>
+
+<h3>5、修改文件</h3>
+
+<p>修改Excel文件除了打开文件的方式不同之外，其他与创建Excel是一样的。</p>
+
+<pre><code class="java UpdateExcel.java">// 修改Excel的类 
+import java.io.File;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+
+public class UpdateExcel {
+    public static void main(String args[]) {
+        try {
+            // 获得Excel文件
+            Workbook wb = Workbook.getWorkbook(new File("c:/test.xls"));
+            // 打开一个文件的副本，并且指定数据写回到原文件
+            WritableWorkbook book = Workbook.createWorkbook(new File("c:/test.xls"), wb);
+
+            //修改原工作表数据
+            WritableSheet sheet1 = book.getSheet(0);
+            sheet1.addCell(new Label(0, 0, "覆盖原来的test"));
+
+            // 添加一个新工作表
+            WritableSheet sheet2 = book.createSheet(" 第二页 ", 1);
+            sheet2.addCell(new Label(0, 0, " 第二页的测试数据 "));
+
+            book.write();
+            book.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+</code></pre>
+
+<h2>导出文件</h2>
+
+<p>附上一个导出文件例子。</p>
+
+<pre><code class="javascript">$( function() {
+    /** 报表导出按钮 */
+    $( '#exportBtn' ).click( function() {
+        if( !$( '#frm' ).validationEngine( 'validate' ) )
+            return false;
+        $( '#frm' )[ 0 ].action = '${ctx }/exportAction.do?m=exportExcel';
+        $( '#frm' )[ 0 ].submit();
+        $( this ).attr( 'disabled', true );
+        window.setTimeout( function() {
+            document.getElementById( 'exportBtn' ).disabled = false;
+        }, 5000 );
+    } );
+} );
+</code></pre>
+
+<pre><code class="java">/** 根据浏览器类型，转换为当前浏览器支持的中文*/
+String fileName = "Excel工作表";
+
+/** header 浏览器key */
+String userAgent = request.getHeader("USER-AGENT").toUpperCase();
+if (userAgent != null &amp;&amp; userAgent.length() != 0 &amp;&amp; fileName != null &amp;&amp; fileName.length() != 0) {
+    /** header IE */
+    if ( -1 != userAgent.indexOf("MSIE") )
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+    /** header Mozilla */
+    else if ( -1 != userAgent.indexOf("MOZILLA") )
+        fileName = new String(fileName.getBytes(), "ISO8859-1");
+    /** header Safari */
+    else if ( -1 != userAgent.indexOf("SAFARI") )
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
+    /** header Opera */
+    else if ( -1 != userAgent.indexOf("OPERA") )
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
+    /** header 其它内核浏览器 */
+    else
+        fileName = new String( fileName.getBytes(), "ISO8859-1");
+}
+
+response.setCharacterEncoding("UTF-8");
+response.setContentType("application/vnd.ms-excel");
+response.setHeader("Content-disposition", new StringBuffer("attachment").append( ";filename=" ).append( fileName ).append(".xls").toString() );
+
+WritableWorkbook book = Workbook.createWorkbook(response.getOutputStream());
+WritableSheet sheet = book.createSheet("Excel工作表", 0);
+
+//...
+
+book.write();
+book.close();
+</code></pre>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java中的Listener 监听器]]></title>
+    <link href="http://tianweili.github.io/blog/2015/01/27/java-listener/"/>
+    <updated>2015-01-27T15:36:14+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/01/27/java-listener</id>
+    <content type="html"><![CDATA[<p>本文介绍了Listener以下几个方面的内容：</p>
+
+<ul>
+<li>Listener的定义与作用</li>
+<li>Listener的分类与使用
+
+<ul>
+<li>ServletContext监听</li>
+<li>Session监听</li>
+<li>Request监听</li>
+</ul>
+</li>
+<li>Listener的应用实例
+
+<ul>
+<li>利用HttpSessionListener统计最多在线用户人数</li>
+<li>Spring使用ContextLoaderListener加载ApplicationContext配置信息</li>
+<li>Spring使用Log4jConfigListener配置Log4j日志</li>
+<li>Spring使用IntrospectorCleanupListener清理缓存</li>
+</ul>
+</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
+
+<p><a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">之前写了一篇关于Filter的文章</a>，现在再来一篇Listener的，Filter和Listener在项目中是经常用到的，巧妙的使用可以达到事半功倍的效果。故把两者的用法总结一下。</p>
+
+<h2>Listener的定义与作用</h2>
+
+<p>监听器Listener就是在application,session,request三个对象创建、销毁或者往其中添加修改删除属性时自动执行代码的功能组件。</p>
+
+<p>Listener是Servlet的监听器，可以监听客户端的请求，服务端的操作等。</p>
+
+<h2>Listener的分类与使用</h2>
+
+<p>主要有以下三类：</p>
+
+<h3>1、ServletContext监听</h3>
+
+<p>ServletContextListener：用于对Servlet整个上下文进行监听（创建、销毁）。</p>
+
+<pre><code class="java">//上下文初始化
+public void contextInitialized(ServletContextEvent sce);
+//上下文销毁
+public void contextDestroyed(ServletContextEvent sce);
+//ServletContextEvent事件：取得一个ServletContext（application）对象
+public ServletContext getServletContext();
+</code></pre>
+
+<p>ServletContextAttributeListener：对Servlet上下文属性的监听（增删改属性）。</p>
+
+<pre><code class="java">//增加属性
+public void attributeAdded(ServletContextAttributeEvent scab);
+//属性删除
+public void attributeRemoved(ServletContextAttributeEvent scab);
+//属性替换（第二次设置同一属性）
+public void attributeRepalced(ServletContextAttributeEvent scab);
+
+//ServletContextAttributeEvent事件：能取得设置属性的名称与内容
+//得到属性名称
+public String getName();
+//取得属性的值
+public Object getValue();
+</code></pre>
+
+<h3>2、Session监听</h3>
+
+<p>Session属于http协议下的内容，接口位于javax.servlet.http.*包下。</p>
+
+<p>HttpSessionListener接口：对Session的整体状态的监听。</p>
+
+<pre><code class="java">//session创建
+public void sessionCreated(HttpSessionEvent se);
+//session销毁
+public void sessionDestroyed(HttpSessionEvent se);
+
+//HttpSessionEvent事件：
+//取得当前操作的session
+public HttpSession getSession();
+</code></pre>
+
+<p>HttpSessionAttributeListener接口：对session的属性监听。</p>
+
+<pre><code class="java">public void attributeAdded(HttpSessionBindingEvent se);//增加属性
+public void attributeRemoved(HttpSessionBindingEvent se);//删除属性
+public void attributeReplaced(HttpSessionBindingEvent se);//替换属性
+
+//HttpSessionBindingEvent事件：
+public String getName();//取得属性的名称
+public Object getValue();//取得属性的值
+public HttpSession getSession();//取得当前的session
+</code></pre>
+
+<p>session的销毁有两种情况：</p>
+
+<p>1.session超时，web.xml配置：</p>
+
+<pre><code class="xml">&lt;session-config&gt;
+    &lt;session-timeout&gt;120&lt;/session-timeout&gt;&lt;!--session120分钟后超时销毁--&gt;
+&lt;/session-config&gt;
+</code></pre>
+
+<p>2.手工使session失效</p>
+
+<pre><code class="java">//使session失效方法。session.invalidate();
+public void invalidate();
+</code></pre>
+
+<h3>3、Request监听</h3>
+
+<p>ServletRequestListener：用于对Request请求进行监听（创建、销毁）。</p>
+
+<pre><code class="java">public void requestInitialized(ServletRequestEvent sre);//request初始化
+public void requestDestroyed(ServletRequestEvent sre);//request销毁
+
+//ServletRequestEvent事件：
+public ServletRequest getServletRequest();//取得一个ServletRequest对象
+public ServletContext getServletContext();//取得一个ServletContext（application）对象
+</code></pre>
+
+<p>ServletRequestAttributeListener：对Request属性的监听（增删改属性）。</p>
+
+<pre><code class="java">public void attributeAdded(ServletRequestAttributeEvent srae);//增加属性
+public void attributeRemoved(ServletRequestAttributeEvent srae);//属性删除
+public void attributeReplaced(ServletRequestAttributeEvent srae);//属性替换（第二次设置同一属性）
+
+//ServletRequestAttributeEvent事件：能取得设置属性的名称与内容
+public String getName();//得到属性名称
+public Object getValue();//取得属性的值
+</code></pre>
+
+<h3>4、在web.xml中配置</h3>
+
+<p>Listener配置信息必须在Filter和Servlet配置之前，Listener的初始化（ServletContentListener初始化）比Servlet和Filter都优先，而销毁比Servlet和Filter都慢。</p>
+
+<pre><code class="xml">&lt;listener&gt;
+    &lt;listener-class&gt;com.listener.class&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
+
+<h2>Listener应用实例</h2>
+
+<h3>1、利用HttpSessionListener统计最多在线用户人数</h3>
+
+<pre><code class="java HttpSessionListenerImpl.java">import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
+public class HttpSessionListenerImpl implements HttpSessionListener {
+
+    public void sessionCreated(HttpSessionEvent event) {
+        ServletContext app = event.getSession().getServletContext();
+        int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
+        count++;
+        app.setAttribute("onLineCount", count);
+        int maxOnLineCount = Integer.parseInt(app.getAttribute("maxOnLineCount").toString());
+        if (count &gt; maxOnLineCount) {
+            //记录最多人数是多少
+            app.setAttribute("maxOnLineCount", count);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            //记录在那个时刻达到上限
+            app.setAttribute("date", df.format(new Date()));
+        }
+    }
+    //session注销、超时时候调用，停止tomcat不会调用
+    public void sessionDestroyed(HttpSessionEvent event) {
+        ServletContext app = event.getSession().getServletContext();
+        int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
+        count--;
+        app.setAttribute("onLineCount", count);    
+
+    }
+}
+</code></pre>
+
+<h3>2、Spring使用ContextLoaderListener加载ApplicationContext配置信息</h3>
+
+<p>ContextLoaderListener的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。因为它实现了ServletContextListener这个接口，在web.xml配置这个监听器，启动容器时，就会默认执行它实现的方法。</p>
+
+<p>ContextLoaderListener如何查找ApplicationContext.xml的配置位置以及配置多个xml：如果在web.xml中不写任何参数配置信息，默认的路径是&#8221;/WEB-INF/applicationContext.xml&#8221;，在WEB-INF目录下创建的xml文件的名称必须是applicationContext.xml（在MyEclipse中把xml文件放置在src目录下）。如果是要自定义文件名可以在web.xml里加入contextConfigLocation这个context参数。</p>
+
+<pre><code class="xml">&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;classpath:spring/applicationContext-*.xml&lt;/param-value&gt;&lt;!-- 采用的是通配符方式，查找WEB-INF/spring目录下xml文件。如有多个xml文件，以“,”分隔。 --&gt;
+&lt;/context-param&gt;
+&lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
+
+<h3>3、Spring使用Log4jConfigListener配置Log4j日志</h3>
+
+<p>Spring使用Log4jConfigListener的好处：</p>
+
+<ul>
+<li>动态的改变记录级别和策略，不需要重启Web应用。</li>
+<li>把log文件定在 /WEB-INF/logs/ 而不需要写绝对路径。因为系统把web目录的路径压入一个叫webapp.root的系统变量。这样写log文件路径时不用写绝对路径了。</li>
+<li>可以把log4j.properties和其他properties一起放在/WEB-INF/ ，而不是Class-Path。</li>
+<li>设置log4jRefreshInterval时间，开一条watchdog线程每隔段时间扫描一下配置文件的变化。</li>
+</ul>
+
+
+<pre><code class="xml">&lt;context-param&gt;
+    &lt;param-name&gt;webAppRootKey&lt;/param-name&gt;
+    &lt;param-value&gt;project.root&lt;/param-value&gt;&lt;!-- 用于定位log文件输出位置在web应用根目录下，log4j配置文件中写输出位置：log4j.appender.FILE.File=${project.root}/logs/project.log --&gt;
+&lt;/context-param&gt;
+&lt;context-param&gt;
+    &lt;param-name&gt;log4jConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;classpath:log4j.properties&lt;/param-value&gt;&lt;!-- 载入log4j配置文件 --&gt;
+&lt;/context-param&gt;
+&lt;context-param&gt;
+    &lt;param-name&gt;log4jRefreshInterval&lt;/param-name&gt;
+    &lt;param-value&gt;60000&lt;/param-value&gt;&lt;!--Spring刷新Log4j配置文件的间隔60秒,单位为millisecond--&gt;
+&lt;/context-param&gt;
+&lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.util.Log4jConfigListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
+
+<h3>4、Spring使用IntrospectorCleanupListener清理缓存</h3>
+
+<p>这个监听器的作用是在web应用关闭时刷新JDK的JavaBeans的Introspector缓存，以确保Web应用程序的类加载器以及其加载的类正确的释放资源。</p>
+
+<p>如果JavaBeans的Introspector已被用来分析应用程序类，系统级的Introspector缓存将持有这些类的一个硬引用。因此，这些类和Web应用程序的类加载器在Web应用程序关闭时将不会被垃圾收集器回收！而IntrospectorCleanupListener则会对其进行适当的清理，已使其能够被垃圾收集器回收。</p>
+
+<p>唯一能够清理Introspector的方法是刷新整个Introspector缓存，没有其他办法来确切指定应用程序所引用的类。这将删除所有其他应用程序在服务器的缓存的Introspector结果。</p>
+
+<p>在使用Spring内部的bean机制时，不需要使用此监听器，因为Spring自己的introspection results cache将会立即刷新被分析过的JavaBeans Introspector cache，而仅仅会在应用程序自己的ClassLoader里面持有一个cache。虽然Spring本身不产生泄漏，注意，即使在Spring框架的类本身驻留在一个“共同”类加载器（如系统的ClassLoader）的情况下，也仍然应该使用使用IntrospectorCleanupListener。在这种情况下，这个IntrospectorCleanupListener将会妥善清理Spring的introspection cache。</p>
+
+<p>应用程序类，几乎不需要直接使用JavaBeans Introspector，所以，通常都不是Introspector resource造成内存泄露。相反，许多库和框架，不清理Introspector，例如： Struts和Quartz。</p>
+
+<p>需要注意的是一个简单Introspector泄漏将会导致整个Web应用程序的类加载器不会被回收！这样做的结果，将会是在web应用程序关闭时，该应用程序所有的静态类资源（比如：单实例对象）都没有得到释放。而导致内存泄露的根本原因其实并不是这些未被回收的类！</p>
+
+<p>注意：IntrospectorCleanupListener应该注册为web.xml中的第一个Listener，在任何其他Listener之前注册，比如在Spring&rsquo;s ContextLoaderListener注册之前，才能确保IntrospectorCleanupListener在Web应用的生命周期适当时机生效。</p>
+
+<pre><code class="xml">&lt;listener&gt;&lt;!-- memory clean --&gt;
+    &lt;listener-class&gt;org.springframework.web.util.IntrospectorCleanupListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
+
+<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
+
+<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Java中的Filter 过滤器]]></title>
-    <link href="http://tianweili.github.io/blog/2015/02/25/java-filter/"/>
-    <updated>2015-02-25T17:07:51+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/02/25/java-filter</id>
+    <link href="http://tianweili.github.io/blog/2015/01/26/java-filter/"/>
+    <updated>2015-01-26T17:07:51+08:00</updated>
+    <id>http://tianweili.github.io/blog/2015/01/26/java-filter</id>
     <content type="html"><![CDATA[<p>本文主要详细介绍了Filter的以下几个方面内容：</p>
 
 <ul>
@@ -994,544 +1532,6 @@ public class SessionFilter implements Filter {
 <p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
 
 <p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">http://tianweili.github.io/blog/2015/01/26/java-filter/</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java中的Listener 监听器]]></title>
-    <link href="http://tianweili.github.io/blog/2015/02/24/java-listener/"/>
-    <updated>2015-02-24T15:36:14+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/02/24/java-listener</id>
-    <content type="html"><![CDATA[<p>本文介绍了Listener以下几个方面的内容：</p>
-
-<ul>
-<li>Listener的定义与作用</li>
-<li>Listener的分类与使用
-
-<ul>
-<li>ServletContext监听</li>
-<li>Session监听</li>
-<li>Request监听</li>
-</ul>
-</li>
-<li>Listener的应用实例
-
-<ul>
-<li>利用HttpSessionListener统计最多在线用户人数</li>
-<li>Spring使用ContextLoaderListener加载ApplicationContext配置信息</li>
-<li>Spring使用Log4jConfigListener配置Log4j日志</li>
-<li>Spring使用IntrospectorCleanupListener清理缓存</li>
-</ul>
-</li>
-</ul>
-
-
-<!--more-->
-
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
-
-<p><a href="http://tianweili.github.io/blog/2015/01/26/java-filter/">之前写了一篇关于Filter的文章</a>，现在再来一篇Listener的，Filter和Listener在项目中是经常用到的，巧妙的使用可以达到事半功倍的效果。故把两者的用法总结一下。</p>
-
-<h2>Listener的定义与作用</h2>
-
-<p>监听器Listener就是在application,session,request三个对象创建、销毁或者往其中添加修改删除属性时自动执行代码的功能组件。</p>
-
-<p>Listener是Servlet的监听器，可以监听客户端的请求，服务端的操作等。</p>
-
-<h2>Listener的分类与使用</h2>
-
-<p>主要有以下三类：</p>
-
-<h3>1、ServletContext监听</h3>
-
-<p>ServletContextListener：用于对Servlet整个上下文进行监听（创建、销毁）。</p>
-
-<pre><code class="java">//上下文初始化
-public void contextInitialized(ServletContextEvent sce);
-//上下文销毁
-public void contextDestroyed(ServletContextEvent sce);
-//ServletContextEvent事件：取得一个ServletContext（application）对象
-public ServletContext getServletContext();
-</code></pre>
-
-<p>ServletContextAttributeListener：对Servlet上下文属性的监听（增删改属性）。</p>
-
-<pre><code class="java">//增加属性
-public void attributeAdded(ServletContextAttributeEvent scab);
-//属性删除
-public void attributeRemoved(ServletContextAttributeEvent scab);
-//属性替换（第二次设置同一属性）
-public void attributeRepalced(ServletContextAttributeEvent scab);
-
-//ServletContextAttributeEvent事件：能取得设置属性的名称与内容
-//得到属性名称
-public String getName();
-//取得属性的值
-public Object getValue();
-</code></pre>
-
-<h3>2、Session监听</h3>
-
-<p>Session属于http协议下的内容，接口位于javax.servlet.http.*包下。</p>
-
-<p>HttpSessionListener接口：对Session的整体状态的监听。</p>
-
-<pre><code class="java">//session创建
-public void sessionCreated(HttpSessionEvent se);
-//session销毁
-public void sessionDestroyed(HttpSessionEvent se);
-
-//HttpSessionEvent事件：
-//取得当前操作的session
-public HttpSession getSession();
-</code></pre>
-
-<p>HttpSessionAttributeListener接口：对session的属性监听。</p>
-
-<pre><code class="java">public void attributeAdded(HttpSessionBindingEvent se);//增加属性
-public void attributeRemoved(HttpSessionBindingEvent se);//删除属性
-public void attributeReplaced(HttpSessionBindingEvent se);//替换属性
-
-//HttpSessionBindingEvent事件：
-public String getName();//取得属性的名称
-public Object getValue();//取得属性的值
-public HttpSession getSession();//取得当前的session
-</code></pre>
-
-<p>session的销毁有两种情况：</p>
-
-<p>1.session超时，web.xml配置：</p>
-
-<pre><code class="xml">&lt;session-config&gt;
-    &lt;session-timeout&gt;120&lt;/session-timeout&gt;&lt;!--session120分钟后超时销毁--&gt;
-&lt;/session-config&gt;
-</code></pre>
-
-<p>2.手工使session失效</p>
-
-<pre><code class="java">//使session失效方法。session.invalidate();
-public void invalidate();
-</code></pre>
-
-<h3>3、Request监听</h3>
-
-<p>ServletRequestListener：用于对Request请求进行监听（创建、销毁）。</p>
-
-<pre><code class="java">public void requestInitialized(ServletRequestEvent sre);//request初始化
-public void requestDestroyed(ServletRequestEvent sre);//request销毁
-
-//ServletRequestEvent事件：
-public ServletRequest getServletRequest();//取得一个ServletRequest对象
-public ServletContext getServletContext();//取得一个ServletContext（application）对象
-</code></pre>
-
-<p>ServletRequestAttributeListener：对Request属性的监听（增删改属性）。</p>
-
-<pre><code class="java">public void attributeAdded(ServletRequestAttributeEvent srae);//增加属性
-public void attributeRemoved(ServletRequestAttributeEvent srae);//属性删除
-public void attributeReplaced(ServletRequestAttributeEvent srae);//属性替换（第二次设置同一属性）
-
-//ServletRequestAttributeEvent事件：能取得设置属性的名称与内容
-public String getName();//得到属性名称
-public Object getValue();//取得属性的值
-</code></pre>
-
-<h3>4、在web.xml中配置</h3>
-
-<p>Listener配置信息必须在Filter和Servlet配置之前，Listener的初始化（ServletContentListener初始化）比Servlet和Filter都优先，而销毁比Servlet和Filter都慢。</p>
-
-<pre><code class="xml">&lt;listener&gt;
-    &lt;listener-class&gt;com.listener.class&lt;/listener-class&gt;
-&lt;/listener&gt;
-</code></pre>
-
-<h2>Listener应用实例</h2>
-
-<h3>1、利用HttpSessionListener统计最多在线用户人数</h3>
-
-<pre><code class="java HttpSessionListenerImpl.java">import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
-public class HttpSessionListenerImpl implements HttpSessionListener {
-
-    public void sessionCreated(HttpSessionEvent event) {
-        ServletContext app = event.getSession().getServletContext();
-        int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
-        count++;
-        app.setAttribute("onLineCount", count);
-        int maxOnLineCount = Integer.parseInt(app.getAttribute("maxOnLineCount").toString());
-        if (count &gt; maxOnLineCount) {
-            //记录最多人数是多少
-            app.setAttribute("maxOnLineCount", count);
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            //记录在那个时刻达到上限
-            app.setAttribute("date", df.format(new Date()));
-        }
-    }
-    //session注销、超时时候调用，停止tomcat不会调用
-    public void sessionDestroyed(HttpSessionEvent event) {
-        ServletContext app = event.getSession().getServletContext();
-        int count = Integer.parseInt(app.getAttribute("onLineCount").toString());
-        count--;
-        app.setAttribute("onLineCount", count);    
-
-    }
-}
-</code></pre>
-
-<h3>2、Spring使用ContextLoaderListener加载ApplicationContext配置信息</h3>
-
-<p>ContextLoaderListener的作用就是启动Web容器时，自动装配ApplicationContext的配置信息。因为它实现了ServletContextListener这个接口，在web.xml配置这个监听器，启动容器时，就会默认执行它实现的方法。</p>
-
-<p>ContextLoaderListener如何查找ApplicationContext.xml的配置位置以及配置多个xml：如果在web.xml中不写任何参数配置信息，默认的路径是&#8221;/WEB-INF/applicationContext.xml&#8221;，在WEB-INF目录下创建的xml文件的名称必须是applicationContext.xml（在MyEclipse中把xml文件放置在src目录下）。如果是要自定义文件名可以在web.xml里加入contextConfigLocation这个context参数。</p>
-
-<pre><code class="xml">&lt;context-param&gt;
-    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
-    &lt;param-value&gt;classpath:spring/applicationContext-*.xml&lt;/param-value&gt;&lt;!-- 采用的是通配符方式，查找WEB-INF/spring目录下xml文件。如有多个xml文件，以“,”分隔。 --&gt;
-&lt;/context-param&gt;
-&lt;listener&gt;
-    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
-&lt;/listener&gt;
-</code></pre>
-
-<h3>3、Spring使用Log4jConfigListener配置Log4j日志</h3>
-
-<p>Spring使用Log4jConfigListener的好处：</p>
-
-<ul>
-<li>动态的改变记录级别和策略，不需要重启Web应用。</li>
-<li>把log文件定在 /WEB-INF/logs/ 而不需要写绝对路径。因为系统把web目录的路径压入一个叫webapp.root的系统变量。这样写log文件路径时不用写绝对路径了。</li>
-<li>可以把log4j.properties和其他properties一起放在/WEB-INF/ ，而不是Class-Path。</li>
-<li>设置log4jRefreshInterval时间，开一条watchdog线程每隔段时间扫描一下配置文件的变化。</li>
-</ul>
-
-
-<pre><code class="xml">&lt;context-param&gt;
-    &lt;param-name&gt;webAppRootKey&lt;/param-name&gt;
-    &lt;param-value&gt;project.root&lt;/param-value&gt;&lt;!-- 用于定位log文件输出位置在web应用根目录下，log4j配置文件中写输出位置：log4j.appender.FILE.File=${project.root}/logs/project.log --&gt;
-&lt;/context-param&gt;
-&lt;context-param&gt;
-    &lt;param-name&gt;log4jConfigLocation&lt;/param-name&gt;
-    &lt;param-value&gt;classpath:log4j.properties&lt;/param-value&gt;&lt;!-- 载入log4j配置文件 --&gt;
-&lt;/context-param&gt;
-&lt;context-param&gt;
-    &lt;param-name&gt;log4jRefreshInterval&lt;/param-name&gt;
-    &lt;param-value&gt;60000&lt;/param-value&gt;&lt;!--Spring刷新Log4j配置文件的间隔60秒,单位为millisecond--&gt;
-&lt;/context-param&gt;
-&lt;listener&gt;
-    &lt;listener-class&gt;org.springframework.web.util.Log4jConfigListener&lt;/listener-class&gt;
-&lt;/listener&gt;
-</code></pre>
-
-<h3>4、Spring使用IntrospectorCleanupListener清理缓存</h3>
-
-<p>这个监听器的作用是在web应用关闭时刷新JDK的JavaBeans的Introspector缓存，以确保Web应用程序的类加载器以及其加载的类正确的释放资源。</p>
-
-<p>如果JavaBeans的Introspector已被用来分析应用程序类，系统级的Introspector缓存将持有这些类的一个硬引用。因此，这些类和Web应用程序的类加载器在Web应用程序关闭时将不会被垃圾收集器回收！而IntrospectorCleanupListener则会对其进行适当的清理，已使其能够被垃圾收集器回收。</p>
-
-<p>唯一能够清理Introspector的方法是刷新整个Introspector缓存，没有其他办法来确切指定应用程序所引用的类。这将删除所有其他应用程序在服务器的缓存的Introspector结果。</p>
-
-<p>在使用Spring内部的bean机制时，不需要使用此监听器，因为Spring自己的introspection results cache将会立即刷新被分析过的JavaBeans Introspector cache，而仅仅会在应用程序自己的ClassLoader里面持有一个cache。虽然Spring本身不产生泄漏，注意，即使在Spring框架的类本身驻留在一个“共同”类加载器（如系统的ClassLoader）的情况下，也仍然应该使用使用IntrospectorCleanupListener。在这种情况下，这个IntrospectorCleanupListener将会妥善清理Spring的introspection cache。</p>
-
-<p>应用程序类，几乎不需要直接使用JavaBeans Introspector，所以，通常都不是Introspector resource造成内存泄露。相反，许多库和框架，不清理Introspector，例如： Struts和Quartz。</p>
-
-<p>需要注意的是一个简单Introspector泄漏将会导致整个Web应用程序的类加载器不会被回收！这样做的结果，将会是在web应用程序关闭时，该应用程序所有的静态类资源（比如：单实例对象）都没有得到释放。而导致内存泄露的根本原因其实并不是这些未被回收的类！</p>
-
-<p>注意：IntrospectorCleanupListener应该注册为web.xml中的第一个Listener，在任何其他Listener之前注册，比如在Spring&rsquo;s ContextLoaderListener注册之前，才能确保IntrospectorCleanupListener在Web应用的生命周期适当时机生效。</p>
-
-<pre><code class="xml">&lt;listener&gt;&lt;!-- memory clean --&gt;
-    &lt;listener-class&gt;org.springframework.web.util.IntrospectorCleanupListener&lt;/listener-class&gt;
-&lt;/listener&gt;
-</code></pre>
-
-<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/27/java-listener/">http://tianweili.github.io/blog/2015/01/27/java-listener/</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用JXL组件操作Excel和导出文件]]></title>
-    <link href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/"/>
-    <updated>2015-01-29T16:29:57+08:00</updated>
-    <id>http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel</id>
-    <content type="html"><![CDATA[<p>这段时间参与的项目要求做几张Excel报表，由于项目框架使用了jxl组件，所以把jxl组件的详细用法归纳总结一下。本文主要讲述了以下内容：</p>
-
-<ul>
-<li>JXL及相关工具简介</li>
-<li>如何安装JXL</li>
-<li>JXL的基本操作
-
-<ul>
-<li>创建文件</li>
-<li>单元格操作
-
-<ul>
-<li>合并单元格</li>
-<li>行高和列宽</li>
-</ul>
-</li>
-<li>数据格式化
-
-<ul>
-<li>字符串格式化</li>
-<li>对齐方式</li>
-</ul>
-</li>
-<li>读取文件</li>
-<li>修改文件</li>
-</ul>
-</li>
-<li>导出文件实例</li>
-</ul>
-
-
-<!--more-->
-
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
-
-<h2>简介</h2>
-
-<p>jxl是一个韩国人写的java操作excel的工具, 在开源世界中，有两套比较有影响的API可供使用，一个是POI，一个是jExcelAPI。其中jExcelAPI功能相对POI比较弱一点。但jExcelAPI对中文支持非常好，API是纯Java的，并不依赖Windows系统，即使运行在Linux下，它同样能够正确的处理Excel文件。另外需要说明的是，这套API对图形和图表的支持很有限，而且仅仅识别PNG格式。</p>
-
-<h2>搭建环境</h2>
-
-<p>网上下载jxl.jar包，然后导入工程项目lib中，即可使用。</p>
-
-<h2>基本操作</h2>
-
-<h3>1、创建文件</h3>
-
-<p>以下实例是生成一个名为“test.xls”的Excel文件，其中第一个工作表被命名为“第一页”。编译执行后，会产生一个Excel文件。</p>
-
-<pre><code class="java CreateExcel.java">// 生成Excel的类 
-import java.io.File;
-
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-
-public class CreateExcel {
-    public static void main(String args[]) {
-        try {
-            // 打开文件
-            WritableWorkbook book = Workbook.createWorkbook(new File("c:/test.xls"));
-            // 生成名为“第一页”的工作表，参数0表示这是第一页
-            WritableSheet sheet = book.createSheet(" 第一页 ", 0);
-            // 在Label对象的构造子中指名单元格位置是第一列第一行(0,0)
-            // 以及单元格内容为test
-            Label label = new Label(0, 0, " test ");
-            // 将定义好的单元格添加到工作表中
-            sheet.addCell(label);
-
-            // 生成一个保存数字的单元格，必须使用Number的完整包路径，否则有语法歧义。
-            //单元格位置是第二列，第一行，值为123.456
-            jxl.write.Number number = new jxl.write.Number(1, 0, 123.456);
-            sheet.addCell(number);
-
-            // 写入数据并关闭文件
-            book.write();
-            book.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-}
-</code></pre>
-
-<h3>2、单元格操作</h3>
-
-<p>Excel中很重要的一部分是对单元格的操作，比如行高、列宽、单元格合并等，所幸jExcelAPI提供了这些支持。这些操作相对比较简单，下面只介绍一下相关的API。</p>
-
-<h4>合并单元格</h4>
-
-<p>合并既可以是横向的，也可以是纵向的。合并后的单元格不能再次进行合并，否则会触发异常。</p>
-
-<pre><code class="java">// 方法作用是从(m,n)到(p,q)的单元格全部合并
-WritableSheet.mergeCells( int m, int n, int p, int q);
-
-// 合并第1列第1行到第3列第4行的所有单元格
-sheet.mergeCells(0, 0, 2, 3);
-
-// 先合并单元格，再添加内容。并且定义的列行方位在合并的单元格第一个列行方位，否则添加不上内容，如下所示：
-Label label = new Label(0, 0, " 测试 ");
-sheet.addCell(label);
-</code></pre>
-
-<h4>行高和列宽</h4>
-
-<pre><code class="java">// 作用是指定第i+1行的高度
-WritableSheet.setRowView( int i, int height);
-
-// 将第一行的高度设为200
-sheet.setRowView(0, 200);
-
-// 作用是指定第i+1列的宽度
-WritableSheet.setColumnView( int i, int width);
-
-// 将第一列的宽度设为30
-sheet.setColumnView(0, 30);
-</code></pre>
-
-<h3>3、数据格式化</h3>
-
-<h4>字串格式化</h4>
-
-<p>字符串的格式化涉及到的是字体、粗细、字号等元素，这些功能主要由WritableFont和WritableCellFormat类来负责。</p>
-
-<p>WritableFont有非常丰富的构造子方法，供不同情况下使用，jExcelAPI的java-doc中有详细列表，这里不再列出。</p>
-
-<p>WritableCellFormat类非常重要，通过它可以指定单元格的各种属性，后面的单元格格式化中会有更多描述。</p>
-
-<pre><code class="java">//字体样式：宋体；11号；粗体
-WritableFont font1 = new WritableFont(WritableFont.createFont("宋体"), 11, WritableFont.BOLD);
-WritableCellFormat format1 = new  WritableCellFormat(font1);
-Label label = new  Label( 0 , 0 , "test", format1);
-</code></pre>
-
-<h4>对齐方式</h4>
-
-<p>在WritableCellFormat类中，还有一个很重要的方法是指定数据的对齐方式，比如针对我们上面的实例，可以指定：</p>
-
-<pre><code class="java">// 把水平对齐方式指定为居中 
-format1.setAlignment(jxl.format.Alignment.CENTRE);
-// 把垂直对齐方式指定为居中 
-format1.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-</code></pre>
-
-<h3>4、读取文件</h3>
-
-<pre><code class="java ReadExcel.java">// 读取Excel的类 
-import java.io.File;
-
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-
-public class ReadExcel {
-    public static void main(String args[]) {
-        try {
-            Workbook book = Workbook.getWorkbook(new File("c:/test.xls"));
-            // 获得第一个工作表对象
-            Sheet sheet = book.getSheet(0);
-            // 得到第一列第一行的单元格
-            Cell cell = sheet.getCell(0, 0);
-            String contents = cell.getContents();//得到单元格内容
-            System.out.println(contents);
-            book.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-}
-</code></pre>
-
-<p>程序的输出结果是：test。</p>
-
-<p>Cell接口的方法还可以获取单元格行、列位置，单元格是否隐藏等属性。具体的参考jxl的API。</p>
-
-<h3>5、修改文件</h3>
-
-<p>修改Excel文件除了打开文件的方式不同之外，其他与创建Excel是一样的。</p>
-
-<pre><code class="java UpdateExcel.java">// 修改Excel的类 
-import java.io.File;
-
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-
-public class UpdateExcel {
-    public static void main(String args[]) {
-        try {
-            // 获得Excel文件
-            Workbook wb = Workbook.getWorkbook(new File("c:/test.xls"));
-            // 打开一个文件的副本，并且指定数据写回到原文件
-            WritableWorkbook book = Workbook.createWorkbook(new File("c:/test.xls"), wb);
-
-            //修改原工作表数据
-            WritableSheet sheet1 = book.getSheet(0);
-            sheet1.addCell(new Label(0, 0, "覆盖原来的test"));
-
-            // 添加一个新工作表
-            WritableSheet sheet2 = book.createSheet(" 第二页 ", 1);
-            sheet2.addCell(new Label(0, 0, " 第二页的测试数据 "));
-
-            book.write();
-            book.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-}
-</code></pre>
-
-<h2>导出文件</h2>
-
-<p>附上一个导出文件例子。</p>
-
-<pre><code class="javascript">$( function() {
-    /** 报表导出按钮 */
-    $( '#exportBtn' ).click( function() {
-        if( !$( '#frm' ).validationEngine( 'validate' ) )
-            return false;
-        $( '#frm' )[ 0 ].action = '${ctx }/exportAction.do?m=exportExcel';
-        $( '#frm' )[ 0 ].submit();
-        $( this ).attr( 'disabled', true );
-        window.setTimeout( function() {
-            document.getElementById( 'exportBtn' ).disabled = false;
-        }, 5000 );
-    } );
-} );
-</code></pre>
-
-<pre><code class="java">/** 根据浏览器类型，转换为当前浏览器支持的中文*/
-String fileName = "Excel工作表";
-
-/** header 浏览器key */
-String userAgent = request.getHeader("USER-AGENT").toUpperCase();
-if (userAgent != null &amp;&amp; userAgent.length() != 0 &amp;&amp; fileName != null &amp;&amp; fileName.length() != 0) {
-    /** header IE */
-    if ( -1 != userAgent.indexOf("MSIE") )
-        fileName = URLEncoder.encode(fileName, "UTF-8");
-    /** header Mozilla */
-    else if ( -1 != userAgent.indexOf("MOZILLA") )
-        fileName = new String(fileName.getBytes(), "ISO8859-1");
-    /** header Safari */
-    else if ( -1 != userAgent.indexOf("SAFARI") )
-        fileName = new String( fileName.getBytes(), "ISO8859-1");
-    /** header Opera */
-    else if ( -1 != userAgent.indexOf("OPERA") )
-        fileName = new String( fileName.getBytes(), "ISO8859-1");
-    /** header 其它内核浏览器 */
-    else
-        fileName = new String( fileName.getBytes(), "ISO8859-1");
-}
-
-response.setCharacterEncoding("UTF-8");
-response.setContentType("application/vnd.ms-excel");
-response.setHeader("Content-disposition", new StringBuffer("attachment").append( ";filename=" ).append( fileName ).append(".xls").toString() );
-
-WritableWorkbook book = Workbook.createWorkbook(response.getOutputStream());
-WritableSheet sheet = book.createSheet("Excel工作表", 0);
-
-//...
-
-book.write();
-book.close();
-</code></pre>
-
-<p>作者：<a href="http://tianweili.github.io/">李天炜</a></p>
-
-<p>原文链接：<a href="http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/">http://tianweili.github.io/blog/2015/01/29/use-jxl-produce-excel/</a></p>
 ]]></content>
   </entry>
   
