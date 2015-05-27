@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | 李天炜]]></title>
   <link href="http://tianweili.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-05-26T17:10:08+08:00</updated>
+  <updated>2015-05-27T22:20:25+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -31,44 +31,42 @@
 
 <h2>进入编辑文件</h2>
 
-<ul>
-<li>vi filename：打开或新建文件，并将光标置于第一行首</li>
-<li>vi +n filename：打开文件，并将光标置于第n行首</li>
-<li><p>vi + filename：打开文件，并将光标置于最后一行首</p></li>
-<li><p>vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处</p></li>
-<li>vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename</li>
-<li>vi filename1 &hellip;. filenamen：打开多个文件，依次进行编辑</li>
-</ul>
+<pre><code>vi filename：打开或新建文件，并将光标置于第一行首
+vi +n filename：打开文件，并将光标置于第n行首
+vi + filename：打开文件，并将光标置于最后一行首
 
+vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处
+vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename
+vi filename1 .... filenamen：打开多个文件，依次进行编辑
+</code></pre>
 
 <h2>移动光标</h2>
 
-<ul>
-<li>nG或ngg：光标移至第n行首</li>
-<li>0：（数字零）光标移至当前行首</li>
-<li>$：光标移至当前行尾</li>
-<li>n+：光标下移n行</li>
-<li><p>n-：光标上移n行</p></li>
-<li><p>h ：光标左移一个字符</p></li>
-<li>l ：光标右移一个字符</li>
-<li>space：光标右移一个字符</li>
-<li>Backspace：光标左移一个字符</li>
-<li>k或Ctrl+p：光标上移一行</li>
-<li>j或Ctrl+n ：光标下移一行</li>
-<li>Enter ：光标下移一行</li>
-<li>w或W ：光标右移一个字至字首</li>
-<li>b或B ：光标左移一个字至字首</li>
-<li>e或E ：光标右移一个字至字尾</li>
-<li>) ：光标移至句尾</li>
-<li>( ：光标移至句首</li>
-<li>}：光标移至段落开头</li>
-<li>{：光标移至段落结尾</li>
-<li>n$：光标移至第n行尾</li>
-<li>H ：光标移至屏幕顶行</li>
-<li>M ：光标移至屏幕中间行</li>
-<li>L ：光标移至屏幕最后行</li>
-</ul>
+<pre><code class="bash">nG或ngg：光标移至第n行首
+0：（数字零）光标移至当前行首
+$：光标移至当前行尾
+n+：光标下移n行
+n-：光标上移n行
 
+h ：光标左移一个字符
+l ：光标右移一个字符
+space：光标右移一个字符 
+Backspace：光标左移一个字符 
+k或Ctrl+p：光标上移一行 
+j或Ctrl+n ：光标下移一行 
+Enter ：光标下移一行 
+w或W ：光标右移一个字至字首 
+b或B ：光标左移一个字至字首 
+e或E ：光标右移一个字至字尾 
+) ：光标移至句尾 
+( ：光标移至句首 
+}：光标移至段落开头 
+{：光标移至段落结尾
+n$：光标移至第n行尾 
+H ：光标移至屏幕顶行 
+M ：光标移至屏幕中间行 
+L ：光标移至屏幕最后行
+</code></pre>
 
 <h2>屏幕翻滚</h2>
 

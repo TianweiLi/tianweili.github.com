@@ -4,7 +4,7 @@
   <title><![CDATA[李天炜]]></title>
   <link href="http://tianweili.github.io/atom.xml" rel="self"/>
   <link href="http://tianweili.github.io/"/>
-  <updated>2015-05-26T17:10:08+08:00</updated>
+  <updated>2015-05-27T22:20:25+08:00</updated>
   <id>http://tianweili.github.io/</id>
   <author>
     <name><![CDATA[李天炜 litianwei2013[AT]gmail.com]]></name>
@@ -31,43 +31,73 @@
 
 <h2>进入编辑文件</h2>
 
-<ul>
-<li>vi filename：打开或新建文件，并将光标置于第一行首</li>
-<li>vi +n filename：打开文件，并将光标置于第n行首</li>
-<li><p>vi + filename：打开文件，并将光标置于最后一行首</p></li>
-<li><p>vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处</p></li>
-<li>vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename</li>
-<li>vi filename1 &hellip;. filenamen：打开多个文件，依次进行编辑</li>
-</ul>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vi filename：打开或新建文件，并将光标置于第一行首
+</span><span class='line'>vi +n filename：打开文件，并将光标置于第n行首
+</span><span class='line'>vi + filename：打开文件，并将光标置于最后一行首
+</span><span class='line'>
+</span><span class='line'>vi +/pattern filename：打开文件，并将光标置于第一个与pattern匹配的串处
+</span><span class='line'>vi -r filename：在上次正用vi编辑时发生系统崩溃，恢复filename
+</span><span class='line'>vi filename1 .... filenamen：打开多个文件，依次进行编辑</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>移动光标</h2>
 
-<ul>
-<li>nG或ngg：光标移至第n行首</li>
-<li>0：（数字零）光标移至当前行首</li>
-<li>$：光标移至当前行尾</li>
-<li>n+：光标下移n行</li>
-<li><p>n-：光标上移n行</p></li>
-<li><p>h ：光标左移一个字符</p></li>
-<li>l ：光标右移一个字符</li>
-<li>space：光标右移一个字符</li>
-<li>Backspace：光标左移一个字符</li>
-<li>k或Ctrl+p：光标上移一行</li>
-<li>j或Ctrl+n ：光标下移一行</li>
-<li>Enter ：光标下移一行</li>
-<li>w或W ：光标右移一个字至字首</li>
-<li>b或B ：光标左移一个字至字首</li>
-<li>e或E ：光标右移一个字至字尾</li>
-<li>) ：光标移至句尾</li>
-<li>( ：光标移至句首</li>
-<li>}：光标移至段落开头</li>
-<li>{：光标移至段落结尾</li>
-<li>n$：光标移至第n行尾</li>
-<li>H ：光标移至屏幕顶行</li>
-<li>M ：光标移至屏幕中间行</li>
-<li>L ：光标移至屏幕最后行</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nG或ngg：光标移至第n行首
+</span><span class='line'>0：（数字零）光标移至当前行首
+</span><span class='line'><span class="nv">$：</span>光标移至当前行尾
+</span><span class='line'>n+：光标下移n行
+</span><span class='line'>n-：光标上移n行
+</span><span class='line'>
+</span><span class='line'>h ：光标左移一个字符
+</span><span class='line'>l ：光标右移一个字符
+</span><span class='line'>space：光标右移一个字符
+</span><span class='line'>Backspace：光标左移一个字符
+</span><span class='line'>k或Ctrl+p：光标上移一行
+</span><span class='line'>j或Ctrl+n ：光标下移一行
+</span><span class='line'>Enter ：光标下移一行
+</span><span class='line'>w或W ：光标右移一个字至字首
+</span><span class='line'>b或B ：光标左移一个字至字首
+</span><span class='line'>e或E ：光标右移一个字至字尾
+</span><span class='line'><span class="o">)</span> ：光标移至句尾
+</span><span class='line'><span class="o">(</span> ：光标移至句首
+</span><span class='line'><span class="o">}</span>：光标移至段落开头
+</span><span class='line'><span class="o">{</span>：光标移至段落结尾
+</span><span class='line'>n<span class="nv">$：</span>光标移至第n行尾
+</span><span class='line'>H ：光标移至屏幕顶行
+</span><span class='line'>M ：光标移至屏幕中间行
+</span><span class='line'>L ：光标移至屏幕最后行
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>屏幕翻滚</h2>
